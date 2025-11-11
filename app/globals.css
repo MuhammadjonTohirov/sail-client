@@ -1,0 +1,41 @@
+/*
+ * Marketplace Client - Global Styles (driven by app.config.ts)
+ * Modular CSS Organization
+ */
+
+/* Base styles - variables, reset, typography */
+@import './styles/base.css';
+
+/* Layout components - container, grid, flexbox */
+@import './styles/layout.css';
+
+/* Form elements - inputs, buttons, form layouts */
+@import './styles/forms.css';
+
+/* Modals and dropdowns */
+@import './styles/modals.css';
+
+/* Product and listing cards */
+@import './styles/cards.css';
+
+/* Search and filters */
+@import './styles/search.css';
+
+/* Gallery and images */
+@import './styles/gallery.css';
+
+/* Listing detail page */
+@import './styles/listing-detail.css';
+
+/* Navigation components */
+@import './styles/navigation.css';
+
+/* Favorites and filters */
+@import './styles/favorites.css';
+
+/* Chat */
+@import './styles/chat.css';
+@import './styles/thread-list.css';
+
+/* Utility classes */
+@import './styles/utilities.css';

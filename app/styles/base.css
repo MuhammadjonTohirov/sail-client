@@ -1,0 +1,81 @@
+/* Theme variables resolved from app.config.ts */
+:root {
+  --fg: #002F34;
+  --bg: #F2F4F5;
+  --card-bg: #ffffff;
+  --muted: #7f9799;
+  --border: #d9dfe3;
+  --brand: #002F34;        /* primary text / button bg */
+  --accent: #23E5DB;       /* cyan accent */
+  --accent-2: #35a4c8;     /* blue accent used in CTAs */
+  --danger: #FF5631;
+  --radius: 8px;
+}
+
+/* Reset and base styles */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--fg);
+  background: var(--bg);
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Common elements */
+.link {
+  color: var(--accent-2);
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e9f8f7;
+  color: var(--brand);
+  font-size: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  gap: 6px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

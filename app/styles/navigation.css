@@ -1,0 +1,127 @@
+/* Navigation Components */
+
+nav .nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--card-bg);
+  color: var(--brand);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+nav .nav-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+nav .nav-icon:hover {
+  background: var(--color-neutral-100);
+}
+
+nav .nav-icon--outline {
+  border-color: var(--border);
+}
+
+nav .nav-icon--accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+nav .nav-icon--accent:hover {
+  background: var(--accent-2);
+}
+
+nav .nav-icon--profile {
+  width: 44px;
+  height: 44px;
+}
+
+nav .nav-icon.is-active,
+nav .nav-icon:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.15);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin: 0;
+}
+
+.tab {
+  padding: 12px 24px;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--fg);
+}
+
+.tab.is-active {
+  border-bottom-color: var(--accent);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* Toolbar */
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+@media (max-width: 960px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Listing Row */
+.listing-row {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.listing-thumb {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f3f4f6;
+}
+
+.listing-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 24px;
+}
+
+.empty-illustration {
+  font-size: 48px;
+  opacity: .3;
+  margin-bottom: 8px;
+}

@@ -1,0 +1,144 @@
+/* Gallery and Image Components */
+
+/* Gallery */
+.gallery {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  position: relative;
+}
+
+/* Promoted Banner */
+.promoted-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #FFC700 0%, #FFD700 100%);
+  color: #002F34;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Gallery Main */
+.gallery-main {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 520px;
+  background: #f8fafb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.no-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+/* Gallery Navigation */
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.gallery-nav button {
+  background: rgba(0,0,0,0.4);
+  border: 0;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 12px;
+  cursor: pointer;
+  pointer-events: all;
+  transition: all 0.2s ease;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-nav button:hover {
+  background: rgba(0,0,0,0.4);
+  transform: scale(1.1);
+}
+
+/* Gallery Counter */
+.gallery-counter {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Gallery Thumbnails */
+.gallery-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 12px;
+  padding: 4px 0;
+  scroll-behavior: smooth;
+}
+
+.gallery-thumbs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-thumbs::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 3px;
+}
+
+.gallery-thumbs::-webkit-scrollbar-thumb {
+  background: #cfd6db;
+  border-radius: 3px;
+}
+
+.gallery-thumbs::-webkit-scrollbar-thumb:hover {
+  background: #b0b8bd;
+}
+
+.gallery-thumbs img {
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gallery-thumbs img:hover {
+  border-color: var(--accent);
+  opacity: 0.8;
+}
+
+.gallery-thumbs img.is-active {
+  border-color: var(--brand);
+  box-shadow: 0 2px 8px rgba(0,47,52,0.3);
+}
