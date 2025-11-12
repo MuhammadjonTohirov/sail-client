@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { appConfig, trustedImageUrl } from "@/config";
 import { LogoutUseCase } from "@/domain/usecases/auth/LogoutUseCase";
 import { AuthRepositoryImpl } from "@/data/repositories/AuthRepositoryImpl";
-import { Assets, getAsset } from "@/utils/assets";
+import { getAsset } from "@/utils/assets";
 
 const iconProps = { width: 22, height: 22, strokeWidth: 1.8 };
 const profileIconProps = { width: 26, height: 26, strokeWidth: 1.8 };
