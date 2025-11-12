@@ -36,3 +36,4 @@ Thumbs.db
 .eslintcache
 coverage/
 .next/
+node_modules/
