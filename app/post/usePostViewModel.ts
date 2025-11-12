@@ -205,11 +205,11 @@ export function usePostViewModel(): PostViewModel {
         setNegotiable(listing.isPriceNegotiable || false);
         setDealType(listing.dealType || 'sell');
         setSellerType(listing.sellerType || 'person');
-        setCondition(listing.condition || 'used');
+        setCondition(listing.condition == 'new' ? 'new' : 'used');
 
-        const categoryId = listing.category?.id || listing.category;
+        const categoryId = listing.categoryId;
         setSelectedCat(categoryId);
-        setLocationId(listing.location?.id || listing.location);
+        setLocationId(listing.locationId);
 
         // Build category path
         if (listing.categoryName) {
@@ -397,7 +397,7 @@ export function usePostViewModel(): PostViewModel {
     // Validate required attributes
     const missing: string[] = [];
     for (const a of attrs) {
-      if (!a.isRequired) continue;
+      if (!a.required) continue;
       const v = values[a.key];
       if (a.type === 'multiselect') {
         if (!Array.isArray(v) || v.length === 0) missing.push(a.label);
@@ -445,9 +445,9 @@ export function usePostViewModel(): PostViewModel {
       };
 
       let id: number;
-
+      console.log('Submitting listing payload:', listingPayload);
       if (isEditMode && editId) {
-        await interactorRef.current.updateListing(editId, listingPayload);
+        // await interactorRef.current.updateListing(editId, listingPayload);
         id = editId;
       } else {
         const created = await interactorRef.current.createListing(listingPayload);
