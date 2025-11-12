@@ -2,13 +2,7 @@
 import { I18nextProvider } from "react-i18next";
 import i18next from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
-import {
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import { ReactNode, useCallback, useMemo, useState, useEffect } from "react";
 import { LocaleContext } from "@/context/LocaleContext";
 import { appConfig } from "@/config";
 
@@ -29,6 +23,7 @@ const persistLocalePreference = (next: Locale) => {
     window.localStorage.setItem("locale", next);
   }
   if (typeof document !== "undefined") {
+    console.log(next);
     document.cookie = `locale=${next}; path=/; max-age=31536000; SameSite=Lax`;
     document.documentElement.lang = next;
   }
