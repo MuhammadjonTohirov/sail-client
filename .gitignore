@@ -35,4 +35,4 @@ Thumbs.db
 *.7z
 .eslintcache
 coverage/
-
+.next/
