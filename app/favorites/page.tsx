@@ -7,22 +7,9 @@ import { SavedSearches } from '@/lib/api';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { useFavorites } from '@/hooks/useFavorites';
 import { appConfig } from '@/config';
-
-interface SavedSearch {
-  id: number;
-  title: string;
-  query: {
-    q?: string;
-    category?: number;
-    category_name?: string;
-    location?: number;
-    location_name?: string;
-    price_min?: number;
-    price_max?: number;
-    [key: string]: any; // Allow other filter fields
-  };
-  created_at: string;
-}
+import { GetSavedSearchesUseCase } from '@/domain/usecases/savedSearches/GetSavedSearchesUseCase';
+import { SavedSearchesRepositoryImpl } from '@/data/repositories/SavedSearchesRepositoryImpl';
+import { SavedSearch } from '@/domain/models/SavedSearch';
 
 export default function FavoritesPage() {
   const { t, locale } = useI18n();
@@ -54,9 +41,11 @@ export default function FavoritesPage() {
     const loadSavedSearches = async () => {
       setLoadingSearches(true);
       try {
-        const data = await SavedSearches.list();
+        const usecase = new GetSavedSearchesUseCase(new SavedSearchesRepositoryImpl());
+        const savedSearchList = await usecase.execute();
+        console.log('Fetched saved searches via use case:', savedSearchList);
         if (!cancelled) {
-          setSavedSearches(data.results || data || []);
+          setSavedSearches(savedSearchList);
         }
       } catch (error) {
         console.error('Failed to load saved searches:', error);
@@ -371,7 +360,7 @@ export default function FavoritesPage() {
                       )}
                     </div>
                     <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
-                      {formatDate(search.created_at)}
+                      {formatDate(search.createdAt ?? '')}
                     </div>
                   </Link>
                   <button

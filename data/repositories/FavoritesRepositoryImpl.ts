@@ -3,9 +3,13 @@ import { Favorite, ToggleFavoriteResult } from '../../domain/models/Favorite';
 import { Favorites } from '../../lib/favoritesApi';
 import { FavoriteMapper } from '../mappers/FavoriteMapper';
 import { FavoriteDTO, ToggleFavoriteResultDTO } from '../models/FavoriteDTO';
+import { getToken } from '@/lib/apiUtils';
 
 export class FavoritesRepositoryImpl implements IFavoritesRepository {
   async list(): Promise<Favorite[]> {
+    const token = getToken();
+    if (token == null) { return [];}
+    
     const data = await Favorites.list();
     const dtos = (data || []) as FavoriteDTO[];
     return dtos.map(dto => FavoriteMapper.toDomain(dto));

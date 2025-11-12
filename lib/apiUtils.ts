@@ -76,6 +76,7 @@ export async function apiFetch(path: string, opts: RequestInit = {}, isJson = tr
     };
     const token = getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
+    
     try {
       return await fetch(`${API_BASE}${path}`, {
         ...opts,
