@@ -23,8 +23,12 @@ export default function SearchResultsGrid({
     return (
       <div className="card" style={{ padding: 32, textAlign: 'center' }}>
         <div style={{ fontSize: 48, opacity: 0.2, marginBottom: 8 }}>🔎</div>
-        <h3 style={{ margin: 0 }}>{t('searchPage.noResultsTitle')}</h3>
-        <p className="muted">{t('searchPage.noResultsDescription')}</p>
+        <h3 style={{ margin: 0 }} suppressHydrationWarning>
+          {t('searchPage.noResultsTitle')}
+        </h3>
+        <p className="muted" suppressHydrationWarning>
+          {t('searchPage.noResultsDescription')}
+        </p>
       </div>
     );
   }

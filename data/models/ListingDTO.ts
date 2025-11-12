@@ -49,6 +49,9 @@ export interface ListingDTO {
   media?: ListingMediaDTO[];
   media_urls?: string[];
   attributes?: Array<{ key: string; value: unknown; label?: string }>;
+  contact_name?: string;
+  contact_email?: string;
+  contact_phone?: string;
   status?: string;
   created_at?: string;
   updated_at?: string;
@@ -77,4 +80,7 @@ export interface ListingPayloadDTO {
   lat?: number;
   lon?: number;
   attributes?: Array<{ attribute: number; value: unknown }>;
+  contact_name?: string;
+  contact_email?: string;
+  contact_phone?: string;
 }

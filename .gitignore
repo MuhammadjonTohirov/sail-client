@@ -1,0 +1,38 @@
+# dependencies
+/node_modules
+
+# build outputs
+/build
+/dist
+/out
+
+# environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editor/IDE specific
+.vscode/
+.idea/
+
+# operating system specific
+.DS_Store
+Thumbs.db
+
+# miscellaneous
+*.log
+*.tgz
+*.zip
+*.rar
+*.7z
+.eslintcache
+coverage/
+

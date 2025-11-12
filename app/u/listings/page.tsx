@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Dropdown from '@/components/ui/Dropdown';
 import CategoryPicker from '@/components/ui/CategoryPicker';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { appConfig } from '@/config';
 
 type CatNode = { id: number; name: string; slug: string; is_leaf: boolean; children?: CatNode[] };
@@ -20,6 +21,8 @@ export default function MyListings() {
   const [catPickerOpen, setCatPickerOpen] = useState(false);
   const [sort, setSort] = useState('newest');
   const [tab, setTab] = useState<'active'|'pending_review'|'inactive'>('active');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [listingToDelete, setListingToDelete] = useState<number | null>(null);
 
   const load = async () => {
     try {
@@ -33,6 +36,43 @@ export default function MyListings() {
   const bump = async (id: number) => { await Listings.refresh(id); await load(); };
   const upload = async (id: number, file?: File | null) => {
     if (!file) return; await Listings.uploadMedia(id, file); await load();
+  };
+
+  const deactivate = async (id: number) => {
+    try {
+      await Listings.deactivate(id);
+      await load();
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
+
+  const activate = async (id: number) => {
+    try {
+      await Listings.activate(id);
+      await load();
+    } catch (e: any) {
+      setError(e.message);
+    }
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setListingToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!listingToDelete) return;
+    try {
+      await Listings.delete(listingToDelete);
+      setDeleteModalOpen(false);
+      setListingToDelete(null);
+      await load();
+    } catch (e: any) {
+      setError(e.message);
+      setDeleteModalOpen(false);
+      setListingToDelete(null);
+    }
   };
 
   // Category tree is provided to CategoryPicker; no need to flatten here
@@ -242,16 +282,18 @@ export default function MyListings() {
               </div>
 
               <div className="listing-actions-col">
-                <button
-                  className="action-btn primary"
-                  onClick={() => bump(l.id)}
-                  title={t('myListings.bumpTooltip')}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  {t('myListings.bumpButton')}
-                </button>
+                {l.status === 'active' && (
+                  <button
+                    className="action-btn primary"
+                    onClick={() => bump(l.id)}
+                    title={t('myListings.bumpTooltip')}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    {t('myListings.bumpButton')}
+                  </button>
+                )}
 
                 <a
                   href={`/post?edit=${l.id}`}
@@ -262,11 +304,60 @@ export default function MyListings() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </a>
+
+                {l.status === 'active' && (
+                  <button
+                    className="action-btn secondary"
+                    onClick={() => deactivate(l.id)}
+                    title={t('myListings.deactivateTooltip')}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                )}
+
+                {(l.status === 'paused' || l.status === 'closed') && (
+                  <button
+                    className="action-btn primary"
+                    onClick={() => activate(l.id)}
+                    title={t('myListings.activateTooltip')}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                )}
+
+                <button
+                  className="action-btn secondary text-red-600 hover:bg-red-50"
+                  onClick={() => handleDeleteClick(l.id)}
+                  title={t('myListings.deleteTooltip')}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <ConfirmModal
+        open={deleteModalOpen}
+        title={t('myListings.confirmDelete')}
+        message={t('myListings.confirmDeleteMessage')}
+        confirmText={t('myListings.confirmButton')}
+        cancelText={t('myListings.cancelButton')}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+          setListingToDelete(null);
+        }}
+        isDestructive
+      />
     </div>
   );
 }

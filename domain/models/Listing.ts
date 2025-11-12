@@ -50,6 +50,9 @@ export interface Listing {
   readonly mediaUrls?: string[];
   readonly attributes?: Array<{ key: string; value: unknown; label?: string }>;
   readonly status?: string;
+  readonly contactName?: string;
+  readonly contactEmail?: string;
+  readonly contactPhone?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   readonly refreshedAt?: string;

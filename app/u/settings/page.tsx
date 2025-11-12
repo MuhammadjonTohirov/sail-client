@@ -86,6 +86,7 @@ export default function SettingsPage() {
         location: locationId,
       });
       alert('Profile saved successfully!');
+      await getProfile();
     } catch (error) {
       console.error('Failed to save profile:', error);
       alert('Failed to save profile');
@@ -106,7 +107,6 @@ export default function SettingsPage() {
       if (Object.keys(payload).length > 0) {
         await updateProfile(payload);
         alert('Media saved successfully!');
-        // Reload to show uploaded images
         await getProfile();
       }
     } catch (error) {
@@ -213,7 +213,6 @@ export default function SettingsPage() {
                       setLocationId(loc.id);
                       setLocationPath(loc.path);
                     }}
-                    locale={locale as 'ru' | 'uz'}
                   />
                 </div>
 

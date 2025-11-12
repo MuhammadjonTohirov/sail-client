@@ -71,6 +71,9 @@ export class ListingMapper {
       mediaUrls,
       attributes: dto.attributes,
       status: dto.status,
+      contactName: dto.contact_name,
+      contactEmail: dto.contact_email,
+      contactPhone: dto.contact_phone,
       createdAt: dto.created_at,
       updatedAt: dto.updated_at,
       refreshedAt: dto.refreshed_at,
@@ -107,6 +110,9 @@ export class ListingMapper {
         attribute: attr.attributeId,
         value: attr.value,
       })),
+      contact_name: payload.contactName,
+      contact_email: payload.contactEmail,
+      contact_phone: payload.contactPhone,
     };
   }
 
@@ -131,6 +137,9 @@ export class ListingMapper {
         value: attr.value,
       }));
     }
+    if (payload.contactName !== undefined) dto.contact_name = payload.contactName;
+    if (payload.contactEmail !== undefined) dto.contact_email = payload.contactEmail;
+    if (payload.contactPhone !== undefined) dto.contact_phone = payload.contactPhone;
 
     return dto;
   }

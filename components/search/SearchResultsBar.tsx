@@ -19,6 +19,7 @@ export default function SearchResultsBar({
           className={`view-toggle-btn ${viewMode === 'list' ? 'active' : ''}`}
           onClick={() => setViewMode('list')}
           aria-label={t('searchPage.listView')}
+          suppressHydrationWarning
         >
           <svg className="view-icon" fill="currentColor" viewBox="0 0 24 24">
             <rect x="3" y="5" width="18" height="4" rx="1" />
@@ -31,6 +32,7 @@ export default function SearchResultsBar({
           className={`view-toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
           onClick={() => setViewMode('grid')}
           aria-label={t('searchPage.gridView')}
+          suppressHydrationWarning
         >
           <svg className="view-icon" fill="currentColor" viewBox="0 0 24 24">
             <rect x="3" y="3" width="8" height="8" rx="1" />

@@ -28,9 +28,14 @@ export default function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(detectInitialLocale);
 
   const setLocale = useCallback((next: Locale) => {
-    if (!supportedLocales.includes(next)) return;
+    if (!supportedLocales.includes(next) || next === locale) return;
     setLocaleState(next);
-  }, []);
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('locale', next);
+      window.location.reload();
+    }
+  }, [locale]);
 
   useEffect(() => {
     if (i18next.language !== locale) {

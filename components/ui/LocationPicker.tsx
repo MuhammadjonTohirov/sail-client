@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Taxonomy } from '@/lib/api';
+import { useI18n } from '@/lib/i18n';
 
 interface Location {
   id: number;
@@ -22,10 +23,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onSelect: (location: SelectedLocation) => void;
-  locale?: 'ru' | 'uz';
 }
 
-export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' }: Props) {
+export default function LocationPicker({ open, onClose, onSelect }: Props) {
+  const { t, locale } = useI18n();
   const [regions, setRegions] = useState<Location[]>([]);
   const [cities, setCities] = useState<Location[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<Location | null>(null);
@@ -40,9 +41,6 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
     }
     return location.name_ru || location.name;
   };
-
-  // Helper function for labels
-  const label = (ru: string, uz: string) => (locale === 'uz' ? uz : ru);
 
   // Load regions on mount
   useEffect(() => {
@@ -153,8 +151,8 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
     <div className="modal-backdrop" onClick={handleCancel}>
       <div className="modal location-picker-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">
-            {label('Выберите местоположение', 'Manzilni tanlang')}
+          <h2 className="modal-title" suppressHydrationWarning>
+            {t('locationPicker.title')}
           </h2>
           <button className="modal-close" onClick={handleCancel}>×</button>
         </div>
@@ -163,8 +161,8 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
           <div className="location-picker">
             {/* Regions Column */}
             <div className="location-col">
-              <div className="location-col-header">
-                {label('Регион', 'Viloyat')}
+              <div className="location-col-header" suppressHydrationWarning>
+                {t('locationPicker.region')}
               </div>
               <div className="location-list">
                 {loading ? (
@@ -172,8 +170,8 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
                     <div className="animate-spin">⏳</div>
                   </div>
                 ) : regions.length === 0 ? (
-                  <div className="location-placeholder">
-                    {label('Нет регионов', 'Viloyatlar yo\'q')}
+                  <div className="location-placeholder" suppressHydrationWarning>
+                    {t('locationPicker.noRegions')}
                   </div>
                 ) : (
                   regions.map((region) => (
@@ -192,21 +190,21 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
 
             {/* Cities Column */}
             <div className="location-col">
-              <div className="location-col-header">
-                {label('Город / Район', 'Shahar / Tuman')}
+              <div className="location-col-header" suppressHydrationWarning>
+                {t('locationPicker.city')}
               </div>
               <div className="location-list">
                 {!selectedRegion ? (
-                  <div className="location-placeholder">
-                    {label('Выберите регион', 'Viloyatni tanlang')}
+                  <div className="location-placeholder" suppressHydrationWarning>
+                    {t('locationPicker.selectRegion')}
                   </div>
                 ) : cityLoading ? (
                   <div className="location-loading">
                     <div className="animate-spin">⏳</div>
                   </div>
                 ) : cities.length === 0 ? (
-                  <div className="location-placeholder">
-                    {label('Нет городов', 'Shaharlar yo\'q')}
+                  <div className="location-placeholder" suppressHydrationWarning>
+                    {t('locationPicker.noCities')}
                   </div>
                 ) : (
                   cities.map((city) => (
@@ -224,20 +222,20 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
 
             {/* Selected Location Preview Column */}
             <div className="location-col">
-              <div className="location-col-header">
-                {label('Выбрано', 'Tanlangan')}
+              <div className="location-col-header" suppressHydrationWarning>
+                {t('locationPicker.selected')}
               </div>
               <div className="location-list">
                 {!selectedRegion && !selectedCity ? (
-                  <div className="location-placeholder">
-                    {label('Выберите местоположение', 'Manzilni tanlang')}
+                  <div className="location-placeholder" suppressHydrationWarning>
+                    {t('locationPicker.selectLocation')}
                   </div>
                 ) : (
                   <div style={{ padding: '16px' }}>
                     {selectedRegion && (
                       <div style={{ marginBottom: '12px' }}>
-                        <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '4px' }}>
-                          {label('Регион', 'Viloyat')}
+                        <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '4px' }} suppressHydrationWarning>
+                          {t('locationPicker.region')}
                         </div>
                         <div style={{ fontWeight: '600' }}>
                           {getDisplayName(selectedRegion)}
@@ -246,8 +244,8 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
                     )}
                     {selectedCity && (
                       <div>
-                        <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '4px' }}>
-                          {label('Город / Район', 'Shahar / Tuman')}
+                        <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '4px' }} suppressHydrationWarning>
+                          {t('locationPicker.city')}
                         </div>
                         <div style={{ fontWeight: '600' }}>
                           {getDisplayName(selectedCity)}
@@ -262,14 +260,15 @@ export default function LocationPicker({ open, onClose, onSelect, locale = 'ru' 
         </div>
 
         <div className="modal-footer">
-          <button onClick={handleCancel}>
-            {label('Отмена', 'Bekor qilish')}
+          <button onClick={handleCancel} suppressHydrationWarning>
+            {t('locationPicker.cancel')}
           </button>
           <button
             onClick={handleConfirm}
             disabled={!selectedCity}
+            suppressHydrationWarning
           >
-            {label('Выбрать', 'Tanlash')}
+            {t('locationPicker.select')}
           </button>
         </div>
       </div>

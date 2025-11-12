@@ -14,6 +14,9 @@ export type ListingPayload = {
   lat?: number;
   lon?: number;
   attributes?: { attribute: number; value: unknown }[];
+  contact_name?: string;
+  contact_email?: string;
+  contact_phone?: string;
 };
 
 export const Listings = {
@@ -58,4 +61,13 @@ export const Listings = {
       method: 'POST',
       body: JSON.stringify({ media_ids: mediaIds })
     }),
+
+  deactivate: (id: number) =>
+    apiFetch(`/api/v1/listings/${id}/deactivate`, { method: 'POST' }),
+
+  activate: (id: number) =>
+    apiFetch(`/api/v1/listings/${id}/activate`, { method: 'POST' }),
+
+  delete: (id: number) =>
+    apiFetch(`/api/v1/listings/${id}/delete`, { method: 'DELETE' }),
 };

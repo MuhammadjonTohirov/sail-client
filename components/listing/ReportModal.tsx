@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useModeration } from "@/hooks";
 import type { ReportReason } from "@/domain/models/ReportReason";
+import { useI18n } from "@/lib/i18n";
 
 type ReportNode = ReportReason;
 
@@ -13,9 +14,6 @@ type ReportModalProps = {
   onSubmitted?: (message: string) => void;
 };
 
-const localeLabel = (locale: "ru" | "uz") => (ru: string, uz: string) =>
-  locale === "uz" ? uz : ru;
-
 export function ReportModal({
   listingId,
   open,
@@ -23,7 +21,7 @@ export function ReportModal({
   onClose,
   onSubmitted,
 }: ReportModalProps) {
-  const label = localeLabel(locale);
+  const { t } = useI18n();
   const { reasons, loading, error, submitting, submitError: submitErr, loadReasons, submitReport } = useModeration();
   const [path, setPath] = useState<ReportNode[]>([]);
   const [selectedLeaf, setSelectedLeaf] = useState<ReportNode | null>(null);
@@ -54,9 +52,9 @@ export function ReportModal({
 
   const title = useMemo(() => {
     if (selectedLeaf) return selectedLeaf.title;
-    if (path.length === 0) return label("Жалоба", "Shikoyat");
+    if (path.length === 0) return t("reportModal.titleRoot");
     return path[path.length - 1].title;
-  }, [selectedLeaf, path, label]);
+  }, [selectedLeaf, path, t]);
 
   const canGoBack = selectedLeaf !== null || path.length > 0;
 
@@ -95,7 +93,7 @@ export function ReportModal({
         reasonCode: selectedLeaf.code,
         notes: notes.trim(),
       });
-      onSubmitted?.(label("Жалоба отправлена", "Shikoyat yuborildi"));
+      onSubmitted?.(t("reportModal.submitted"));
       onClose();
       setTimeout(() => {
         setPath([]);
@@ -103,7 +101,7 @@ export function ReportModal({
         setNotes("");
       }, 0);
     } catch (err: any) {
-      setLocalSubmitError(err?.message || label("Не удалось отправить", "Yuborib bo'lmadi"));
+      setLocalSubmitError(err?.message || t("reportModal.submitError"));
     }
   };
 
@@ -115,16 +113,28 @@ export function ReportModal({
         <div className="modal-header report-modal__header">
           <div className="report-modal__header-side">
             {canGoBack ? (
-              <button type="button" className="report-modal__icon-btn" onClick={goBack} aria-label={label("Назад", "Orqaga")}>
+              <button
+                type="button"
+                className="report-modal__icon-btn"
+                onClick={goBack}
+                aria-label={t("reportModal.back")}
+                suppressHydrationWarning
+              >
                 <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2}>
                   <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             ) : null}
           </div>
-          <div className="modal-title report-modal__title">{title}</div>
+          <div className="modal-title report-modal__title" suppressHydrationWarning>{title}</div>
           <div className="report-modal__header-side" style={{ justifyContent: "flex-end" }}>
-            <button type="button" className="modal-close" onClick={onClose} aria-label={label("Закрыть", "Yopish")}>
+            <button
+              type="button"
+              className="modal-close"
+              onClick={onClose}
+              aria-label={t("reportModal.close")}
+              suppressHydrationWarning
+            >
               ×
             </button>
           </div>
@@ -132,14 +142,20 @@ export function ReportModal({
 
         <div className="modal-body report-modal__body">
           {loading && (
-            <div className="report-modal__placeholder">{label("Загрузка…", "Yuklanmoqda…")}</div>
+            <div className="report-modal__placeholder" suppressHydrationWarning>
+              {t("reportModal.loading")}
+            </div>
           )}
 
           {error && (
             <div className="report-modal__placeholder">
               <p className="text-red-600 mb-3">{error}</p>
-              <button className="report-modal__retry" onClick={() => loadReasons(locale)}>
-                {label("Попробовать снова", "Qayta urinib ko'ring")}
+              <button
+                className="report-modal__retry"
+                onClick={() => loadReasons(locale)}
+                suppressHydrationWarning
+              >
+                {t("reportModal.retry")}
               </button>
             </div>
           )}
@@ -166,16 +182,14 @@ export function ReportModal({
                 <div className="report-form__title">{selectedLeaf.title}</div>
                 {selectedLeaf.description && <p className="report-form__desc">{selectedLeaf.description}</p>}
               </div>
-              <label className="report-form__label">
-                {label("Объясните проблему", "Muammoni tushuntiring")}
+              <label className="report-form__label" suppressHydrationWarning>
+                {t("reportModal.explainProblem")}
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value.slice(0, 1000))}
                   rows={4}
-                  placeholder={label(
-                    "Совет: хотите пожаловаться на несколько объявлений? Вставьте ссылки сюда.",
-                    "Maslahat: bir nechta eʼlondan shikoyat qilmoqchimisiz? Havolalarni shu yerga joylashtiring."
-                  )}
+                  placeholder={t("reportModal.notesPlaceholder")}
+                  suppressHydrationWarning
                 />
                 <div className="report-form__counter">{notes.length}/1000</div>
               </label>
@@ -186,16 +200,17 @@ export function ReportModal({
 
         {!loading && !error && (
           <div className="modal-footer report-modal__footer">
-            <button type="button" onClick={onClose} className="report-modal__secondary">
-              {label("Отмена", "Bekor qilish")}
+            <button type="button" onClick={onClose} className="report-modal__secondary" suppressHydrationWarning>
+              {t("reportModal.cancel")}
             </button>
             <button
               type="button"
               className="report-modal__primary"
               onClick={handleSubmitReport}
               disabled={!selectedLeaf || submitting}
+              suppressHydrationWarning
             >
-              {submitting ? label("Отправка…", "Yuborilmoqda…") : label("Отправить жалобу", "Shikoyat yuborish")}
+              {submitting ? t("reportModal.submitting") : t("reportModal.submit")}
             </button>
           </div>
         )}

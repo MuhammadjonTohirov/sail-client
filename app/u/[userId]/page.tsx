@@ -44,8 +44,6 @@ export default function UserProfilePage() {
   const [sort, setSort] = useState('newest');
   const [error, setError] = useState('');
 
-  const label = (ru: string, uz: string) => (locale === 'uz' ? uz : ru);
-
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -62,10 +60,9 @@ export default function UserProfilePage() {
           userId: Number(userId),
           sort: sort
         });
-        console.log('User listings data:', listingsData);
         setListings(listingsData);
       } catch (e: any) {
-        setError(e.message || label('Ошибка загрузки', 'Yuklashda xatolik'));
+        setError(e.message || t('userProfile.loadError'));
       } finally {
         setLoading(false);
       }
@@ -74,12 +71,14 @@ export default function UserProfilePage() {
     if (userId) {
       loadUserData();
     }
-  }, [userId, sort, locale]);
+  }, [userId, sort, locale, t]);
 
   if (loading) {
     return (
       <div className="container py-12 text-center">
-        <div className="text-gray-600">{label('Загрузка...', 'Yuklanmoqda...')}</div>
+        <div className="text-gray-600" suppressHydrationWarning>
+          {t('userProfile.loading')}
+        </div>
       </div>
     );
   }
@@ -105,12 +104,12 @@ export default function UserProfilePage() {
           <Avatar
             className="seller-avatar"
             imageUrl={seller?.avatarUrl || seller?.logo}
-            placeholder={seller?.displayName ?? 'User'}
-            alt={seller?.displayName || label('Пользователь', 'Foydalanuvchi')}
+            placeholder={seller?.displayName ?? t('userProfile.userFallback')}
+            alt={seller?.displayName || t('userProfile.userFallback')}
           />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {seller?.displayName || label('Пользователь', 'Foydalanuvchi')}
+            <h1 className="text-2xl font-bold text-gray-900" suppressHydrationWarning>
+              {seller?.displayName || t('userProfile.userFallback')}
             </h1>
             <div className="seller-meta">
               {t('listing.onSiteAt')}{' '}
@@ -127,21 +126,31 @@ export default function UserProfilePage() {
       {/* Tabs and Filters */}
       <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            {label('Объявления', "E'lonlar")} ({listings.length})
+          <h2 className="text-lg font-semibold" suppressHydrationWarning>
+            {t('userProfile.listingsTitle')} ({listings.length})
           </h2>
 
           <div className="flex items-center gap-3">
-            <label className="text-sm text-gray-600">{label('Сортировка:', 'Saralash:')}</label>
+            <label className="text-sm text-gray-600" suppressHydrationWarning>
+              {t('userProfile.sortLabel')}
+            </label>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20"
             >
-              <option value="newest">{label('Сначала новые', 'Eng yangi')}</option>
-              <option value="oldest">{label('Сначала старые', 'Eng eski')}</option>
-              <option value="price_asc">{label('Цена: по возрастанию', "Narx: o'sish")}</option>
-              <option value="price_desc">{label('Цена: по убыванию', 'Narx: kamayish')}</option>
+              <option value="newest" suppressHydrationWarning>
+                {t('userProfile.sortNewest')}
+              </option>
+              <option value="oldest" suppressHydrationWarning>
+                {t('userProfile.sortOldest')}
+              </option>
+              <option value="price_asc" suppressHydrationWarning>
+                {t('userProfile.sortPriceAsc')}
+              </option>
+              <option value="price_desc" suppressHydrationWarning>
+                {t('userProfile.sortPriceDesc')}
+              </option>
             </select>
           </div>
         </div>
@@ -151,11 +160,11 @@ export default function UserProfilePage() {
       {listings.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
           <div className="text-6xl mb-4">📦</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            {label('Нет объявлений', "E'lonlar yo'q")}
+          <h3 className="text-xl font-semibold text-gray-900 mb-2" suppressHydrationWarning>
+            {t('userProfile.noListingsTitle')}
           </h3>
-          <p className="text-gray-600">
-            {label('У этого пользователя пока нет активных объявлений', "Bu foydalanuvchida hali faol e'lonlar yo'q")}
+          <p className="text-gray-600" suppressHydrationWarning>
+            {t('userProfile.noListingsDescription')}
           </p>
         </div>
       ) : (

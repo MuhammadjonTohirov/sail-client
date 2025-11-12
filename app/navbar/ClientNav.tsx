@@ -22,8 +22,6 @@ export default function ClientNav() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { features } = appConfig;
-  const [hydrated, setHydrated] = useState(false);
-  const isLocaleRu = locale === 'ru';
   const readAuth = () => {
     try {
       if (typeof window === 'undefined') return;
@@ -53,7 +51,6 @@ export default function ClientNav() {
   const logoutUseCase = new LogoutUseCase(new AuthRepositoryImpl());
 
   useEffect(() => {
-    setHydrated(true);
     readAuth();
     const onStorage = (e: StorageEvent) => {
       if (e.key === 'access_token' || e.key === 'profile') readAuth();
@@ -90,7 +87,7 @@ export default function ClientNav() {
     e.preventDefault();
     // if (!hydrated) return;
     if (!authed) {
-      router.push(`/auth/otp`);
+      router.push(`/auth/login`);
       return;
     }
     setMenuOpen((v) => !v);
@@ -101,7 +98,7 @@ export default function ClientNav() {
     // if (!hydrated) return;
     if (!authed) {
       alert(t('auth.loginRequiredToPost'));
-      router.push(`/auth/otp`);
+      router.push(`/auth/login`);
       return;
     }
     router.push(`/post`);
@@ -223,6 +220,7 @@ export default function ClientNav() {
               onClick={() => changeLocale('ru')}
               aria-current={locale === 'ru' ? 'true' : undefined}
               style={{ background: '#F9F9F9', border: 'none', color: 'inherit', cursor: 'pointer' }}
+              suppressHydrationWarning
             >
               {t('lang.switchRU')}
             </button>
@@ -232,6 +230,7 @@ export default function ClientNav() {
               onClick={() => changeLocale('uz')}
               aria-current={locale === 'uz' ? 'true' : undefined}
               style={{ background: '#F9F9F9', border: 'none', color: 'inherit', cursor: 'pointer' }}
+              suppressHydrationWarning
             >
               {t('lang.switchUZ')}
             </button>

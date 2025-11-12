@@ -1,3 +1,8 @@
+export interface ListingAttributePayload {
+  readonly attributeId: number;
+  readonly value: unknown;
+}
+
 export interface ListingPayload {
   readonly title: string;
   readonly description?: string;
@@ -11,5 +16,8 @@ export interface ListingPayload {
   readonly locationId: number;
   readonly lat?: number;
   readonly lon?: number;
-  readonly attributes?: Array<{ attributeId: number; value: unknown }>;
+  readonly attributes?: ListingAttributePayload[];
+  readonly contactName: string;
+  readonly contactEmail?: string;
+  readonly contactPhone?: string;
 }

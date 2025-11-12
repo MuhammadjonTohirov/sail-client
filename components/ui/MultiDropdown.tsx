@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 type Option = { value: string; label: string };
 
@@ -20,6 +21,7 @@ export default function MultiDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -32,10 +34,10 @@ export default function MultiDropdown({
     return () => { document.removeEventListener('click', onClick); document.removeEventListener('keydown', onKey); };
   }, []);
 
-  const label = () => {
+  const getLabel = () => {
     if (!value || value.length === 0) return placeholder;
     if (value.length === 1) return options.find(o => o.value === value[0])?.label || placeholder;
-    return `${value.length} selected`;
+    return t("multiDropdown.selectedCount", { count: value.length });
   };
 
   const toggle = (val: string) => {
@@ -45,8 +47,15 @@ export default function MultiDropdown({
 
   return (
     <div ref={ref} className={`dd ${className}`}>
-      <button type="button" className="dd-trigger" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(v => !v)}>
-        {label()}
+      <button
+        type="button"
+        className="dd-trigger"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen(v => !v)}
+        suppressHydrationWarning
+      >
+        {getLabel()}
         <span className="dd-caret">▾</span>
       </button>
       {open && (
@@ -62,4 +71,3 @@ export default function MultiDropdown({
     </div>
   );
 }
-

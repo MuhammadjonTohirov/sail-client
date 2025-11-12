@@ -105,7 +105,7 @@ export default function FavoritesPage() {
     if (!enableSavedSearches) return;
     try {
       await SavedSearches.delete(id);
-      setSavedSearches(savedSearches.filter((search) => search.id !== id));
+      setSavedSearches((prev) => prev.filter((search) => search.id !== id));
     } catch (error) {
       console.error('Failed to delete search:', error);
     }

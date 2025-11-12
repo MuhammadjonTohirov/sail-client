@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import type { CategoryNode } from '@/app/search/types';
@@ -26,6 +26,11 @@ export default function SearchBar({
 }: SearchBarProps) {
   const { t } = useI18n();
   const [catPickerOpen, setCatPickerOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="olx-search-bar">
@@ -39,6 +44,7 @@ export default function SearchBar({
           value={q}
           onChange={e => setQ(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && onSearch()}
+          suppressHydrationWarning
         />
       </div>
 
@@ -47,7 +53,7 @@ export default function SearchBar({
         className="category-select-btn"
         onClick={() => setCatPickerOpen(true)}
       >
-        <span className="truncate">
+        <span className="truncate" suppressHydrationWarning>
           {selectedCategory ? selectedCategoryPath : t('searchPage.allCategories')}
         </span>
         <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +61,7 @@ export default function SearchBar({
         </svg>
       </button>
 
-      <button className="olx-search-btn" onClick={onSearch} disabled={loading}>
+      <button className="olx-search-btn" onClick={onSearch} disabled={loading} suppressHydrationWarning>
         {loading ? (
           <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
