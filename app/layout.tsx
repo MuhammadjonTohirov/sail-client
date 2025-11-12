@@ -53,9 +53,9 @@ export default function RootLayout({
       ? (localeCookie.value as Locale)
       : fallbackLocale;
   return (
-    <html lang={appConfig.i18n.defaultLocale}>
+    <html lang={initialLocale}>
       <body style={bodyStyle}>
-        <I18nProvider initialLocale={appConfig.i18n.defaultLocale}>
+        <I18nProvider initialLocale={initialLocale}>
           <CurrencyProvider>
             <ActiveStatusProvider>
               <ClientNav />

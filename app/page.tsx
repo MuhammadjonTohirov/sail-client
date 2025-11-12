@@ -112,7 +112,6 @@ export default function HomePage() {
       window.location.href = `/search`;
     }
   };
-  console.log(heroTitle);
   return (
     <div>
       {/* Hero Section */}
