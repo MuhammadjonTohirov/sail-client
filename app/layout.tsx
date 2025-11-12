@@ -1,12 +1,16 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import React from 'react';
-import ClientNav from './navbar/ClientNav';
-import Footer from '@/components/layout/Footer';
-import CurrencyProvider from '@/components/providers/CurrencyProvider';
-import I18nProvider from '@/components/providers/I18nProvider';
-import ActiveStatusProvider from '@/components/providers/ActiveStatusProvider';
-import { appConfig, buildThemeStyle } from '@/config';
+import "./globals.css";
+import type { Metadata } from "next";
+import React from "react";
+import ClientNav from "./navbar/ClientNav";
+import Footer from "@/components/layout/Footer";
+import CurrencyProvider from "@/components/providers/CurrencyProvider";
+import I18nProvider from "@/components/providers/I18nProvider";
+import ActiveStatusProvider from "@/components/providers/ActiveStatusProvider";
+import { appConfig, buildThemeStyle } from "@/config";
+import { cookies } from "next/headers";
+import { Locale } from "@/i18n/config";
+// import type { Locale } from '@/i18n/config';
+// import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
   title: {
@@ -17,24 +21,41 @@ export const metadata: Metadata = {
   keywords: [...appConfig.seo.keywords],
   applicationName: appConfig.name,
   other: {
-    'tagline': appConfig.tagline,
+    tagline: appConfig.tagline,
   },
 };
 
 const bodyStyle = {
   ...buildThemeStyle(),
-  fontFamily: 'var(--font-sans)',
-  minHeight: '100vh',
-  display: 'flex',
-  flexDirection: 'column',
-  background: 'var(--bg)',
+  fontFamily: "var(--font-sans)",
+  minHeight: "100vh",
+  display: "flex",
+  flexDirection: "column",
+  background: "var(--bg)",
 } as React.CSSProperties;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const supportedLocales: Locale[] = ["ru", "uz"];
+const fallbackLocale: Locale = supportedLocales.includes(
+  appConfig.i18n.defaultLocale as Locale
+)
+  ? (appConfig.i18n.defaultLocale as Locale)
+  : "ru";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = cookies();
+  const localeCookie = cookieStore.get("locale");
+  const initialLocale =
+    localeCookie && supportedLocales.includes(localeCookie.value as Locale)
+      ? (localeCookie.value as Locale)
+      : fallbackLocale;
   return (
     <html lang={appConfig.i18n.defaultLocale}>
       <body style={bodyStyle}>
-        <I18nProvider>
+        <I18nProvider initialLocale={appConfig.i18n.defaultLocale}>
           <CurrencyProvider>
             <ActiveStatusProvider>
               <ClientNav />
