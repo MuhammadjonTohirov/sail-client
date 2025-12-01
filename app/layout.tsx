@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   description: appConfig.seo.description,
   keywords: [...appConfig.seo.keywords],
   applicationName: appConfig.name,
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-64x64.png", type: "image/png", sizes: "64x64" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    shortcut: "/favicon.ico",
+  },
   other: {
     tagline: appConfig.tagline,
   },

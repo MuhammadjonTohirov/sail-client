@@ -8,6 +8,7 @@ import {
   useChatThreadActions,
   useSendChatMessage,
 } from '@/hooks';
+import { trustedImageUrl } from '@/config';
 
 interface ChatPanelProps {
   thread: ChatThread;
@@ -158,7 +159,7 @@ export function ChatPanel({
       <div className="chat-panel__header">
         <div className="chat-panel__listing">
           {listing.thumbnailUrl ? (
-            <img src={listing.thumbnailUrl} alt="" className="chat-panel__thumb" />
+            <img src={trustedImageUrl(listing.thumbnailUrl)} alt="" className="chat-panel__thumb" />
           ) : (
             <div className="chat-panel__thumb chat-panel__thumb--placeholder" aria-hidden>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">

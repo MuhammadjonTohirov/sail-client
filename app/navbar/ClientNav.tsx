@@ -125,7 +125,7 @@ export default function ClientNav() {
         <Link href={`/`}>
           <div className="topbar-logo" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <img src={appLogo} alt={appConfig.name} style={{height: '32px'}} />
-            <p>{appConfig.name}</p>
+            {/* <p>{appConfig.name}</p> */}
           </div>
         </Link>
         

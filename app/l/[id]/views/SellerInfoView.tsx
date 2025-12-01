@@ -59,10 +59,12 @@ export const SellerInfoView = ({
             </div>
             <div className="seller-meta">
               {t('listing.onSiteAt')}{' '}
-              {(sellerLastActiveDate ?? sellerSinceDate)?.toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU', {
-                day: 'numeric',
+              {(sellerLastActiveDate ?? sellerSinceDate)?.toLocaleDateString('ru-RU', {
                 year: 'numeric',
-                month: 'short'
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
               }) || '—'}
             </div>
           </div>

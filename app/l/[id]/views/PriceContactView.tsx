@@ -42,10 +42,12 @@ export const PriceContactView = ({
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          {createdAtDate ? createdAtDate.toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU', {
+          {createdAtDate ? createdAtDate.toLocaleDateString('ru-RU', {
             year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit',
           }) : ''}
         </div>
         <FavoriteButton listingId={listingId} size="md" variant="icon" />

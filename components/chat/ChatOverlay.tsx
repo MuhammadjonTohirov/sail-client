@@ -8,6 +8,7 @@ import {
   useChatThreadActions,
   useSendChatMessage,
 } from '@/hooks';
+import { trustedImageUrl } from '@/config';
 
 interface ListingSummary {
   id: number;
@@ -206,7 +207,7 @@ export function ChatOverlay({
       <div className="chat-overlay__header">
         <div className="chat-overlay__listing">
           {listing.thumbnailUrl ? (
-            <img src={listing.thumbnailUrl} alt="" className="chat-overlay__thumb" />
+            <img src={trustedImageUrl(listing.thumbnailUrl)} alt="" className="chat-overlay__thumb" />
           ) : (
             <div className="chat-overlay__thumb chat-overlay__thumb--placeholder" aria-hidden>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">

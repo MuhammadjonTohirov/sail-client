@@ -44,6 +44,7 @@ const mergePrefillSources = (sp: SearchParamsLike, overrides?: SearchPrefill): S
   });
   if (overrides) {
     Object.entries(overrides).forEach(([key, value]) => {
+      if (base[key] !== undefined) return;
       base[key] = value;
     });
   }
@@ -191,6 +192,12 @@ export function useSearchViewModel(initialFilters?: SearchPrefill): SearchViewMo
   const [prefillSignature, setPrefillSignature] = useState(() => (initialFilters ? JSON.stringify(initialFilters) : ''));
   const mergedPrefill = useMemo(() => mergePrefillSources(searchParams, prefillOverride), [searchParams, prefillOverride]);
   const attributePrefill = useMemo(() => parseAttributePrefill(mergedPrefill), [mergedPrefill]);
+
+  // Use the server-provided prefill only once per searchParams change so it doesn't override user edits later.
+  useEffect(() => {
+    if (!prefillOverride) return;
+    setPrefillOverride(undefined);
+  }, [searchParams, prefillOverride]);
 
   const [q, setQ] = useState(() => toSingleValue(mergedPrefill.q, ''));
   const [minPrice, setMinPrice] = useState(() => toSingleValue(mergedPrefill.min_price, ''));
@@ -363,6 +370,7 @@ export function useSearchViewModel(initialFilters?: SearchPrefill): SearchViewMo
         }
       });
       router.replace(`${basePath}/search?${usp.toString()}`);
+      setPrefillOverride(undefined);
     } finally {
       setLoading(false);
     }

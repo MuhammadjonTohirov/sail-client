@@ -113,10 +113,12 @@ export default function UserProfilePage() {
             </h1>
             <div className="seller-meta">
               {t('listing.onSiteAt')}{' '}
-              {(lastActiveAt ?? since)?.toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU', {
-                day: 'numeric',
+              {(lastActiveAt ?? since)?.toLocaleDateString('ru-RU', {
                 year: 'numeric',
-                month: 'short'
+                month: 'numeric',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
               }) || '—'}
             </div>
           </div>
