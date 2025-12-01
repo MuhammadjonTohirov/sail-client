@@ -6,6 +6,7 @@ export interface ProfileDTO {
   user_id: number;
   username: string;
   phone_e164: string;
+  email: string;
   display_name: string;
   avatar_url?: string;
   about?: string;

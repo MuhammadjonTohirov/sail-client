@@ -6,9 +6,11 @@ import Footer from "@/components/layout/Footer";
 import CurrencyProvider from "@/components/providers/CurrencyProvider";
 import I18nProvider from "@/components/providers/I18nProvider";
 import ActiveStatusProvider from "@/components/providers/ActiveStatusProvider";
+import { FavoritesProvider } from "@/components/providers/FavoritesProvider";
 import { appConfig, buildThemeStyle } from "@/config";
 import { cookies } from "next/headers";
 import { Locale } from "@/i18n/config";
+import { ProfileProvider } from "@/components/providers/ProfileProvider";
 // import type { Locale } from '@/i18n/config';
 // import { cookies } from 'next/headers';
 
@@ -58,9 +60,13 @@ export default function RootLayout({
         <I18nProvider initialLocale={initialLocale}>
           <CurrencyProvider>
             <ActiveStatusProvider>
-              <ClientNav />
-              <main className="container page-content">{children}</main>
-              <Footer />
+              <ProfileProvider>
+                <FavoritesProvider>
+                  <ClientNav />
+                  <main className="container page-content">{children}</main>
+                  <Footer />
+                </FavoritesProvider>
+              </ProfileProvider>
             </ActiveStatusProvider>
           </CurrencyProvider>
         </I18nProvider>

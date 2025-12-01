@@ -137,7 +137,7 @@ export default function UserProfilePage() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20"
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20"
             >
               <option value="newest" suppressHydrationWarning>
                 {t('userProfile.sortNewest')}

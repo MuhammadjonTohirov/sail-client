@@ -164,6 +164,11 @@
       "resendError": "Kodni yuborishda xatolik",
       "changeLogin": "Email/telefonni o'zgartirish",
       "debugCode": "Rivojlantirish uchun kod"
+    },
+    "or": "yoki",
+    "telegram": {
+      "connecting": "Telegram orqali ulanmoqda...",
+      "error": "Telegram orqali kirishda xatolik"
     }
   },
   "listing": {

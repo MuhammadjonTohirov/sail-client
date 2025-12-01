@@ -14,7 +14,7 @@
 .modal {
   background: #fff;
   border-radius: 8px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   box-shadow: 0 24px 48px rgba(0,0,0,0.2);
 }
 
@@ -90,7 +90,7 @@
   top: calc(100% + 8px);
   min-width: 240px;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 12px 24px rgba(0,0,0,0.12);
   padding: 8px;
@@ -140,7 +140,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 10px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 6px;
   background: #fff;
   cursor: pointer;
@@ -161,7 +161,7 @@
   top: calc(100% + 8px);
   min-width: max(180px, 100%);
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 10px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.16);
   padding: 8px;
@@ -213,7 +213,7 @@
 }
 
 .cat-col {
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
@@ -277,7 +277,7 @@
 }
 
 .location-col {
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   background: #fff;
@@ -377,7 +377,7 @@
 .report-modal__retry {
   padding: 8px 16px;
   border-radius: 6px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   background: #fff;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -393,7 +393,7 @@
 }
 
 .report-option {
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 10px;
   padding: 16px;
   background: #fff;
@@ -460,7 +460,7 @@
   resize: vertical;
   min-height: 120px;
   border-radius: 8px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   padding: 12px;
   font-family: inherit;
   font-size: 14px;
@@ -494,7 +494,7 @@
 }
 
 .report-modal__secondary {
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   background: #fff;
 }
 

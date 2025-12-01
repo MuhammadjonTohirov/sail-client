@@ -1,3 +1,5 @@
+import { trustedImageUrl } from "@/config";
+
 interface GalleryViewProps {
   isPromoted: boolean;
   currentImage: string;
@@ -74,7 +76,7 @@ export const GalleryView = ({
           {mediaItems.map((item, i) => (
             <img
               key={item.id}
-              src={item.url}
+              src={trustedImageUrl(item.url)}
               className={i === currentImageIndex ? 'is-active' : ''}
               onClick={() => onSelectImage(i)}
               alt=""

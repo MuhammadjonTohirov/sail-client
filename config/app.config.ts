@@ -5,6 +5,8 @@
  * Update these values to customize your marketplace application.
  */
 
+import { Console } from "console";
+
 export const appConfig = {
   // App Branding
   name: 'Sail',
@@ -22,16 +24,16 @@ export const appConfig = {
 
   // Contact & Social
   contact: {
-    email: 'support@markethub.uz',
+    email: 'tokhirov.mukhammadjon@gmail.com',
     phone: '+998 93 585 24 15',
-    address: 'Tashkent, Uzbekistan',
+    address: 'Fergana, Uzbekistan',
   },
 
   social: {
     facebook: 'https://facebook.com/markethub',
-    instagram: 'https://instagram.com/markethub',
-    twitter: 'https://twitter.com/markethub',
-    telegram: 'https://t.me/markethub',
+    // instagram: 'https://instagram.com/markethub',
+    // twitter: 'https://twitter.com/markethub',
+    telegram: 'https://t.me/joinchat/TwaSoulNq54l3gCT',
   },
 
   // Theme Colors
@@ -39,30 +41,30 @@ export const appConfig = {
     colors: {
       // Primary brand color
       primary: {
-        50: '#f0f9ff',
-        100: '#e0f2fe',
-        200: '#bae6fd',
-        300: '#7dd3fc',
-        400: '#38bdf8ff',
-        500: '#0ea5e9',  // Main primary color
-        600: '#0284c7',
-        700: '#0369a1',
-        800: '#075985',
-        900: '#0c4a6e',
+        50: '#edeff4',
+        100: '#d3d8e2',
+        200: '#b8c0d1',
+        300: '#9ea8c0',
+        400: '#7a88aa',
+        500: '#4e618d',  // Main primary color (brand blue)
+        600: '#425278',
+        700: '#374463',
+        800: '#2b354e',
+        900: '#1f2738',
       },
 
       // Secondary/accent color
       secondary: {
-        50: '#fdf4ff',
-        100: '#fae8ff',
-        200: '#f5d0fe',
-        300: '#f0abfc',
-        400: '#e879f9',
-        500: '#d946ef',  // Main secondary color
-        600: '#c026d3',
-        700: '#a21caf',
-        800: '#86198f',
-        900: '#701a75',
+        50: '#edeff4',
+        100: '#d3d8e2',
+        200: '#b8c0d1',
+        300: '#9ea8c0',
+        400: '#7a88aa',
+        500: '#4e618d',  // Main accent color
+        600: '#425278',
+        700: '#374463',
+        800: '#2b354e',
+        900: '#1f2738',
       },
 
       // Success color (for active listings, success messages)
@@ -158,8 +160,14 @@ export const appConfig = {
 
   // API Configuration
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://94.158.51.9:8080/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://sail.uz/api/',
     timeout: 30000, // 30 seconds
+  },
+
+  // Telegram Login
+  telegram: {
+    botUsername: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || '',
+    enabled: !!process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME,
   },
 
   // Pagination & Limits
@@ -203,7 +211,7 @@ function trustedImageUrl(url: string): string {
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
-  
-  return `${appConfig.api.baseUrl}/${url.replace(/^\/+/, '')}`;
+  const _url = `${appConfig.api.baseUrl}/${url.replace(/^\/+/, '')}`;
+  return _url
 }
 export { trustedImageUrl };

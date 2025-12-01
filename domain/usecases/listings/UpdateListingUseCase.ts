@@ -9,7 +9,7 @@ export class UpdateListingUseCase {
     if (!id || id <= 0) {
       throw new Error('Invalid listing ID');
     }
-
+    
     return await this.repository.updateListing(id, payload);
   }
 }

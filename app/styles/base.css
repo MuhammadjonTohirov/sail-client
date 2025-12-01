@@ -6,8 +6,8 @@
   --muted: #7f9799;
   --border: #d9dfe3;
   --brand: #002F34;        /* primary text / button bg */
-  --accent: #23E5DB;       /* cyan accent */
-  --accent-2: #35a4c8;     /* blue accent used in CTAs */
+  --accent: var(--color-secondary-400);       /* cyan accent */
+  --accent-2: var(--color-secondary-500);     /* blue accent used in CTAs */
   --danger: #FF5631;
   --radius: 8px;
 }
@@ -62,7 +62,7 @@ a {
 .chip {
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 999px;
   padding: 4px 10px;
   gap: 6px;

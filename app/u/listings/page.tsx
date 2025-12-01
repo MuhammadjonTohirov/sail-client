@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import Dropdown from '@/components/ui/Dropdown';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
-import { appConfig } from '@/config';
+import { appConfig, trustedImageUrl } from '@/config';
 
 type CatNode = { id: number; name: string; slug: string; is_leaf: boolean; children?: CatNode[] };
 
@@ -130,7 +130,7 @@ export default function MyListings() {
         </h1>
         <a
           href={`/post`}
-          className="bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-2 px-4 rounded-lg transition-colors inline-flex items-center gap-2"
+          className="bg-accent hover:bg-accent-2 text-white font-semibold py-2 px-4 rounded-lg transition-colors inline-flex items-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -177,7 +177,7 @@ export default function MyListings() {
         <div className="flex flex-wrap gap-3 items-center">
           <div className="flex-1 min-w-[250px]">
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20"
               placeholder={t('myListings.searchPlaceholder')}
               value={q}
               onChange={e => setQ(e.target.value)}
@@ -185,7 +185,7 @@ export default function MyListings() {
           </div>
 
           <button
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:border-[#23E5DB] transition-colors"
+            className="px-4 py-2 border border-gray-300 rounded-lg hover:border-accent transition-colors"
             onClick={() => setCatPickerOpen(true)}
           >
             {catId ? catPath : t('myListings.allCategories')}
@@ -193,7 +193,7 @@ export default function MyListings() {
 
           {catId && (
             <button
-              className="px-4 py-2 text-sm text-[#23E5DB] hover:text-[#1dd4cb]"
+              className="px-4 py-2 text-sm text-accent hover:text-accent-2"
               onClick={() => { setCatId(''); setCatPath(''); }}
             >
               {t('myListings.resetFilter')}
@@ -237,7 +237,7 @@ export default function MyListings() {
           </p>
           <a
             href={`/post`}
-            className="inline-flex items-center gap-2 bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-accent hover:bg-accent-2 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -251,7 +251,7 @@ export default function MyListings() {
             <div className="my-listing-card" key={l.id}>
               <a href={`/l/${l.id}`} className="listing-image-link">
                 {l.media?.[0]?.image_url ? (
-                  <img className="listing-image" src={l.media[0].image_url} alt={l.title} />
+                  <img className="listing-image" src={trustedImageUrl(l.media[0].image_url)} alt={l.title} />
                 ) : (
                   <div className="listing-image-placeholder">
                     <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

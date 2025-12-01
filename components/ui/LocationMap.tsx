@@ -116,7 +116,7 @@ export const LocationMap = ({ lat, lon, locationName, isApproximate = false, cla
           opacity: 1;
         }
         .map-container:focus {
-          outline: 2px solid #23E5DB;
+          outline: 2px solid var(--accent);
           outline-offset: 2px;
         }
       `}</style>

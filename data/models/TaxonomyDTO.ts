@@ -3,6 +3,7 @@ export interface CategoryDTO {
   name: string;
   slug: string;
   icon?: string;
+  icon_url?: string;
   is_leaf: boolean;
   parent_id?: number;
   children?: CategoryDTO[];

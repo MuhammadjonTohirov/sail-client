@@ -176,9 +176,9 @@ export function usePostViewModel(): PostViewModel {
       try {
         const profile = await interactorRef.current.fetchUserProfile();
         if (!cancelled && profile) {
-          setContactName(profile.displayName || '');
-          setContactEmail(profile.email || '');
-          setContactPhone(profile.phoneE164 || '');
+          setContactName(prev => prev || profile.displayName || '');
+          setContactEmail(prev => prev || profile.email || '');
+          setContactPhone(prev => prev || profile.phoneE164 || '');
         }
       } catch (e) {
         console.error('Failed to load user profile for contact defaults:', e);
@@ -430,7 +430,7 @@ export function usePostViewModel(): PostViewModel {
       const listingPayload: ListingPayload = {
         title: title.trim(),
         description: description,
-        priceAmount: dealType === 'sell' && !negotiable ? (price || '0') : '0',
+        priceAmount: price,
         priceCurrency,
         isPriceNegotiable: dealType === 'sell' ? negotiable : false,
         condition,
@@ -447,7 +447,7 @@ export function usePostViewModel(): PostViewModel {
       let id: number;
       console.log('Submitting listing payload:', listingPayload);
       if (isEditMode && editId) {
-        // await interactorRef.current.updateListing(editId, listingPayload);
+        await interactorRef.current.updateListing(editId, listingPayload);
         id = editId;
       } else {
         const created = await interactorRef.current.createListing(listingPayload);

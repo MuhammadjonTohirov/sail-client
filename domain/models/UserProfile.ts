@@ -2,6 +2,7 @@ export interface UserProfile {
   readonly userId: number;
   readonly username: string;
   readonly phoneE164: string;
+  readonly email: string;
   readonly displayName: string;
   readonly avatarUrl?: string;
   readonly about?: string;

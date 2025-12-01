@@ -24,7 +24,7 @@ export default function Footer() {
             <div className="footer-heading">Contact</div>
             <ul className="footer-list">
               <li>{contact.email}</li>
-              <li>{contact.phone}</li>
+              {/* <li>{contact.phone}</li> */}
               <li>{contact.address}</li>
             </ul>
           </div>

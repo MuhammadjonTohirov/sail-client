@@ -8,6 +8,7 @@ import { appConfig } from "@/config";
 import { SearchListingsUseCase } from "@/domain/usecases/search/SearchListingsUseCase";
 import { SearchRepositoryImpl } from "@/data/repositories/SearchRepositoryImpl";
 import { SearchListing } from "@/domain/models/SearchListing";
+import { useRouter } from "next/navigation";
 
 type Hit = {
   id: string;
@@ -38,6 +39,7 @@ function convertToHit(listing: SearchListing): Hit {
 
 export default function HomePage() {
   const { t, locale } = useI18n();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [featuredListings, setFeaturedListings] = useState<Hit[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,6 +114,17 @@ export default function HomePage() {
       window.location.href = `/search`;
     }
   };
+
+  const onClickPost = () => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      alert(t("auth.loginRequiredToPost"));
+      router.push("/auth/login");
+      return;
+    }
+    router.push("/post");
+  };
   return (
     <div>
       {/* Hero Section */}
@@ -162,7 +175,7 @@ export default function HomePage() {
             </h2>
             <Link
               href={`/search`}
-              className="text-[#23E5DB] hover:text-[#1dd4cb] text-sm font-medium"
+              className="text-accent hover:text-accent-2 text-sm font-medium"
             >
               {t("home.allCategories")}
             </Link>
@@ -180,7 +193,7 @@ export default function HomePage() {
             </h2>
             <Link
               href={`/search`}
-              className="text-[#23E5DB] hover:text-[#1dd4cb] text-sm font-medium"
+              className="text-accent hover:text-accent-2 text-sm font-medium"
             >
               {t("home.viewAll")}
             </Link>
@@ -226,7 +239,7 @@ export default function HomePage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#23E5DB] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-white"
                   fill="none"
@@ -250,7 +263,7 @@ export default function HomePage() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#23E5DB] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-white"
                   fill="none"
@@ -274,7 +287,7 @@ export default function HomePage() {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#23E5DB] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-white"
                   fill="none"
@@ -301,7 +314,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 bg-gradient-to-br from-[#23E5DB] to-[#35a4c8]">
+      <section className="py-12 bg-gradient-to-br from-accent to-accent-2">
         <div className="container text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             {t("home.ctaTitle")}
@@ -309,9 +322,9 @@ export default function HomePage() {
           <p className="text-white text-lg mb-6 opacity-90">
             {t("home.ctaSubtitle")}
           </p>
-          <a
-            href={`/post`}
-            className="inline-flex items-center gap-2 bg-white text-[#002F34] font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors"
+          <button
+            className="inline-flex items-center gap-2 text-[#002F34] font-semibold py-3 px-8 rounded-lg transition-colors"
+            onClick={onClickPost}
           >
             <svg
               className="w-5 h-5"
@@ -327,7 +340,7 @@ export default function HomePage() {
               />
             </svg>
             {t("home.ctaButton")}
-          </a>
+          </button>
         </div>
       </section>
     </div>

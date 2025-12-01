@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { Listing } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
 import { UserListingsParams } from '@/domain/models/UserListingsParams';
+import { SearchListing } from '@/domain/models/SearchListing';
 import { CreateListingUseCase } from '@/domain/usecases/listings/CreateListingUseCase';
 import { GetListingDetailUseCase } from '@/domain/usecases/listings/GetListingDetailUseCase';
 import { GetMyListingsUseCase } from '@/domain/usecases/listings/GetMyListingsUseCase';
@@ -69,7 +70,7 @@ export function useListings() {
     }
   }, [getMyListingsUseCase]);
 
-  const getUserListings = useCallback(async (params: UserListingsParams): Promise<Listing[]> => {
+  const getUserListings = useCallback(async (params: UserListingsParams): Promise<SearchListing[]> => {
     try {
       setLoading(true);
       setError(null);

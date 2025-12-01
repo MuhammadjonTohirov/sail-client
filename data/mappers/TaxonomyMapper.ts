@@ -10,6 +10,7 @@ export class TaxonomyMapper {
       name: dto.name,
       slug: dto.slug,
       icon: dto.icon,
+      iconUrl: dto.icon_url,
       isLeaf: dto.is_leaf,
       parentId: dto.parent_id,
       children: dto.children?.map(child => this.categoryToDomain(child)),

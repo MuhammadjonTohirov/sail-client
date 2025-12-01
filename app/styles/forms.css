@@ -3,7 +3,7 @@
 /* Inputs */
 input, select, textarea {
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 6px;
   background: #fff;
 }
@@ -58,7 +58,7 @@ button.btn-accent {
 
 .form-card {
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
 }
@@ -92,7 +92,7 @@ button.btn-accent {
 .field select,
 .field textarea {
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 6px;
   background: #fff;
 }
@@ -128,7 +128,7 @@ button.btn-accent {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   background: #fff;
   color: var(--fg);
   text-decoration: none;

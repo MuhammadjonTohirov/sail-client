@@ -56,7 +56,7 @@ export function ConfirmModal({
             className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               isDestructive
                 ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-[#23E5DB] hover:bg-[#1dd4cb] text-white'
+                : 'bg-accent hover:bg-accent-2 text-white'
             }`}
           >
             {confirmText}

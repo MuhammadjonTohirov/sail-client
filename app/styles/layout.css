@@ -107,13 +107,13 @@ header nav .nav-link:hover {
 /* Card */
 .card {
   background: var(--card-bg);
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: var(--radius);
   padding: 12px;
   transition: box-shadow .15s ease;
 }
 .card:hover {
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 10px rgba(0,0,0,0.06);
 }
 
 /* Detail Layout */
@@ -159,7 +159,7 @@ header nav .nav-link:hover {
 
 .filters-mobile-trigger {
   width: 100%;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 16px;
   padding: 14px 16px;
   display: flex;

@@ -3,6 +3,7 @@ export interface Category {
   readonly name: string;
   readonly slug: string;
   readonly icon?: string;
+  readonly iconUrl?: string;
   readonly isLeaf: boolean;
   readonly parentId?: number;
   readonly children?: Category[];

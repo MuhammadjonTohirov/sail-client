@@ -124,7 +124,7 @@ function RegisterPageContent() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#23E5DB] rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
             </svg>
@@ -138,7 +138,7 @@ function RegisterPageContent() {
             ) : (
               <>
                 {t('auth.register.subtitle')}{' '}
-                <Link href="/auth/login" className="text-[#23E5DB] hover:text-[#1dd4cb] font-medium">
+                <Link href="/auth/login" className="text-accent hover:text-accent-2 font-medium">
                   {t('auth.register.loginLink')}
                 </Link>
               </>
@@ -164,7 +164,7 @@ function RegisterPageContent() {
                   placeholder={t('auth.register.loginPlaceholder')}
                   disabled={loading}
                   autoComplete="username"
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   {t('auth.register.loginHint')}
@@ -184,7 +184,7 @@ function RegisterPageContent() {
                   placeholder={t('auth.register.displayNamePlaceholder')}
                   disabled={loading}
                   autoComplete="name"
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
                 />
               </div>
 
@@ -201,7 +201,7 @@ function RegisterPageContent() {
                   placeholder={t('auth.register.passwordPlaceholder')}
                   disabled={loading}
                   autoComplete="new-password"
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   {t('auth.register.passwordHint')}
@@ -221,14 +221,14 @@ function RegisterPageContent() {
                   placeholder={t('auth.register.confirmPasswordPlaceholder')}
                   disabled={loading}
                   autoComplete="new-password"
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
                 />
               </div>
 
               <button
                 onClick={register}
                 disabled={loading || !login || !password || !confirmPassword}
-                className="w-full bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-accent hover:bg-accent-2 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {loading ? (
                   <>
@@ -253,7 +253,7 @@ function RegisterPageContent() {
                   </label>
                   <button
                     onClick={resetForm}
-                    className="text-xs text-[#23E5DB] hover:text-[#1dd4cb] font-medium"
+                    className="text-xs text-accent hover:text-accent-2 font-medium"
                   >
                     {t('auth.register.changeLogin')}
                   </button>
@@ -268,7 +268,7 @@ function RegisterPageContent() {
                   placeholder="000000"
                   disabled={loading}
                   maxLength={6}
-                  className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                  className="w-full px-4 py-3 text-center text-2xl font-mono tracking-widest border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
                 />
               </div>
 
@@ -287,7 +287,7 @@ function RegisterPageContent() {
               <button
                 onClick={() => verify()}
                 disabled={loading || code.length !== 6}
-                className="w-full bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-accent hover:bg-accent-2 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {loading ? (
                   <>
@@ -312,7 +312,7 @@ function RegisterPageContent() {
                   <button
                     onClick={register}
                     disabled={loading}
-                    className="text-sm text-[#23E5DB] hover:text-[#1dd4cb] font-medium disabled:opacity-50"
+                    className="text-sm text-accent hover:text-accent-2 font-medium disabled:opacity-50"
                   >
                     {t('auth.register.resend')}
                   </button>

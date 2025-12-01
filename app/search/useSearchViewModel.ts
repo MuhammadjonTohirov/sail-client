@@ -283,21 +283,62 @@ export function useSearchViewModel(initialFilters?: SearchPrefill): SearchViewMo
     setLoading(true);
     try {
       const params: Record<string, any> = { q, min_price: minPrice, max_price: maxPrice, sort, per_page: perPage };
+      const urlAttributeEntries: Array<[string, any]> = [];
+      const handledAttrKeys = new Set<string>();
+      const fallbackAttrEntries: Array<[string, SearchPrefillValue]> = [];
+      Object.entries(mergedPrefill).forEach(([key, value]) => {
+        if (key.startsWith('attrs.')) {
+          fallbackAttrEntries.push([key, value]);
+        }
+      });
       const effectiveCategorySlug = selectedCategory?.slug || categorySlug || '';
       if (effectiveCategorySlug) params.category_slug = effectiveCategorySlug;
       for (const attr of attributes) {
         const value = attrValues[attr.key];
         if (value === undefined || value === '' || value === null) continue;
         if (attr.type === 'multiselect' && Array.isArray(value)) {
-          if (value.length) params[`attrs.${attr.key}`] = value;
+          if (value.length) {
+            const key = `attrs.${attr.key}`;
+            params[key] = value;
+            urlAttributeEntries.push([key, value]);
+            handledAttrKeys.add(key);
+          }
         } else if (attr.type === 'number' || attr.type === 'range') {
           const [min, max] = Array.isArray(value) ? value : [value, undefined];
-          if (min !== undefined && min !== '') params[`attrs.${attr.key}_min`] = min;
-          if (max !== undefined && max !== '') params[`attrs.${attr.key}_max`] = max;
+          if (min !== undefined && min !== '') {
+            const key = `attrs.${attr.key}_min`;
+            params[key] = min;
+            urlAttributeEntries.push([key, min]);
+            handledAttrKeys.add(key);
+          }
+          if (max !== undefined && max !== '') {
+            const key = `attrs.${attr.key}_max`;
+            params[key] = max;
+            urlAttributeEntries.push([key, max]);
+            handledAttrKeys.add(key);
+          }
         } else {
-          params[`attrs.${attr.key}`] = value;
+          const key = `attrs.${attr.key}`;
+          params[key] = value;
+          urlAttributeEntries.push([key, value]);
+          handledAttrKeys.add(key);
         }
       }
+      fallbackAttrEntries.forEach(([key, raw]) => {
+        if (handledAttrKeys.has(key)) return;
+        if (raw === undefined || raw === null) return;
+        if (Array.isArray(raw)) {
+          if (!raw.length) return;
+          params[key] = raw;
+          urlAttributeEntries.push([key, raw]);
+          handledAttrKeys.add(key);
+          return;
+        }
+        if (raw === '') return;
+        params[key] = raw;
+        urlAttributeEntries.push([key, raw]);
+        handledAttrKeys.add(key);
+      });
       const data = await interactorRef.current.fetchListings(params);
       setResults(data.results || []);
       setTotal(data.total || 0);
@@ -308,6 +349,19 @@ export function useSearchViewModel(initialFilters?: SearchPrefill): SearchViewMo
       if (maxPrice) usp.set('max_price', String(maxPrice));
       if (effectiveCategorySlug) usp.set('category_slug', effectiveCategorySlug);
       if (sort && sort !== 'relevance') usp.set('sort', sort);
+      urlAttributeEntries.forEach(([key, raw]) => {
+        if (Array.isArray(raw)) {
+          raw.forEach((val) => {
+            if (val !== undefined && val !== null && val !== '') {
+              usp.append(key, String(val));
+            }
+          });
+          return;
+        }
+        if (raw !== undefined && raw !== null && raw !== '') {
+          usp.set(key, String(raw));
+        }
+      });
       router.replace(`${basePath}/search?${usp.toString()}`);
     } finally {
       setLoading(false);

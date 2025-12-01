@@ -1,17 +1,22 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { Taxonomy } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
+import { GetCategoriesUseCase } from '@/domain/usecases/taxonomy/GetCategoriesUseCase';
+import { TaxonomyRepositoryImpl } from '@/data/repositories/TaxonomyRepositoryImpl';
+import { Category } from '@/domain/models/Category';
+import { trustedImageUrl } from '@/config';
 
-type CategoryNode = { id: number; name: string; slug: string; is_leaf: boolean; icon?: string; icon_url?: string; children?: CategoryNode[] };
+// type CategoryNode = { id: number; name: string; slug: string; is_leaf: boolean; icon?: string; icon_url?: string; children?: CategoryNode[] };
 
 export default function CategoriesGrid() {
-  const [cats, setCats] = useState<CategoryNode[]>([]);
-  const { t } = useI18n();
+  const usecase = new GetCategoriesUseCase(new TaxonomyRepositoryImpl())
+  const { t } = useI18n();  
+  
+  const [cats, setCats] = useState<Category[]>([]);
 
   useEffect(() => {
     (async () => {
-      try { setCats(await Taxonomy.categories()); } catch {}
+      try { setCats(await usecase.execute(t.name)); } catch {}
     })();
   }, []);
 
@@ -23,8 +28,8 @@ export default function CategoriesGrid() {
           {cats.map((c) => (
             <a key={c.id} className="category-tile" href={`/search?category_slug=${encodeURIComponent(c.slug)}`}>
               <div className="category-tile__icon" aria-hidden>
-                {c.icon_url ? (
-                  <img src={c.icon_url} alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
+                {c.iconUrl ? (
+                  <img src={trustedImageUrl(c.iconUrl)} alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
                 ) : (
                   c.icon || c.name.charAt(0)
                 )}

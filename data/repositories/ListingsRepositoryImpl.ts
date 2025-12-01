@@ -45,6 +45,7 @@ export class ListingsRepositoryImpl implements IListingsRepository {
 
   async updateListing(id: number, payload: Partial<ListingPayload>): Promise<Listing> {
     const dto = ListingMapper.partialPayloadToDTO(payload);
+    console.log('Updating listing with DTO:', dto);
     const result: ListingDTO = await Listings.update(id, dto as any);
     return ListingMapper.toDomain(result);
   }

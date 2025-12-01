@@ -15,8 +15,9 @@ import { Category } from '@/domain/models/Category';
 import { Attribute } from '@/domain/models/Attribute';
 import { Listing } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
-import { Profile } from '@/domain/models/Profile';
+
 import { Listings } from '@/lib/api';
+import { UserProfile } from '@/domain/models/UserProfile';
 
 export class PostInteractor {
   private getCategoriesUseCase: GetCategoriesUseCase;
@@ -51,7 +52,7 @@ export class PostInteractor {
     return await this.getCategoryAttributesUseCase.execute(categoryId);
   }
 
-  async fetchUserProfile(): Promise<Profile | null> {
+  async fetchUserProfile(): Promise<UserProfile | null> {
     try {
       return await this.getProfileUseCase.execute();
     } catch (error) {

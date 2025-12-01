@@ -78,6 +78,29 @@ export const Auth = {
       body: JSON.stringify({ login, code, password })
     }),
 
+  // Telegram authentication
+  telegram: async (telegramData: {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    photo_url?: string;
+    auth_date: number;
+    hash: string;
+  }) => {
+    const data = await apiFetch('/api/v1/auth/telegram', {
+      method: 'POST',
+      body: JSON.stringify(telegramData)
+    });
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
+      localStorage.setItem('profile', JSON.stringify(data.profile));
+      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+    }
+    return data;
+  },
+
   me: () => apiFetch('/api/v1/me'),
 
   updateProfile: async (data: { display_name?: string; email?: string; location?: number | null; logo?: File; banner?: File }) => {

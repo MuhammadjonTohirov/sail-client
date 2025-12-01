@@ -3,7 +3,7 @@
 /* Gallery */
 .gallery {
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   padding: 12px;
   position: relative;

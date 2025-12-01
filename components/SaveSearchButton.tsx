@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { SavedSearches } from '@/lib/api';
+import { appConfig } from '@/config';
 
 interface SaveSearchButtonProps {
   searchParams: {
@@ -70,6 +71,8 @@ export function SaveSearchButton({
     }
   };
 
+  const accentColor = appConfig.theme.colors.secondary[500];
+
   if (variant === 'icon') {
     return (
       <button
@@ -78,8 +81,8 @@ export function SaveSearchButton({
         className={`save-search-icon ${isSaved ? 'saved' : ''} ${className}`}
         title={label('Сохранить поиск', 'Qidiruvni saqlash')}
         style={{
-          background: isSaved ? '#23E5DB' : 'white',
-          border: `1px solid ${isSaved ? '#23E5DB' : '#ddd'}`,
+          background: isSaved ? accentColor : 'white',
+          border: `1px solid ${isSaved ? accentColor : '#ddd'}`,
           borderRadius: '8px',
           padding: '8px 12px',
           cursor: isSaving ? 'wait' : isSaved ? 'default' : 'pointer',
@@ -110,8 +113,8 @@ export function SaveSearchButton({
       disabled={isSaving || isSaved}
       className={`save-search-button ${isSaved ? 'saved' : ''} ${className}`}
       style={{
-        background: isSaved ? '#23E5DB' : 'white',
-        border: `1px solid ${isSaved ? '#23E5DB' : '#ddd'}`,
+        background: isSaved ? accentColor : 'white',
+        border: `1px solid ${isSaved ? accentColor : '#ddd'}`,
         borderRadius: '8px',
         padding: '10px 20px',
         cursor: isSaving ? 'wait' : isSaved ? 'default' : 'pointer',

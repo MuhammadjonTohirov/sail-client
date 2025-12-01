@@ -52,16 +52,19 @@ export const PriceContactView = ({
       </div>
 
       {priceAmount > 0 ? (
-        <div className="price-block mb-4">
+        // horizontal div
+        <div className="price-block mb-4" style={{
+          // horizontal
+          display: 'flex', 
+          flexDirection: 'row',
+          gap: '12px',
+        }}>
           <div className="text-4xl font-bold text-[#002F34] mb-1">
-            {Number(priceAmount).toLocaleString()} <span className="text-2xl">{priceCurrency}</span>
+            {Number(priceAmount).toLocaleString()} <span className="text-1xl">{priceCurrency}</span>
           </div>
           {isPriceNegotiable && (
-            <div className="flex items-center gap-1 text-sm text-[#23E5DB]">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-              </svg>
-              {t('listing.priceNegotiable')}
+            <div className="flex items-center gap-1 text-sm" style={{color: "#7d7d7d"}}>
+              ({t('listing.priceNegotiable')})
             </div>
           )}
         </div>
@@ -77,7 +80,7 @@ export const PriceContactView = ({
         <button
           onClick={onChatClick}
           disabled={isOwnListing || chatLoading}
-          className={`w-full bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 ${isOwnListing || chatLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          className={`w-full bg-accent hover:bg-accent-2 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 ${isOwnListing || chatLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
           {chatLoading ? (
             <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
@@ -98,7 +101,7 @@ export const PriceContactView = ({
         )}
 
         <button
-          className="w-full bg-white border-2 border-gray-300 hover:border-[#23E5DB] text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-white border-2 border-gray-300 hover:border-accent text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           onClick={onShowPhoneClick}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

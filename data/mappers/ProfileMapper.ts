@@ -11,6 +11,7 @@ export class ProfileMapper {
       userId: dto.user_id,
       username: dto.username,
       phoneE164: dto.phone_e164,
+      email: dto.email,
       displayName: dto.display_name || '',
       avatarUrl: dto.avatar_url,
       about: dto.about,

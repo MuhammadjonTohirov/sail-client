@@ -164,6 +164,11 @@
       "resendError": "Ошибка отправки кода",
       "changeLogin": "Изменить email/телефон",
       "debugCode": "Код для разработки"
+    },
+    "or": "или",
+    "telegram": {
+      "connecting": "Подключение к Telegram...",
+      "error": "Ошибка входа через Telegram"
     }
   },
   "listing": {

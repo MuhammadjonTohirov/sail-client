@@ -3,11 +3,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import type { Locale } from "@/i18n/config";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { appConfig, trustedImageUrl } from "@/config";
 import { LogoutUseCase } from "@/domain/usecases/auth/LogoutUseCase";
 import { AuthRepositoryImpl } from "@/data/repositories/AuthRepositoryImpl";
 import { getAsset } from "@/utils/assets";
+import { useProfile } from "@/hooks";
 
 const iconProps = { width: 22, height: 22, strokeWidth: 1.8 };
 const profileIconProps = { width: 26, height: 26, strokeWidth: 1.8 };
@@ -17,33 +18,20 @@ export default function ClientNav() {
   const router = useRouter();
   const { t, locale, setLocale } = useI18n();
   const [authed, setAuthed] = useState<boolean>(false);
-  const [profileName, setProfileName] = useState<string>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const { features } = appConfig;
-  const readAuth = () => {
+  const { profile, getProfile } = useProfile();
+
+  const readAuth = useCallback(() => {
     try {
-      if (typeof window === 'undefined') return;
-      const token = localStorage.getItem('access_token');
-      const profRaw = localStorage.getItem('profile');
+      if (typeof window === "undefined") return;
+      const token = localStorage.getItem("access_token");
       setAuthed(!!token);
-      if (profRaw) {
-        const p = JSON.parse(profRaw);
-        const dn = p.display_name && p.display_name.trim() ? p.display_name : (p.username || "");
-        const imageUrl = p.avatar ?? p.logo ?? '';
-        if (imageUrl.length > 0) {
-          setAvatarUrl(trustedImageUrl(imageUrl));
-        }
-        setProfileName(dn || "");
-      } else {
-        setProfileName("");
-      }
     } catch {
       setAuthed(false);
-      setProfileName("");
     }
-  };
+  }, []);
 
   const isSearchActive = pathname.startsWith('/search');
   const isFavoritesActive = pathname.startsWith('/favorites');
@@ -77,7 +65,7 @@ export default function ClientNav() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
-  useEffect(() => { setMenuOpen(false); readAuth(); }, [pathname]);
+  useEffect(() => { setMenuOpen(false); readAuth(); }, [pathname, readAuth]);
 
   useEffect(() => {
     if (!authed) setMenuOpen(false);
@@ -107,6 +95,21 @@ export default function ClientNav() {
     if (locale === next) return;
     setLocale(next);
   };
+  const profileName = useMemo(() => {
+    if (!profile) return "";
+    return profile.displayName?.trim()
+      ? profile.displayName
+      : profile.username || "";
+  }, [profile]);
+
+  const avatarUrl = useMemo(() => {
+    if (!profile) return "";
+    const source = profile.avatarUrl || profile.logoUrl || "";
+    return source ? trustedImageUrl(source) : "";
+  }, [profile]);
+
+  const isAuthenticated = authed && !!profile;
+
   const appLogo = getAsset('app-logo.svg')
   return (
     <header className="topbar">
@@ -170,14 +173,14 @@ export default function ClientNav() {
           <div className="dropdown" ref={menuRef}>
             <button
               type="button"
-              className={`nav-icon nav-icon--outline nav-icon--profile${authed && menuOpen ? ' is-active' : ''}`}
+              className={`nav-icon nav-icon--outline nav-icon--profile${isAuthenticated && menuOpen ? ' is-active' : ''}`}
               onClick={onProfileClick}
               aria-haspopup={authed ? 'menu' : undefined}
               aria-expanded={authed ? menuOpen : undefined}
               title={authed ? t('nav.profile') : t('nav.auth')}
               aria-label={authed ? t('nav.profile') : t('nav.auth')}
             >
-              {authed && avatarUrl ? (
+              {isAuthenticated && avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={profileName || t('nav.profile')}

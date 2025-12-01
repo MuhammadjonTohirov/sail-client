@@ -4,6 +4,8 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
+import { TelegramLoginButton } from '@/components/auth/TelegramLoginButton';
+import { appConfig } from '@/config/app.config';
 
 function LoginPageContent() {
   const { t } = useI18n();
@@ -51,7 +53,7 @@ function LoginPageContent() {
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#23E5DB] rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent rounded-full mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -61,7 +63,7 @@ function LoginPageContent() {
           </h1>
           <p className="text-gray-600">
             {t('auth.login.subtitle')}{' '}
-            <Link href="/auth/register" className="text-[#23E5DB] hover:text-[#1dd4cb] font-medium">
+            <Link href="/auth/register" className="text-accent hover:text-accent-2 font-medium">
               {t('auth.login.registerLink')}
             </Link>
           </p>
@@ -83,7 +85,7 @@ function LoginPageContent() {
                 placeholder={t('auth.login.loginPlaceholder')}
                 disabled={loading}
                 autoComplete="username"
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
               />
             </div>
 
@@ -100,20 +102,20 @@ function LoginPageContent() {
                 placeholder={t('auth.login.passwordPlaceholder')}
                 disabled={loading}
                 autoComplete="current-password"
-                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-[#23E5DB] focus:ring-2 focus:ring-[#23E5DB] focus:ring-opacity-20 transition-colors"
+                className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-20 transition-colors"
               />
             </div>
 
             <div className="flex items-center justify-between text-sm">
               <Link
                 href="/auth/forgot-password"
-                className="text-[#23E5DB] hover:text-[#1dd4cb] font-medium"
+                className="text-accent hover:text-accent-2 font-medium"
               >
                 {t('auth.login.forgotPassword')}
               </Link>
               <Link
                 href="/auth/otp"
-                className="text-[#23E5DB] hover:text-[#1dd4cb] font-medium"
+                className="text-accent hover:text-accent-2 font-medium"
               >
                 {t('auth.login.useOtp')}
               </Link>
@@ -122,7 +124,7 @@ function LoginPageContent() {
             <button
               onClick={handleSubmit}
               disabled={loading || !login || !password}
-              className="w-full bg-[#23E5DB] hover:bg-[#1dd4cb] text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-accent hover:bg-accent-2 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {loading ? (
                 <>
@@ -150,6 +152,26 @@ function LoginPageContent() {
             </div>
           )}
         </div>
+
+        {/* Telegram Login */}
+        {appConfig.telegram.enabled && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+            <div className="text-center mb-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">{t('auth.or')}</span>
+                </div>
+              </div>
+            </div>
+            <TelegramLoginButton
+              onSuccess={() => router.push(redirectTo)}
+              onError={setError}
+            />
+          </div>
+        )}
 
         {/* Footer */}
         <div className="text-center text-xs text-gray-500">

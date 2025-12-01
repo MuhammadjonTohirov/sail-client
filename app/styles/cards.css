@@ -4,7 +4,7 @@
 .olx-product-card {
   display: block;
   background: var(--card-bg);
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -134,7 +134,7 @@
   gap: 16px;
   align-items: center;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   transition: all 0.2s ease;
@@ -267,7 +267,7 @@
   gap: 10px;
   padding: 10px;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   text-decoration: none;
   color: var(--fg);
@@ -314,7 +314,7 @@
 .related-listing-card {
   display: block;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -390,7 +390,7 @@
 /* Sidebar Cards */
 .sidebar-card {
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -401,7 +401,7 @@
 }
 
 .location-card {
-  border: 2px solid #e9ecef;
+  border: 0.2px solid #e9ecef;
 }
 
 .location-name {
@@ -443,7 +443,7 @@
 .listing-card {
   position: relative;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -539,7 +539,7 @@
   justify-content: space-between;
   gap: 16px;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 0.3px solid var(--border);
   border-radius: 8px;
   padding: 16px;
   transition: all 0.2s ease;
