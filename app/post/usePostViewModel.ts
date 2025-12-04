@@ -8,6 +8,8 @@ import { PostInteractor } from './PostInteractor';
 import { Category } from '@/domain/models/Category';
 import { Attribute } from '@/domain/models/Attribute';
 import { ListingPayload } from '@/domain/models/ListingPayload';
+import { PostFile } from './components/types';
+import { compressImage } from '@/lib/photoCompressor';
 
 export interface PostViewModel {
   // State
@@ -66,7 +68,7 @@ export interface PostViewModel {
   setContactPhone: (value: string) => void;
 
   // Media
-  files: File[];
+  files: PostFile[];
   existingMedia: any[];
   onPickFiles: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeFile: (index: number) => void;
@@ -83,6 +85,8 @@ export interface PostViewModel {
   // Actions
   onSubmit: () => Promise<void>;
   uploading: boolean;
+  isCompressing: boolean;
+  hasCompressionError: boolean;
   error: string;
 }
 
@@ -139,13 +143,17 @@ export function usePostViewModel(): PostViewModel {
   const [contactPhone, setContactPhone] = useState('');
 
   // Media
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<PostFile[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   // Drag and drop
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [draggedType, setDraggedType] = useState<'existing' | 'new' | null>(null);
+
+  // Computed states
+  const isCompressing = useMemo(() => files.some(f => f.status === 'compressing'), [files]);
+  const hasCompressionError = useMemo(() => files.some(f => f.status === 'error'), [files]);
 
   // Initialize mounted state
   useEffect(() => {
@@ -303,7 +311,7 @@ export function usePostViewModel(): PostViewModel {
     });
   }, [attrs]);
 
-  const onPickFiles = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickFiles = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const incoming = Array.from(e.target.files || []);
     const availableSlots = Math.max(0, maxImages - files.length);
     if (!availableSlots) {
@@ -311,27 +319,69 @@ export function usePostViewModel(): PostViewModel {
       e.currentTarget.value = '';
       return;
     }
+
+    // Preliminary check for initial files, though we allow compression to validate true size if we wanted to
+    // But currently using browser-image-compression, input file size limit is less relevant if we compress it down.
+    // However, keeping strict check on original file if necessary.
+    // The requirement says "max image should be 500 kb", usually means output.
+    // The previous code checked file.size > maxFileSize. I will keep it for now but relaxed or rely on compressor?
+    // Actually, let's process all selected files.
+
     const accepted: File[] = [];
     const rejected: string[] = [];
+
+    // We will attempt to compress everything that is an image.
     for (const file of incoming) {
       if (accepted.length >= availableSlots) break;
-      if (file.size > maxFileSize) {
-        rejected.push(file.name);
-        continue;
-      }
       accepted.push(file);
     }
+
     if (accepted.length) {
-      setFiles(prev => [...prev, ...accepted]);
+      const newPostFiles: PostFile[] = accepted.map(file => ({
+        id: Math.random().toString(36).substring(7),
+        file: null, // Not ready yet
+        previewUrl: URL.createObjectURL(file),
+        status: 'compressing'
+      }));
+
+      setFiles(prev => [...prev, ...newPostFiles]);
+
+      // Process compression for each
+      newPostFiles.forEach(async (postFile, index) => {
+        const originalFile = accepted[index];
+        try {
+          const compressed = await compressImage(originalFile);
+
+          setFiles(prev => prev.map(f => {
+             if (f.id === postFile.id) {
+               return { ...f, file: compressed, status: 'ready' };
+             }
+             return f;
+          }));
+        } catch (err) {
+          console.error(`Failed to compress ${originalFile.name}`, err);
+          setFiles(prev => prev.map(f => {
+            if (f.id === postFile.id) {
+              return { ...f, status: 'error' };
+            }
+            return f;
+          }));
+        }
+      });
     }
-    if (rejected.length) {
-      setError(t('post.errorFileSize', { size: maxFileSizeMb, files: rejected.join(', ') }));
-    }
+
+    // Reset input
     e.currentTarget.value = '';
   }, [files.length, maxImages, maxFileSize, maxFileSizeMb, t]);
 
   const removeFile = useCallback((idx: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== idx));
+    setFiles(prev => {
+      const fileToRemove = prev[idx];
+      if (fileToRemove && fileToRemove.previewUrl) {
+        URL.revokeObjectURL(fileToRemove.previewUrl);
+      }
+      return prev.filter((_, i) => i !== idx);
+    });
   }, []);
 
   const deleteExistingMedia = useCallback(async (mediaId: number) => {
@@ -391,6 +441,16 @@ export function usePostViewModel(): PostViewModel {
   const onSubmit = useCallback(async () => {
     if (!selectedCat || !locationId || !title || !contactName) {
       setError(t('post.errorRequiredFields'));
+      return;
+    }
+
+    if (isCompressing) {
+      // Should be disabled but double check
+      return;
+    }
+
+    if (hasCompressionError) {
+      setError(t('post.errorCompression'));
       return;
     }
 
@@ -455,7 +515,10 @@ export function usePostViewModel(): PostViewModel {
       }
 
       // Upload new media files
-      for (const f of files) {
+      // Filter only ready files
+      const readyFiles = files.filter(f => f.status === 'ready' && f.file).map(f => f.file!);
+
+      for (const f of readyFiles) {
         try {
           await interactorRef.current.uploadMedia(Number(id), f);
         } catch (e) {
@@ -483,7 +546,7 @@ export function usePostViewModel(): PostViewModel {
     selectedCat, locationId, title, contactName, attrs, values, description,
     dealType, negotiable, price, priceCurrency, condition, sellerType,
     contactEmail, contactPhone, isEditMode, editId, files, existingMedia,
-    router, t
+    router, t, isCompressing, hasCompressionError
   ]);
 
   return {
@@ -540,5 +603,7 @@ export function usePostViewModel(): PostViewModel {
     onSubmit,
     uploading,
     error,
+    isCompressing,
+    hasCompressionError
   };
 }

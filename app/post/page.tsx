@@ -28,6 +28,8 @@ function PostPageContent() {
   const pageTitle = vm.isEditMode ? t('post.editTitle') : t('post.createTitle');
   const actionDisabled =
     vm.uploading ||
+    vm.isCompressing ||
+    vm.hasCompressionError ||
     !vm.selectedCat ||
     !vm.locationId ||
     !vm.title ||
