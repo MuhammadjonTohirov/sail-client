@@ -12,6 +12,7 @@ import { useProfile } from "@/hooks";
 
 const iconProps = { width: 22, height: 22, strokeWidth: 1.8 };
 const profileIconProps = { width: 26, height: 26, strokeWidth: 1.8 };
+const mobileMenuIconProps = { width: 24, height: 24, strokeWidth: 2 };
 
 export default function ClientNav() {
   const pathname = usePathname() || "/";
@@ -19,7 +20,9 @@ export default function ClientNav() {
   const { t, locale, setLocale } = useI18n();
   const [authed, setAuthed] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const { features } = appConfig;
   const { profile, getProfile } = useProfile();
 
@@ -65,11 +68,30 @@ export default function ClientNav() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
-  useEffect(() => { setMenuOpen(false); readAuth(); }, [pathname, readAuth]);
+  useEffect(() => {
+    setMenuOpen(false);
+    setMobileMenuOpen(false);
+    readAuth();
+  }, [pathname, readAuth]);
 
   useEffect(() => {
-    if (!authed) setMenuOpen(false);
+    if (!authed) {
+      setMenuOpen(false);
+      setMobileMenuOpen(false);
+    }
   }, [authed]);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (!mobileMenuRef.current) return;
+      if (!mobileMenuRef.current.contains(e.target as Node)) setMobileMenuOpen(false);
+    };
+    if (mobileMenuOpen) {
+      document.addEventListener('click', onClick);
+      return () => document.removeEventListener('click', onClick);
+    }
+  }, [mobileMenuOpen]);
 
   const onProfileClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -114,10 +136,10 @@ export default function ClientNav() {
   return (
     <header className="topbar">
       <div className="container" style={
-          { 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between', 
+          {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             height: '32px'
           }
         }>
@@ -128,8 +150,9 @@ export default function ClientNav() {
             {/* <p>{appConfig.name}</p> */}
           </div>
         </Link>
-        
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+
+        {/* Desktop Navigation */}
+        <nav className="nav-desktop">
           
           <Link
             href={`/search`}
@@ -148,8 +171,8 @@ export default function ClientNav() {
             <Link
               href={`/favorites`}
               className={`nav-icon nav-icon--outline${isFavoritesActive ? ' is-active' : ''}`}
-              title={t('navFavorites')}
-              aria-label={t('navFavorites')}
+              title={t('nav.favorites')}
+              aria-label={t('nav.favorites')}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -161,8 +184,8 @@ export default function ClientNav() {
             href={`/post`}
             onClick={onAddPostClick}
             className={`nav-icon nav-icon--accent${isPostActive ? ' is-active' : ''}`}
-            aria-label={t('navPost')}
-            title={t('navPost')}
+            aria-label={t('nav.post')}
+            title={t('nav.post')}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
               <path d="M12 5v14" />
@@ -238,6 +261,220 @@ export default function ClientNav() {
               {t('lang.switchUZ')}
             </button>
         </nav>
+
+        {/* Mobile Navigation - Hamburger Menu */}
+        <div className="nav-mobile" ref={mobileMenuRef}>
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMobileMenuOpen((v) => !v);
+            }}
+            aria-label={mobileMenuOpen ? t('nav.closeMenu') : t('nav.openMenu')}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...mobileMenuIconProps}>
+                <path d="M18 6L6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...mobileMenuIconProps}>
+                <path d="M3 12h18" />
+                <path d="M3 6h18" />
+                <path d="M3 18h18" />
+              </svg>
+            )}
+          </button>
+
+          {mobileMenuOpen && (
+            <div className="mobile-menu">
+              <nav className="mobile-menu-nav">
+                <button
+                  className={`mobile-menu-item${isSearchActive ? ' is-active' : ''}`}
+                  onClick={() => {
+                    router.push('/search');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                    <circle cx="11" cy="11" r="6" />
+                    <path d="m17 17 4 4" />
+                  </svg>
+                  <span>{t('nav.search')}</span>
+                </button>
+
+                {features.enableFavorites && (
+                  <button
+                    className={`mobile-menu-item${isFavoritesActive ? ' is-active' : ''}`}
+                    onClick={() => {
+                      router.push('/favorites');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span>{t('nav.favorites')}</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    if (!authed) {
+                      alert(t('auth.loginRequiredToPost'));
+                      router.push('/auth/login');
+                    } else {
+                      router.push('/post');
+                    }
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`mobile-menu-item mobile-menu-item--accent${isPostActive ? ' is-active' : ''}`}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                  </svg>
+                  <span>{t('nav.post')}</span>
+                </button>
+
+                {authed && isAuthenticated && (
+                  <>
+                    <div className="mobile-menu-divider" />
+
+                    <div className="mobile-menu-profile">
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt={profileName || t('nav.profile')}
+                          className="mobile-menu-avatar"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...profileIconProps}>
+                          <circle cx="12" cy="8" r="4" />
+                          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg>
+                      )}
+                      <span className="mobile-menu-profile-name">{profileName || t('nav.profile')}</span>
+                    </div>
+
+                    <button
+                      className="mobile-menu-item"
+                      onClick={() => {
+                        router.push('/u/listings');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                      </svg>
+                      <span>{t('nav.listings')}</span>
+                    </button>
+
+                    <button
+                      className="mobile-menu-item"
+                      onClick={() => {
+                        router.push('/chat');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                      <span>{t('nav.chats')}</span>
+                    </button>
+
+                    <button
+                      className="mobile-menu-item"
+                      onClick={() => {
+                        router.push('/u/settings');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 1v6m0 6v6m9.66-9.66l-4.24 4.24m-6.83 0L5.34 9.34m13.32 0l-4.24 4.24m-6.83 0L2.34 18.66" strokeWidth="1.5" />
+                      </svg>
+                      <span>{t('nav.settings')}</span>
+                    </button>
+
+                    <div className="mobile-menu-divider" />
+
+                    <button
+                      className="mobile-menu-item mobile-menu-item--danger"
+                      onClick={() => {
+                        logoutUseCase.execute();
+                        setMobileMenuOpen(false);
+                        router.push('/');
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...iconProps}>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                      </svg>
+                      <span>{t('nav.logout')}</span>
+                    </button>
+                  </>
+                )}
+
+                {!authed && (
+                  <>
+                    <div className="mobile-menu-divider" />
+                    <button
+                      className="mobile-menu-item"
+                      onClick={() => {
+                        router.push('/auth/login');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...profileIconProps}>
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                      </svg>
+                      <span>{t('nav.auth')}</span>
+                    </button>
+                  </>
+                )}
+
+                <div className="mobile-menu-divider" />
+
+                <div className="mobile-menu-locale">
+                  <span className="mobile-menu-locale-label">{t('lang.language')}</span>
+                  <div className="mobile-menu-locale-buttons">
+                    <button
+                      type="button"
+                      className={`locale-toggle-mobile${locale === 'ru' ? ' is-active' : ''}`}
+                      onClick={() => {
+                        changeLocale('ru');
+                        setMobileMenuOpen(false);
+                      }}
+                      aria-current={locale === 'ru' ? 'true' : undefined}
+                    >
+                      {t('lang.switchRU')}
+                    </button>
+                    <button
+                      type="button"
+                      className={`locale-toggle-mobile${locale === 'uz' ? ' is-active' : ''}`}
+                      onClick={() => {
+                        changeLocale('uz');
+                        setMobileMenuOpen(false);
+                      }}
+                      aria-current={locale === 'uz' ? 'true' : undefined}
+                    >
+                      {t('lang.switchUZ')}
+                    </button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

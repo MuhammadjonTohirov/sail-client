@@ -9,7 +9,9 @@
     "chats": "Chatlar",
     "favorites": "Sevimlilar",
     "settings": "Sozlamalar",
-    "logout": "Chiqish"
+    "logout": "Chiqish",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish"
   },
   "home": {
     "welcome": "Xush kelibsiz",
@@ -407,6 +409,7 @@
   },
   "lang": {
     "switchRU": "RU",
-    "switchUZ": "UZ"
+    "switchUZ": "UZ",
+    "language": "Til"
   }
 }

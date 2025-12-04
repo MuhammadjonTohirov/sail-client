@@ -9,7 +9,9 @@
     "chats": "Чаты",
     "favorites": "Избранное",
     "settings": "Настройки",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню"
   },
   "home": {
     "welcome": "Добро пожаловать",
@@ -407,6 +409,7 @@
   },
   "lang": {
     "switchRU": "RU",
-    "switchUZ": "UZ"
+    "switchUZ": "UZ",
+    "language": "Язык"
   }
 }

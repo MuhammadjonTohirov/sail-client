@@ -25,7 +25,7 @@ export default function ListingDetail({ params }: { params: { id: string } }) {
     if (vm.isOwnListing) return;
     const token = localStorage.getItem('access_token');
     if (!token) {
-      router.push('/auth/otp');
+      router.push('/auth/login');
       return;
     }
     await vm.openChat();
