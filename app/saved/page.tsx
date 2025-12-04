@@ -8,6 +8,30 @@ type Saved = { id: number; title: string; query: any; is_active: boolean; create
 
 export default function SavedPage() {
   const { t } = useI18n();
+  const [items, setItems] = useState<Saved[]>([]);
+  const [error, setError] = useState('');
+
+  const load = async () => {
+    try {
+      const res = await apiFetch('/api/v1/saved-searches');
+      setItems(res);
+    } catch (e: any) { setError(e.message); }
+  };
+
+  useEffect(() => {
+    if (appConfig.features.enableSavedSearches) {
+      load();
+    }
+  }, []);
+
+  const toggle = async (id: number, isActive: boolean) => {
+    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: !isActive }) });
+    await load();
+  };
+  const del = async (id: number) => {
+    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'DELETE' });
+    await load();
+  };
 
   if (!appConfig.features.enableSavedSearches) {
     return (
@@ -23,26 +47,6 @@ export default function SavedPage() {
       </div>
     );
   }
-
-  const [items, setItems] = useState<Saved[]>([]);
-  const [error, setError] = useState('');
-
-  const load = async () => {
-    try {
-      const res = await apiFetch('/api/v1/saved-searches');
-      setItems(res);
-    } catch (e: any) { setError(e.message); }
-  };
-  useEffect(() => { load(); }, []);
-
-  const toggle = async (id: number, isActive: boolean) => {
-    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: !isActive }) });
-    await load();
-  };
-  const del = async (id: number) => {
-    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'DELETE' });
-    await load();
-  };
 
   if (error) return <p>{error}</p>;
   return (
