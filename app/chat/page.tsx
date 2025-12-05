@@ -24,6 +24,7 @@ function ChatPageContentInner() {
   const { threads, loading, error, reload, updateThread } = useChatThreads();
   const { selectedThreadId, selectThread } = useChatStore();
   const [viewerId, setViewerId] = useState<number | null>(null);
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -54,9 +55,24 @@ function ChatPageContentInner() {
     [threads, selectedThreadId],
   );
 
+  // When a thread is selected, we assume we want to open the detail view on mobile
+  const handleSelectThread = (threadId: string) => {
+    selectThread(threadId);
+    setIsMobileDetailOpen(true);
+  };
+
+  const handleBack = () => {
+    setIsMobileDetailOpen(false);
+    // Optional: Deselect thread if desired, but keeping it selected might be fine
+    // until another is selected. For now, we just close the view.
+    // If we want to truly clear selection:
+    // selectThread(null as any); // assuming selectThread handles null or empty string
+  };
+
   return (
     <ChatShell
       header={<ChatPageHeader />}
+      isMobileDetailOpen={isMobileDetailOpen}
       sidebar={(
         <ThreadList
           threads={threads}
@@ -64,7 +80,7 @@ function ChatPageContentInner() {
           loading={loading}
           error={error}
           onRetry={reload}
-          onSelect={(thread) => selectThread(thread.id)}
+          onSelect={(thread) => handleSelectThread(thread.id)}
         />
       )}
       conversation={currentThread ? (
@@ -72,6 +88,7 @@ function ChatPageContentInner() {
           thread={currentThread}
           viewerId={viewerId}
           onThreadChange={updateThread}
+          onBack={handleBack}
         />
       ) : (
         <div className="chat-panel__empty">
