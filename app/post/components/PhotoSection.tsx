@@ -123,7 +123,6 @@ export function PhotoSection({
             style={{ display: 'none' }}
           />
           <span className="flex flex-col items-center">
-             <Lineicons icon={Camera} width={24} height={24} />
              <span className="mt-2">{t('post.addPhoto')}</span>
           </span>
         </label>
