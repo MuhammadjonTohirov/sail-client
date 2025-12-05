@@ -5,6 +5,8 @@ import type { CategoryNode } from '@/app/search/types';
 import { iconRegistry, Lineicons } from "@lineiconshq/react-lineicons";
 import {
   Spinner2SacleOutlined,
+  Search1Outlined as Search,
+  ChevronDownOutlined as ChevronDown,
 } from "@lineiconshq/free-icons";
 
 interface SearchBarProps {
@@ -39,9 +41,9 @@ export default function SearchBar({
   return (
     <div className="olx-search-bar">
       <div className="search-input-wrapper">
-        <svg className="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+        <div className="search-icon">
+          <Lineicons icon={Search} width={24} height={24} />
+        </div>
         <input
           className="olx-search-input"
           placeholder={t('searchPage.searchPlaceholder')}
@@ -60,9 +62,9 @@ export default function SearchBar({
         <span className="truncate" suppressHydrationWarning>
           {selectedCategory ? selectedCategoryPath : t('searchPage.allCategories')}
         </span>
-        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <div className="flex-shrink-0">
+          <Lineicons icon={ChevronDown} width={16} height={16} />
+        </div>
       </button>
 
       <button
