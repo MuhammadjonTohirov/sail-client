@@ -1,4 +1,9 @@
 import { useI18n } from '@/lib/i18n';
+import { Lineicons } from "@lineiconshq/react-lineicons";
+import {
+  MenuHamburger1Outlined as ListIcon,
+  Layout26Outlined as GridIcon,
+} from "@lineiconshq/free-icons";
 
 interface SearchResultsBarProps {
   viewMode: 'list' | 'grid';
@@ -21,11 +26,7 @@ export default function SearchResultsBar({
           aria-label={t('searchPage.listView')}
           suppressHydrationWarning
         >
-          <svg className="view-icon" fill="currentColor" viewBox="0 0 24 24">
-            <rect x="3" y="5" width="18" height="4" rx="1" />
-            <rect x="3" y="11" width="18" height="4" rx="1" />
-            <rect x="3" y="17" width="18" height="4" rx="1" />
-          </svg>
+          <Lineicons icon={ListIcon} width={20} height={20} />
         </button>
         <button
           type="button"
@@ -34,12 +35,7 @@ export default function SearchResultsBar({
           aria-label={t('searchPage.gridView')}
           suppressHydrationWarning
         >
-          <svg className="view-icon" fill="currentColor" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="8" height="8" rx="1" />
-            <rect x="13" y="3" width="8" height="8" rx="1" />
-            <rect x="3" y="13" width="8" height="8" rx="1" />
-            <rect x="13" y="13" width="8" height="8" rx="1" />
-          </svg>
+          <Lineicons icon={GridIcon} width={20} height={20} />
         </button>
       </div>
     </div>

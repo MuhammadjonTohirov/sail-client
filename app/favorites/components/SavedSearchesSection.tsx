@@ -3,6 +3,10 @@
 import type { CSSProperties } from 'react';
 import type { SavedSearch } from '@/domain/models/SavedSearch';
 import { EmptyState } from './EmptyState';
+import { Lineicons } from "@lineiconshq/react-lineicons";
+import {
+  Search1Outlined as Search,
+} from "@lineiconshq/free-icons";
 
 interface SavedSearchesSectionProps {
   loading: boolean;
@@ -73,7 +77,7 @@ export function SavedSearchesSection({
   if (!searches.length) {
     return (
       <EmptyState
-        icon="🔍"
+        icon={<Lineicons icon={Search} width={64} height={64} />}
         title={messages.emptyTitle}
         description={messages.emptyDescription}
       />

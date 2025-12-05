@@ -3,6 +3,12 @@
 import type { ChangeEvent, DragEvent } from 'react';
 import type { TranslateFn, PostFile } from './types';
 import { trustedImageUrl } from '@/config';
+import { Lineicons } from "@lineiconshq/react-lineicons";
+import {
+  XmarkOutlined as Xmark,
+  Trash3Outlined as Trash,
+  Camera1Outlined as Camera,
+} from "@lineiconshq/free-icons";
 
 type ExistingMedia = { id: number; image?: string; imageUrl?: string };
 
@@ -64,7 +70,7 @@ export function PhotoSection({
               onClick={() => deleteExistingMedia(media.id)}
               title={t('post.deletePhoto')}
             >
-              ×
+              <Lineicons icon={Xmark} width={16} height={16} />
             </button>
           </div>
         ))}
@@ -99,7 +105,11 @@ export function PhotoSection({
             )}
 
             <button type="button" className="photo-remove" onClick={() => removeFile(idx)}>
-              {postFile.status === 'error' ? '×' : '🗑️'}
+              {postFile.status === 'error' ? (
+                <Lineicons icon={Xmark} width={16} height={16} />
+              ) : (
+                <Lineicons icon={Trash} width={16} height={16} />
+              )}
             </button>
           </div>
         ))}
@@ -112,12 +122,15 @@ export function PhotoSection({
             onChange={onPickFiles}
             style={{ display: 'none' }}
           />
-          <span>{t('post.addPhoto')}</span>
+          <span className="flex flex-col items-center">
+             <Lineicons icon={Camera} width={24} height={24} />
+             <span className="mt-2">{t('post.addPhoto')}</span>
+          </span>
         </label>
 
         {Array.from({ length: placeholders }).map((_, i) => (
-          <div key={`placeholder-${i}`} className="photo-tile placeholder">
-            📷
+          <div key={`placeholder-${i}`} className="photo-tile placeholder flex items-center justify-center">
+             <Lineicons icon={Camera} width={24} height={24} style={{ opacity: 0.3 }} />
           </div>
         ))}
       </div>
