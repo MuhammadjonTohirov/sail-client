@@ -8,6 +8,7 @@ import {
   EyeOutlined as Eye,
   Camera1Outlined as Camera,
 } from "@lineiconshq/free-icons";
+import { trustedImageUrl } from '@/config';
 
 interface RecentItemsSectionProps {
   loading: boolean;
@@ -52,7 +53,7 @@ export function RecentItemsSection({
         <div key={item.id} className="listing-card">
           <Link href={`/l/${item.listingId}`} className="listing-card-link">
             {item.mediaUrls?.length ? (
-              <div className="listing-card-img" style={{ backgroundImage: `url(${item.mediaUrls[0]})` }} />
+              <div className="listing-card-img" style={{ backgroundImage: `url(${trustedImageUrl(item.mediaUrls[0])})` }} />
             ) : (
               <div className="listing-card-img listing-card-img-placeholder flex items-center justify-center">
                  <Lineicons icon={Camera} width={48} height={48} style={{ opacity: 0.3 }} />
