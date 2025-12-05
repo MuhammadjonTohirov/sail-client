@@ -180,7 +180,7 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="page-section page-section--padded" style={{ paddingTop: 0 }}>
+    <div className="page-section page-section--padded" style={{ paddingTop: 0, paddingLeft: 20, paddingRight: 20 }}>
       <h1 style={{ marginBottom: '32px', fontSize: '32px', fontWeight: 700 }}>
         {t('favorites.pageTitle')}
       </h1>

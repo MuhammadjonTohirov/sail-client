@@ -37,7 +37,7 @@ function PostPageContent() {
     (vm.dealType === 'sell' && !vm.negotiable && !vm.price);
 
   return (
-    <div className="page-section page-section--padded post-page">
+    <div className="page-section page-section--padded post-page" style={{paddingLeft: 20, paddingRight: 20}}>
       <h2>{pageTitle}</h2>
       <div className="form-section">
         <DescribeSection
