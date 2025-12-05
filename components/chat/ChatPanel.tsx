@@ -9,17 +9,21 @@ import {
   useSendChatMessage,
 } from '@/hooks';
 import { trustedImageUrl } from '@/config';
+import { Lineicons } from "@lineiconshq/react-lineicons";
+import { ArrowLeftOutlined } from "@lineiconshq/free-icons";
 
 interface ChatPanelProps {
   thread: ChatThread;
   viewerId: number | null;
   onThreadChange: (thread: ChatThread) => void;
+  onBack?: () => void;
 }
 
 export function ChatPanel({
   thread,
   viewerId,
   onThreadChange,
+  onBack,
 }: ChatPanelProps) {
   const threadId = thread.id;
   const {
@@ -157,6 +161,16 @@ export function ChatPanel({
   return (
     <div className="chat-panel">
       <div className="chat-panel__header">
+        {onBack && (
+          <button
+            type="button"
+            className="chat-panel__back-btn mobile-only"
+            onClick={onBack}
+            aria-label="Назад"
+          >
+            <Lineicons icon={ArrowLeftOutlined} width={24} height={24} />
+          </button>
+        )}
         <div className="chat-panel__listing">
           {listing.thumbnailUrl ? (
             <img src={trustedImageUrl(listing.thumbnailUrl)} alt="" className="chat-panel__thumb" />

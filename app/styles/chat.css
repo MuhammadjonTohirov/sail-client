@@ -81,6 +81,17 @@
   border-bottom: 1px solid var(--border);
 }
 
+.chat-panel__back-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--fg);
+  align-items: center;
+  justify-content: center;
+}
+
 .chat-overlay__listing,
 .chat-panel__listing {
   display: flex;
@@ -388,6 +399,17 @@
   text-align: right;
 }
 
+.chat-main {
+  background: var(--card-bg);
+  border: 0.3px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 60vh;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
 @media (max-width: 768px) {
   .chat-overlay {
     right: 12px;
@@ -414,27 +436,41 @@
   }
 }
 
-.chat-main {
-  background: var(--card-bg);
-  border: 0.3px solid var(--border);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  min-height: 60vh;
-  padding: 12px;
-  box-sizing: border-box;
-}
-
-@media (max-width: 960px) {
+/* Mobile Chat Logic (Split View) */
+@media (max-width: 768px) {
   .chat-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
+    gap: 0;
   }
 
   .chat-sidebar {
-    order: 2;
+    width: 100%;
+    /* Default: visible */
+    display: flex;
   }
 
   .chat-main {
-    order: 1;
+    width: 100%;
+    /* Default: hidden */
+    display: none;
+  }
+
+  /* When mobile detail view is active */
+  .chat-page--mobile-detail .chat-sidebar {
+    display: none;
+  }
+
+  .chat-page--mobile-detail .chat-main {
+    display: flex;
+  }
+
+  .chat-panel__back-btn.mobile-only {
+    display: flex;
+  }
+
+  /* Hide header in mobile detail if desired, or keep it */
+  .chat-page--mobile-detail .chat-header {
+    display: none;
+    /* Often cleaner to hide the main page header "Messages" when reading a specific thread */
   }
 }
