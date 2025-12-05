@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  min-height: calc(100vh - 160px);
-  padding: 32px 40px 48px;
+  /* Use flex: 1 to fill the parent .page-content instead of a fixed calc min-height */
+  flex: 1;
+  /* Reduced bottom padding to minimize gap to footer */
+  padding: 32px 40px 16px;
   box-sizing: border-box;
   width: 100%;
   max-width: 1200px;
@@ -32,7 +34,9 @@
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 24px;
-  min-height: 60vh;
+  /* Ensure it fills the remaining space in .chat-page */
+  flex: 1;
+  min-height: 0; /* Allow flex child to shrink if needed, preventing overflow issues */
   width: 100%;
 }
 
@@ -44,6 +48,7 @@
   display: flex;
   flex-direction: column;
   padding: 12px 0;
+  height: 100%; /* Fill shell height */
 }
 
 .chat-overlay {
@@ -333,6 +338,7 @@
   border-radius: 12px;
   margin: 16px;
   padding: 24px;
+  height: 100%; /* Fill parent */
 }
 
 .chat-message--own {
@@ -405,7 +411,8 @@
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  min-height: 60vh;
+  /* min-height: 60vh; Removed to allow flex: 1 from parent to control */
+  height: 100%; /* Fill shell height */
   padding: 12px;
   box-sizing: border-box;
 }
@@ -428,7 +435,7 @@
 
 @media (max-width: 640px) {
   .chat-page {
-    padding: 16px;
+    padding: 16px 16px 8px; /* Reduced bottom padding further on mobile */
   }
 
   .chat-shell {
@@ -447,12 +454,14 @@
     width: 100%;
     /* Default: visible */
     display: flex;
+    flex: 1; /* Grow */
   }
 
   .chat-main {
     width: 100%;
     /* Default: hidden */
     display: none;
+    flex: 1; /* Grow */
   }
 
   /* When mobile detail view is active */
