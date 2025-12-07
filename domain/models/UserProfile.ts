@@ -10,6 +10,9 @@ export interface UserProfile {
   readonly locationName?: string | null;
   readonly logoUrl?: string | null;
   readonly bannerUrl?: string | null;
+  readonly telegramId?: number | null;
+  readonly telegramUsername?: string | null;
+  readonly telegramPhotoUrl?: string | null;
   readonly lastActiveAt?: Date | null;
   readonly createdAt: Date;
 }

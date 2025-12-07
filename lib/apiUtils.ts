@@ -106,6 +106,8 @@ export async function apiFetch(path: string, opts: RequestInit = {}, isJson = tr
     throw new Error(`API ${res.status}: ${detail || res.statusText}`);
   }
   if (!isJson) return res;
+  // Handle 204 No Content responses (e.g., DELETE operations)
+  if (res.status === 204) return null;
   return res.json();
 }
 

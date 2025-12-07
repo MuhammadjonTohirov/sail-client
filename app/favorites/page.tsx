@@ -10,6 +10,7 @@ import { GetSavedSearchesUseCase } from '@/domain/usecases/savedSearches/GetSave
 import { SavedSearchesRepositoryImpl } from '@/data/repositories/SavedSearchesRepositoryImpl';
 import { SavedSearch } from '@/domain/models/SavedSearch';
 import { DeleteSavedSearchUseCase } from '@/domain/usecases/savedSearches/DeleteSavedSearchUseCase';
+import { MarkSavedSearchViewedUseCase } from '@/domain/usecases/savedSearches/MarkSavedSearchViewedUseCase';
 import { FavoritesTabs, FavoritesTab } from './components/FavoritesTabs';
 import { LikedItemsSection } from './components/LikedItemsSection';
 import { SavedSearchesSection } from './components/SavedSearchesSection';
@@ -97,12 +98,20 @@ export default function FavoritesPage() {
 
   const handleDeleteSearch = async (id: number) => {
     if (!enableSavedSearches) return;
+
+    // Add confirmation dialog
+    if (!confirm(t('favorites.confirmDeleteSearch'))) {
+      return;
+    }
+
     try {
       const deleteUseCase = new DeleteSavedSearchUseCase(new SavedSearchesRepositoryImpl());
       await deleteUseCase.execute(id);
+      // Update UI immediately after successful deletion
       setSavedSearches((prev) => prev.filter((search) => search.id !== id));
     } catch (error) {
       console.error('Failed to delete search:', error);
+      alert(t('favorites.deleteSearchError'));
     }
   };
 
@@ -128,7 +137,23 @@ export default function FavoritesPage() {
     return url;
   };
 
-  const handleSavedSearchNavigation = (search: SavedSearch) => {
+  const handleSavedSearchNavigation = async (search: SavedSearch) => {
+    try {
+      // Mark the search as viewed to update last_viewed_at
+      const markViewedUseCase = new MarkSavedSearchViewedUseCase(new SavedSearchesRepositoryImpl());
+      await markViewedUseCase.execute(search.id);
+
+      // Update local state to reflect the change
+      setSavedSearches((prev) =>
+        prev.map((s) =>
+          s.id === search.id
+            ? { ...s, lastViewedAt: new Date().toISOString(), newItemsCount: 0 }
+            : s
+        )
+      );
+    } catch (error) {
+      console.error('Failed to mark search as viewed:', error);
+    }
     return router.push(buildSearchUrl(search.query));
   };
 
@@ -240,7 +265,10 @@ export default function FavoritesPage() {
             emptyTitle: t('favorites.noSavedSearches'),
             emptyDescription: t('favorites.noSavedSearchesDescription'),
             priceLabel: t('favorites.priceLabel'),
+            priceNotSpecified: t('favorites.priceNotSpecified'),
             deleteButton: t('favorites.deleteButton'),
+            newItemsFound: t('favorites.newItemsFound'),
+            noNewItems: t('favorites.noNewItems'),
           }}
         />
       )}

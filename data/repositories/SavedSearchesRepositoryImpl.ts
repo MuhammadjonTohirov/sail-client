@@ -27,4 +27,8 @@ export class SavedSearchesRepositoryImpl implements ISavedSearchesRepository {
   async deleteSavedSearch(id: number): Promise<void> {
     await SavedSearches.delete(id);
   }
+
+  async markSavedSearchViewed(id: number): Promise<void> {
+    await SavedSearches.markViewed(id);
+  }
 }

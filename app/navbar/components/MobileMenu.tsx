@@ -17,6 +17,7 @@ import type { Locale } from "@/i18n/config";
 import type { AppConfig } from "@/config/app.config";
 import { LogoutUseCase } from "@/domain/usecases/auth/LogoutUseCase";
 import { AuthRepositoryImpl } from "@/data/repositories/AuthRepositoryImpl";
+import Image from "next/image";
 
 const iconProps = { width: 22, height: 22, strokeWidth: 1.8 };
 const profileIconProps = { width: 26, height: 26, strokeWidth: 1.8 };

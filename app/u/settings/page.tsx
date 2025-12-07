@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import { useProfile } from '@/hooks';
 import LocationPicker from '@/components/ui/LocationPicker';
-import { appConfig } from '@/config';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { appConfig, trustedImageUrl } from '@/config';
 import { compressImage } from '@/lib/photoCompressor';
 import './styles.css';
+import Image from 'next/image';
 
 export default function SettingsPage() {
   const { t } = useI18n();
@@ -37,7 +39,9 @@ export default function SettingsPage() {
       setUserName(profile.displayName || '');
       setLocationId(profile.locationId || null);
       setLocationPath(profile.locationName || '');
-      setLogoPreview(profile.logoUrl ? `${appConfig.api.baseUrl}${profile.logoUrl}` : null);
+      const avatar = profile.logoUrl ?? profile.telegramPhotoUrl ?? null;
+      const trustedAvatar = avatar ? trustedImageUrl(avatar) : null;
+      setLogoPreview(trustedAvatar);
     }
   }, [profile]);
 
@@ -98,7 +102,7 @@ export default function SettingsPage() {
   };
 
   if (!mounted || loading) {
-    return <div>Loading...</div>; // Or a proper skeleton loader
+    return <LoadingSpinner fullScreen size="large" />;
   }
   
   if (error) {

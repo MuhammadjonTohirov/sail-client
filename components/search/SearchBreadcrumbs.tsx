@@ -33,6 +33,7 @@ export default function SearchBreadcrumbs({
         className="olx-save-filter-btn flex items-center"
         title={t('searchPage.saveSearch')}
         onClick={onSaveSearch}
+        style={{gap: 8}}
       >
         <Lineicons icon={Heart} width={16} height={16} />
         <span className="ml-1">{t('searchPage.saveSearch')}</span>

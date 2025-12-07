@@ -9,6 +9,7 @@ import {
   Trash3Outlined as Trash,
   Camera1Outlined as Camera,
 } from "@lineiconshq/free-icons";
+import Image from 'next/image';
 
 type ExistingMedia = { id: number; image?: string; imageUrl?: string };
 

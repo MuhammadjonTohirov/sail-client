@@ -7,6 +7,7 @@ import { User4Outlined as User } from "@lineiconshq/free-icons";
 import { LogoutUseCase } from "@/domain/usecases/auth/LogoutUseCase";
 import { AuthRepositoryImpl } from "@/data/repositories/AuthRepositoryImpl";
 import type { UserProfile } from "@/domain/models/UserProfile";
+import Image from "next/image";
 
 const profileIconProps = { width: 26, height: 26, strokeWidth: 1.8 };
 

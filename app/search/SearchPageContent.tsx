@@ -53,7 +53,7 @@ export default function SearchPageContent({
         loading={loading}
       />
 
-      {selectedCategory && (
+      {(selectedCategory) && (
         <SearchBreadcrumbs
           selectedCategoryPath={selectedCategoryPath}
           basePath={basePath}

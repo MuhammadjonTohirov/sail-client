@@ -14,6 +14,9 @@ export interface ProfileDTO {
   location_name?: string | null;
   logo?: string | null;
   banner?: string | null;
+  telegram_id?: number | null;
+  telegram_username?: string | null;
+  telegram_photo_url?: string | null;
   last_active_at?: string | null;
   created_at: string;
 }

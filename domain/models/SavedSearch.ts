@@ -6,6 +6,8 @@ export interface SavedSearch {
   readonly query: Record<string, any>;
   readonly frequency?: SearchFrequency;
   readonly isActive?: boolean;
+  readonly lastViewedAt?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
+  readonly newItemsCount?: number;
 }

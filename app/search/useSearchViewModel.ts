@@ -422,6 +422,7 @@ export function useSearchViewModel(initialFilters?: SearchPrefill): SearchViewMo
   }, [flatCategories]);
 
   const resetFilters = useCallback(() => {
+    setQ('');
     setSelectedCategory(null);
     setSelectedCategoryPath('');
     setCategorySlug('');

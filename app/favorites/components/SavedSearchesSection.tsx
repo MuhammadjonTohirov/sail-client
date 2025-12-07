@@ -18,7 +18,10 @@ interface SavedSearchesSectionProps {
     emptyTitle: string;
     emptyDescription: string;
     priceLabel: string;
+    priceNotSpecified: string;
     deleteButton: string;
+    newItemsFound: string;
+    noNewItems: string;
   };
   formatDate: (date: string) => string;
   onSelect: (search: SavedSearch) => void;
@@ -84,10 +87,17 @@ export function SavedSearchesSection({
     );
   }
 
+  const formatNewItemsCount = (count: number) => {
+    return count.toLocaleString(locale === 'uz' ? 'uz-UZ' : 'ru-RU').replace(/,/g, ' ');
+  };
+
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       {searches.map((search) => {
         const priceRange = formatPriceRange(search, locale, currencySymbol);
+        const hasNewItems = search.newItemsCount && search.newItemsCount > 0;
+        const hasBeenViewed = !!search.lastViewedAt;
+
         return (
           <div key={search.id} className="saved-search-card">
             <button
@@ -95,22 +105,57 @@ export function SavedSearchesSection({
               onClick={() => onSelect(search)}
               style={buttonStyle}
             >
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px', color: 'var(--brand)' }}>
-                {search.title}
-              </h3>
-              <div style={{ fontSize: '14px', color: 'var(--muted)' }}>
-                {search.query.category_name && <span>{search.query.category_name}</span>}
-                {search.query.location_name && <span> • {search.query.location_name}</span>}
-                {priceRange && (
-                  <span>
-                    {' '}
-                    • {messages.priceLabel} {priceRange}
-                  </span>
-                )}
+              <div style={{ marginBottom: '12px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', color: 'var(--text)' }}>
+                  {search.title}
+                </h3>
+                <div style={{ fontSize: '14px', color: 'var(--muted)' }}>
+                  {search.query.category_name && <span>{search.query.category_name}</span>}
+                  {search.query.location_name && <span> / {search.query.location_name}</span>}
+                </div>
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
-                {formatDate(search.createdAt ?? '')}
+
+              <div style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '8px' }}>
+                <span>{messages.priceLabel} {priceRange || messages.priceNotSpecified}</span>
               </div>
+
+              {hasBeenViewed && (
+                <div style={{ marginBottom: '4px' }}>
+                  {hasNewItems ? (
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        padding: '6px 12px',
+                        backgroundColor: '#40E0D0',
+                        color: 'white',
+                        borderRadius: '2px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.5px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {formatNewItemsCount(search.newItemsCount)} {messages.newItemsFound}
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        padding: '6px 12px',
+                        backgroundColor: '#2C2C2C',
+                        color: 'white',
+                        borderRadius: '2px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.5px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {messages.noNewItems}
+                    </div>
+                  )}
+                </div>
+              )}
             </button>
             <button
               type="button"

@@ -1,4 +1,5 @@
 import { SearchListing } from '@/domain/models/SearchListing';
+import Image from 'next/image';
 
 interface RelatedListingsViewProps {
   listings: SearchListing[];
@@ -60,7 +61,7 @@ export const RelatedListingsView = ({
               >
                 <div className="related-listing-image">
                   {thumb ? (
-                    <img src={thumb} alt={otherListing.title} />
+                    <img src={thumb} alt={otherListing.title}/>
                   ) : (
                     <div className="no-image">
                       <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

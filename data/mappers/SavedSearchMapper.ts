@@ -10,8 +10,10 @@ export class SavedSearchMapper {
       query: dto.query,
       frequency: dto.frequency,
       isActive: dto.is_active,
+      lastViewedAt: dto.last_viewed_at,
       createdAt: dto.created_at,
       updatedAt: dto.updated_at,
+      newItemsCount: dto.new_items_count,
     };
   }
 

@@ -26,4 +26,9 @@ export const SavedSearches = {
       method: 'PATCH',
       body: JSON.stringify(payload)
     }),
+
+  markViewed: (id: number) =>
+    apiFetch(`/api/v1/saved-searches/${id}/mark-viewed`, {
+      method: 'POST',
+    }),
 };

@@ -10,6 +10,7 @@ import { getAsset } from "@/utils/assets";
 import { useProfile } from "@/hooks";
 import DesktopNav from "./components/DesktopNav";
 import MobileNav from "./components/MobileNav";
+import Image from "next/image";
 
 export default function ClientNav() {
   const pathname = usePathname() || "/";
@@ -97,10 +98,12 @@ export default function ClientNav() {
             className="topbar-logo"
             style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <img
+            <Image
               src={appLogo}
               alt={appConfig.name}
               style={{ height: "32px" }}
+              width={200}
+              height={32}
             />
           </div>
         </Link>

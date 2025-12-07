@@ -19,6 +19,9 @@ export class ProfileMapper {
       locationName: dto.location_name,
       logoUrl: dto.logo,
       bannerUrl: dto.banner,
+      telegramId: dto.telegram_id,
+      telegramUsername: dto.telegram_username,
+      telegramPhotoUrl: dto.telegram_photo_url,
       lastActiveAt: dto.last_active_at ? new Date(dto.last_active_at) : null,
       createdAt: new Date(dto.created_at),
     };

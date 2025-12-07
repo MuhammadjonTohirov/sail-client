@@ -6,4 +6,5 @@ export interface ISavedSearchesRepository {
   createSavedSearch(payload: SavedSearchPayload): Promise<SavedSearch>;
   updateSavedSearch(id: number, payload: SavedSearchUpdatePayload): Promise<SavedSearch>;
   deleteSavedSearch(id: number): Promise<void>;
+  markSavedSearchViewed(id: number): Promise<void>;
 }

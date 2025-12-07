@@ -1,4 +1,5 @@
 import { trustedImageUrl } from "@/config";
+import Image from "next/image";
 
 interface GalleryViewProps {
   isPromoted: boolean;
@@ -46,6 +47,7 @@ export const GalleryView = ({
       >
         {currentImage ? (
           <img src={currentImage} alt={listingTitle} />
+          // <Image src={currentImage} alt={listingTitle} width={600} height={400} />
         ) : (
           <div className="no-image-placeholder">
             <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,13 +76,24 @@ export const GalleryView = ({
       {galleryLength > 0 && (
         <div className="gallery-thumbs">
           {mediaItems.map((item, i) => (
+            // <Image 
+            //   key={item.id}
+            //   src={trustedImageUrl(item.url)}
+            //   width={80}
+            //   height={80}
+            //   // className={i === currentImageIndex ? 'is-active' : ''}
+            //   // onClick={() => onSelectImage(i)}
+            //   alt=""
+            // />
             <img
               key={item.id}
               src={trustedImageUrl(item.url)}
+              width={80}
+              height={80}
               className={i === currentImageIndex ? 'is-active' : ''}
               onClick={() => onSelectImage(i)}
               alt=""
-            />
+             />
           ))}
         </div>
       )}
