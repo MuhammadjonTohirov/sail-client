@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import type { CategoryNode } from '@/app/search/types';
-import { iconRegistry, Lineicons } from "@lineiconshq/react-lineicons";
+import { Lineicons } from "@lineiconshq/react-lineicons";
 import {
   Spinner2SacleOutlined,
   Search1Outlined as Search,
@@ -81,8 +81,8 @@ export default function SearchBar({
             <div className="absolute inset-0 flex items-center justify-center">
               <Lineicons
                 icon={Spinner2SacleOutlined}
-                {...iconRegistry}
-                style={{ fontSize: '12px' }}
+                width={12}
+                height={12}
               />
             </div>
           )}

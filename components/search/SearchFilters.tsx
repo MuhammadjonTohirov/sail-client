@@ -97,164 +97,7 @@ export default function SearchFilters({
   const filtersCount = (selectedCategory ? 1 : 0) + (minPrice ? 1 : 0) + (maxPrice ? 1 : 0) + attrFilterCount;
   const hasActiveFilters = filtersCount > 0;
   const { t } = useI18n();
-  const renderFiltersBody = () => (
-    <>
-      <div className="filter-group">
-        <label className="muted" suppressHydrationWarning>
-          {t('searchPage.priceLabel')}
-        </label>
-        <div className="row">
-          <input
-            placeholder={t('searchPage.priceFrom')}
-            value={minPrice}
-            onChange={e => setMinPrice(e.target.value)}
-            suppressHydrationWarning
-          />
-          <input
-            placeholder={t('searchPage.priceTo')}
-            value={maxPrice}
-            onChange={e => setMaxPrice(e.target.value)}
-            suppressHydrationWarning
-          />
-        </div>
-      </div>
-
-      {attributes.map((a) => {
-        const attrValue = attrValues[a.key];
-        const [attrMin, attrMax] = Array.isArray(attrValue) ? attrValue : ['', ''];
-
-        return (
-          <div key={a.id} className="filter-group">
-            <label className="muted" suppressHydrationWarning>{a.label}</label>
-
-            {a.type === 'select' && (
-              <Dropdown
-                value={String(attrValue ?? '')}
-                onChange={(v) => setAttrValue(a.key, v)}
-                options={[
-                  { value: '', label: '--' },
-                  ...(a.options || []).map((o) => ({ value: String(o), label: String(o) })),
-                ]}
-              />
-            )}
-
-            {a.type === 'multiselect' && (
-              <MultiDropdown
-                value={Array.isArray(attrValue) ? attrValue.map(String) : []}
-                onChange={(v) => setAttrValue(a.key, v)}
-                options={(a.options || []).map((o) => ({ value: String(o), label: String(o) }))}
-              />
-            )}
-
-            {(a.type === 'number' || a.type === 'range') && (
-              <div className="row">
-                <input
-                  placeholder={t('searchPage.rangeMin')}
-                  value={attrMin ?? ''}
-                  onChange={(e) => setAttrValue(a.key, [e.target.value, attrMax ?? ''])}
-                  suppressHydrationWarning
-                />
-                <input
-                  placeholder={t('searchPage.rangeMax')}
-                  value={attrMax ?? ''}
-                  onChange={(e) => setAttrValue(a.key, [attrMin ?? '', e.target.value])}
-                  suppressHydrationWarning
-                />
-              </div>
-            )}
-
-            {a.type === 'text' && (
-              <input value={attrValue || ''} onChange={(e) => setAttrValue(a.key, e.target.value)} />
-            )}
-
-            {a.type === 'boolean' && (
-              <label>
-                <input
-                  type="checkbox"
-                  checked={!!attrValue}
-                  onChange={(e) => setAttrValue(a.key, e.target.checked)}
-                />
-              </label>
-            )}
-          </div>
-        );
-      })}
-    </>
-  );
-
-  const handleApplyAndClose = () => {
-    onApplyFilters();
-    setMobileOpen(false);
-  };
-
-  const handleResetAndClose = () => {
-    onResetFilters();
-    setMobileOpen(false);
-  };
-
-  if (isMobile) {
-    return (
-      <>
-        <button
-          type="button"
-          className="filters-mobile-trigger card"
-          onClick={() => setMobileOpen(true)}
-        >
-          <span suppressHydrationWarning>{t('searchPage.filtersTitle')}</span>
-          {hasActiveFilters ? (
-            <span className="filters-mobile-chip" suppressHydrationWarning>
-              {t('searchPage.filtersApplied', { count: filtersCount })}
-            </span>
-          ) : (
-            <svg viewBox="0 0 24 24" width={20} height={20} stroke="currentColor" fill="none" strokeWidth={1.8}>
-              <path d="M4 7h16M4 12h10M4 17h6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          )}
-        </button>
-
-        {mobileOpen && (
-          <div className="filters-sheet" role="dialog" aria-modal="true">
-            <div className="filters-sheet__header">
-              <button
-                type="button"
-                className="filters-sheet__back"
-                onClick={() => setMobileOpen(false)}
-                aria-label={t('searchPage.filtersBack')}
-                suppressHydrationWarning
-              >
-                <p style={{color: '#000000'}}>←</p>
-              </button>
-              <h3 className="filters-sheet__title" suppressHydrationWarning>
-                {t('searchPage.filtersTitle')}
-              </h3>
-              {hasActiveFilters && (
-                <button
-                  type="button"
-                  className="filters-sheet__reset"
-                  onClick={onResetFilters}
-                  suppressHydrationWarning
-                >
-                  {t('searchPage.resetFilters')}
-                </button>
-              )}
-            </div>
-
-            <div className="filters-sheet__body">{renderFiltersBody()}</div>
-
-            <div className="filters-sheet__footer">
-              <button type="button" className="btn-outline" onClick={handleResetAndClose}>
-                {t('searchPage.resetFilters')}
-              </button>
-              <button type="button" className="btn-accent" onClick={handleApplyAndClose}>
-                {t('searchPage.applyFilters')}
-              </button>
-            </div>
-          </div>
-        )}
-      </>
-    );
-  }
-
+  
   return (
     <aside className="search-filters card">
       <div className="flex items-center justify-between mb-4">
@@ -272,9 +115,102 @@ export default function SearchFilters({
         )}
       </div>
 
-      {renderFiltersBody()}
+      <div className="filters-grid">
+        <div className="filter-group">
+          <label className="muted-small" suppressHydrationWarning>
+            {t('searchPage.priceLabel')}
+          </label>
+          <div className="row">
+            <input
+              placeholder={t('searchPage.priceFrom')}
+              value={minPrice}
+              onChange={e => setMinPrice(e.target.value)}
+              style={{width: `100%`, maxWidth: '120px'}}
+              suppressHydrationWarning
+            />
+            <input
+              placeholder={t('searchPage.priceTo')}
+              value={maxPrice}
+              onChange={e => setMaxPrice(e.target.value)}
+              style={{width: `100%`, maxWidth: '120px'}}
+              suppressHydrationWarning
+            />
+          </div>
+        </div>
 
-      <button className="btn-accent" onClick={onApplyFilters} style={{ width: '100%' }} suppressHydrationWarning>
+        {attributes.map((a) => {
+          const attrValue = attrValues[a.key];
+          const [attrMin, attrMax] = Array.isArray(attrValue) ? attrValue : ['', ''];
+
+          return (
+            <div key={a.id} className="filter-group">
+              <label className="muted-small" suppressHydrationWarning>{a.label}</label>
+
+              {a.type === 'select' && (
+                <Dropdown
+                  value={String(attrValue ?? '')}
+                  onChange={(v) => setAttrValue(a.key, v)}
+                  options={[
+                    { value: '', label: t('') },
+                    ...(a.options || []).map((o) => ({ value: String(o), label: String(o) })),
+                  ]}
+                  style={{
+                    
+                  }}
+                />
+              )}
+
+              {a.type === 'multiselect' && (
+                <MultiDropdown
+                  value={Array.isArray(attrValue) ? attrValue.map(String) : []}
+                  onChange={(v) => setAttrValue(a.key, v)}
+                  options={(a.options || []).map((o) => ({ value: String(o), label: String(o) }))}
+                />
+              )}
+
+              {(a.type === 'number' || a.type === 'range') && (
+                <div className="row">
+                  <input
+                    placeholder={t('searchPage.rangeMin')}
+                    value={attrMin ?? ''}
+                    onChange={(e) => setAttrValue(a.key, [e.target.value, attrMax ?? ''])}
+                    style={{width: `100%`, maxWidth: '120px'}}
+                    suppressHydrationWarning
+                  />
+                  <input
+                    placeholder={t('searchPage.rangeMax')}
+                    value={attrMax ?? ''}
+                    onChange={(e) => setAttrValue(a.key, [attrMin ?? '', e.target.value])}
+                    style={{width: `100%`, maxWidth: '120px'}}
+                    suppressHydrationWarning
+                  />
+                </div>
+              )}
+
+              {a.type === 'text' && (
+                <input 
+                  value={attrValue || ''} 
+                  onChange={(e) => setAttrValue(a.key, e.target.value)} 
+                  style={{width: `100%`, maxWidth: '120px'}}
+                />
+              )}
+
+              {a.type === 'boolean' && (
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={!!attrValue}
+                    onChange={(e) => setAttrValue(a.key, e.target.checked)}
+                    style={{width: `100%`, maxWidth: '120px'}}
+                  />
+                </label>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <button className="btn-accent" onClick={onApplyFilters} style={{ width: '100%', marginTop: '16px' }} suppressHydrationWarning>
         {t('searchPage.applyFilters')}
       </button>
     </aside>

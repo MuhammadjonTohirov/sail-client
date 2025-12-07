@@ -50,6 +50,11 @@ a {
   color: var(--muted);
 }
 
+.muted-small {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .tag {
   display: inline-block;
   padding: 4px 8px;

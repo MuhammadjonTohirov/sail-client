@@ -140,8 +140,32 @@ header nav .nav-link:hover {
   .search-layout {
     grid-template-columns: 1fr;
   }
+  
   .search-filters {
-    order: 2;
+    position: static !important;
+    top: auto !important;
+    z-index: 1;
+  }
+
+  .search-results {
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+  }
+
+  .filters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .filter-group {
+    flex: 0 0 auto;
+    min-width: 200px;
+    max-width: 100%;
+    margin: 0 !important;
   }
 }
 

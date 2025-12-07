@@ -29,14 +29,33 @@ export class SearchInteractor {
 
   async fetchCategoryTree(): Promise<CategoryNode[]> {
     const categories = await this.getCategoriesUseCase.execute();
-    // Map domain Category to CategoryNode
-    return categories as any;
+    return categories.map(c => this.mapCategoryToNode(c));
   }
 
   async fetchCategoryAttributes(categoryId: number): Promise<Attr[]> {
     const attributes = await this.getCategoryAttributesUseCase.execute(categoryId);
-    // Map domain Attribute to Attr
-    return attributes as any;
+    return attributes.map(a => this.mapAttributeToAttr(a));
+  }
+
+  private mapCategoryToNode(category: any): CategoryNode {
+    return {
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      is_leaf: category.isLeaf,
+      icon: category.icon,
+      children: category.children?.map((c: any) => this.mapCategoryToNode(c))
+    };
+  }
+
+  private mapAttributeToAttr(attr: any): Attr {
+    return {
+      id: attr.id,
+      key: attr.key,
+      label: attr.label,
+      type: attr.type,
+      options: attr.options
+    };
   }
 
   async fetchListings(params: Record<string, any>): Promise<{ results?: SearchListing[]; total?: number }> {
