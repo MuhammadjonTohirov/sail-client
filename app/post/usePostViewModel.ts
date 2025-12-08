@@ -8,6 +8,7 @@ import { PostInteractor } from './PostInteractor';
 import { Category } from '@/domain/models/Category';
 import { Attribute } from '@/domain/models/Attribute';
 import { ListingPayload } from '@/domain/models/ListingPayload';
+import { TelegramChat } from '@/domain/models/TelegramChat';
 import { PostFile } from './components/types';
 import { compressImage } from '@/lib/photoCompressor';
 
@@ -66,6 +67,11 @@ export interface PostViewModel {
   setContactEmail: (value: string) => void;
   contactPhone: string;
   setContactPhone: (value: string) => void;
+
+  // Telegram Sharing
+  telegramChats: TelegramChat[];
+  selectedTelegramChats: number[];
+  setSelectedTelegramChats: (chatIds: number[]) => void;
 
   // Media
   files: PostFile[];
@@ -142,6 +148,10 @@ export function usePostViewModel(): PostViewModel {
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
 
+  // Telegram Sharing
+  const [telegramChats, setTelegramChats] = useState<TelegramChat[]>([]);
+  const [selectedTelegramChats, setSelectedTelegramChats] = useState<number[]>([]);
+
   // Media
   const [files, setFiles] = useState<PostFile[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -190,6 +200,22 @@ export function usePostViewModel(): PostViewModel {
         }
       } catch (e) {
         console.error('Failed to load user profile for contact defaults:', e);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Load telegram chats
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const chats = await interactorRef.current.fetchTelegramChats();
+        if (!cancelled) {
+          setTelegramChats(chats);
+        }
+      } catch (e) {
+        console.error('Failed to load telegram chats:', e);
       }
     })();
     return () => { cancelled = true; };
@@ -502,6 +528,7 @@ export function usePostViewModel(): PostViewModel {
         contactName: contactName.trim(),
         contactEmail: contactEmail || undefined,
         contactPhone: contactPhone || undefined,
+        sharingTelegramChatIds: selectedTelegramChats.length > 0 ? selectedTelegramChats : undefined,
       };
 
       let id: number;
@@ -589,6 +616,9 @@ export function usePostViewModel(): PostViewModel {
     setContactEmail,
     contactPhone,
     setContactPhone,
+    telegramChats,
+    selectedTelegramChats,
+    setSelectedTelegramChats,
     files,
     existingMedia,
     onPickFiles,

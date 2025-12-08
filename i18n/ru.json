@@ -56,7 +56,8 @@
     "noResultsTitle": "Объявления не найдены",
     "noResultsDescription": "Попробуйте изменить параметры поиска.",
     "filtersApplied": "{{count}} фильтров",
-    "filtersBack": "Назад к результатам"
+    "filtersBack": "Назад к результатам",
+    "select": "Выбрать"
   },
   "features": {
     "promotions": "Продвижение объявлений",

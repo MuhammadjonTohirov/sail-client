@@ -11,6 +11,7 @@ import { AttributesSection } from './components/AttributesSection';
 import { LocationSection } from './components/LocationSection';
 import { ContactInfoSection } from './components/ContactInfoSection';
 import { FormActions } from './components/FormActions';
+import { TelegramChannelSelector } from '@/components/post/TelegramChannelSelector';
 
 const TITLE_MAX_LENGTH = 70;
 const DESCRIPTION_MAX_LENGTH = 9000;
@@ -132,6 +133,16 @@ function PostPageContent() {
           emailMaxLength={CONTACT_MAX_LENGTH}
           phoneMaxLength={PHONE_MAX_LENGTH}
         />
+
+        {!vm.isEditMode && (
+          <div className="mb-8">
+            <TelegramChannelSelector
+              chats={vm.telegramChats}
+              selectedChatIds={vm.selectedTelegramChats}
+              onChange={vm.setSelectedTelegramChats}
+            />
+          </div>
+        )}
 
         <FormActions
           t={t}

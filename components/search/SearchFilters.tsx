@@ -151,7 +151,7 @@ export default function SearchFilters({
                   value={String(attrValue ?? '')}
                   onChange={(v) => setAttrValue(a.key, v)}
                   options={[
-                    { value: '', label: t('') },
+                    { value: '', label: '- -' },
                     ...(a.options || []).map((o) => ({ value: String(o), label: String(o) })),
                   ]}
                   style={{
@@ -163,6 +163,7 @@ export default function SearchFilters({
               {a.type === 'multiselect' && (
                 <MultiDropdown
                   value={Array.isArray(attrValue) ? attrValue.map(String) : []}
+                  placeholder='- -'
                   onChange={(v) => setAttrValue(a.key, v)}
                   options={(a.options || []).map((o) => ({ value: String(o), label: String(o) }))}
                 />

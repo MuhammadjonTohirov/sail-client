@@ -150,4 +150,6 @@ export const Auth = {
       try { window.dispatchEvent(new Event('auth-changed')); } catch {}
     }
   },
+
+  getTelegramChats: () => apiFetch('/api/v1/telegram-chats/'),
 };

@@ -8,13 +8,16 @@ import { GetListingDetailUseCase } from '@/domain/usecases/listings/GetListingDe
 import { UploadListingMediaUseCase } from '@/domain/usecases/listings/UploadListingMediaUseCase';
 import { DeleteListingMediaUseCase } from '@/domain/usecases/listings/DeleteListingMediaUseCase';
 import { GetProfileUseCase } from '@/domain/usecases/profile/GetProfileUseCase';
+import { GetTelegramChatsUseCase } from '@/domain/usecases/telegram/GetTelegramChatsUseCase';
 import { TaxonomyRepositoryImpl } from '@/data/repositories/TaxonomyRepositoryImpl';
 import { ListingsRepositoryImpl } from '@/data/repositories/ListingsRepositoryImpl';
 import { ProfileRepositoryImpl } from '@/data/repositories/ProfileRepositoryImpl';
+import { TelegramRepositoryImpl } from '@/data/repositories/TelegramRepositoryImpl';
 import { Category } from '@/domain/models/Category';
 import { Attribute } from '@/domain/models/Attribute';
 import { Listing } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
+import { TelegramChat } from '@/domain/models/TelegramChat';
 
 import { Listings } from '@/lib/api';
 import { UserProfile } from '@/domain/models/UserProfile';
@@ -28,11 +31,13 @@ export class PostInteractor {
   private uploadListingMediaUseCase: UploadListingMediaUseCase;
   private deleteListingMediaUseCase: DeleteListingMediaUseCase;
   private getProfileUseCase: GetProfileUseCase;
+  private getTelegramChatsUseCase: GetTelegramChatsUseCase;
 
   constructor() {
     const taxonomyRepository = new TaxonomyRepositoryImpl();
     const listingsRepository = new ListingsRepositoryImpl();
     const profileRepository = new ProfileRepositoryImpl();
+    const telegramRepository = new TelegramRepositoryImpl();
 
     this.getCategoriesUseCase = new GetCategoriesUseCase(taxonomyRepository);
     this.getCategoryAttributesUseCase = new GetCategoryAttributesUseCase(taxonomyRepository);
@@ -42,6 +47,7 @@ export class PostInteractor {
     this.uploadListingMediaUseCase = new UploadListingMediaUseCase(listingsRepository);
     this.deleteListingMediaUseCase = new DeleteListingMediaUseCase(listingsRepository);
     this.getProfileUseCase = new GetProfileUseCase(profileRepository);
+    this.getTelegramChatsUseCase = new GetTelegramChatsUseCase(telegramRepository);
   }
 
   async fetchCategoryTree(): Promise<Category[]> {
@@ -58,6 +64,15 @@ export class PostInteractor {
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
       return null;
+    }
+  }
+
+  async fetchTelegramChats(): Promise<TelegramChat[]> {
+    try {
+      return await this.getTelegramChatsUseCase.execute();
+    } catch (error) {
+      console.error('Failed to fetch telegram chats:', error);
+      return [];
     }
   }
 

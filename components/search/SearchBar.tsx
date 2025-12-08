@@ -68,7 +68,7 @@ export default function SearchBar({
       </button>
 
       <button
-        className={`olx-search-btn ${loading ? 'loading' : ''}`}
+        className={`app-search-btn ${loading ? 'loading' : ''}`}
         onClick={onSearch}
         disabled={loading}
         suppressHydrationWarning

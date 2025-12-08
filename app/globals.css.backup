@@ -355,7 +355,7 @@ button.btn-accent { background: var(--accent-2); }
   background: #f7f9fa;
 }
 
-.olx-search-btn {
+.app-search-btn {
   padding: 12px 24px;
   background: var(--accent);
   color: #fff;
@@ -368,11 +368,11 @@ button.btn-accent { background: var(--accent-2); }
   white-space: nowrap;
 }
 
-.olx-search-btn:hover:not(:disabled) {
+.app-search-btn:hover:not(:disabled) {
   background: var(--accent-2);
 }
 
-.olx-search-btn:disabled {
+.app-search-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

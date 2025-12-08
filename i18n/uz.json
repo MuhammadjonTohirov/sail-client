@@ -56,7 +56,8 @@
     "noResultsTitle": "E'lonlar topilmadi",
     "noResultsDescription": "Qidiruv parametrlarini o'zgartiring.",
     "filtersApplied": "{{count}} ta filtr",
-    "filtersBack": "Natijalarga qaytish"
+    "filtersBack": "Natijalarga qaytish",
+    "select": "Tanlash"
   },
   "features": {
     "promotions": "Reklama qilingan eʼlonlar",

@@ -136,11 +136,12 @@
 }
 
 .dd-trigger {
-  display: inline-block;
-  align-items: start;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 6px;
   padding: 8px 10px;
-  
+
   width: 100%;
   z-index: 60;
 
@@ -149,7 +150,7 @@
   background: #fff;
   cursor: pointer;
   color: var(--fg);
-  
+
 }
 
 .dd-trigger:hover {
