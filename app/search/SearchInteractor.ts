@@ -9,6 +9,19 @@ import { SearchRepositoryImpl } from '@/data/repositories/SearchRepositoryImpl';
 import { SavedSearchesRepositoryImpl } from '@/data/repositories/SavedSearchesRepositoryImpl';
 import { CategoryNode, Attr, Hit } from './types';
 import { SearchListing } from '@/domain/models/SearchListing';
+import { Category } from '@/domain/models/Category';
+import { Attribute } from '@/domain/models/Attribute';
+
+interface SearchQueryParams {
+  q?: string;
+  category_slug?: string;
+  min_price?: string | number;
+  max_price?: string | number;
+  sort?: string;
+  per_page?: number;
+  page?: number;
+  [key: string]: any;
+}
 
 export class SearchInteractor {
   private getCategoriesUseCase: GetCategoriesUseCase;
@@ -37,7 +50,7 @@ export class SearchInteractor {
     return attributes.map(a => this.mapAttributeToAttr(a));
   }
 
-  private mapCategoryToNode(category: any): CategoryNode {
+  private mapCategoryToNode(category: Category): CategoryNode {
     return {
       id: category.id,
       name: category.name,
@@ -48,7 +61,7 @@ export class SearchInteractor {
     };
   }
 
-  private mapAttributeToAttr(attr: any): Attr {
+  private mapAttributeToAttr(attr: Attribute): Attr {
     return {
       id: attr.id,
       key: attr.key,
@@ -58,7 +71,7 @@ export class SearchInteractor {
     };
   }
 
-  async fetchListings(params: Record<string, any>): Promise<{ results?: SearchListing[]; total?: number }> {
+  async fetchListings(params: SearchQueryParams): Promise<{ results?: SearchListing[]; total?: number }> {
     // Extract attributes from params (attrs.*)
     const attributes: Record<string, any> = {};
     const cleanParams: any = { ...params };
