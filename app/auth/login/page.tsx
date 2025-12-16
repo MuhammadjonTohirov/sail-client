@@ -113,12 +113,12 @@ function LoginPageContent() {
               >
                 {t('auth.login.forgotPassword')}
               </Link>
-              <Link
+              {/* <Link
                 href="/auth/otp"
                 className="text-accent hover:text-accent-2 font-medium"
               >
                 {t('auth.login.useOtp')}
-              </Link>
+              </Link> */}
             </div>
 
             <button

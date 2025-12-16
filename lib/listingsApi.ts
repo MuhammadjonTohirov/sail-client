@@ -68,6 +68,17 @@ export const Listings = {
   activate: (id: number) =>
     apiFetch(`/api/v1/listings/${id}/activate`, { method: 'POST' }),
 
-  delete: (id: number) =>
-    apiFetch(`/api/v1/listings/${id}/delete`, { method: 'DELETE' }),
+  async delete(id: number): Promise<void> {
+    return apiFetch(`/api/v1/listings/${id}/delete`, { method: 'DELETE' });
+  },
+
+  async share(id: number, chatIds: number[]): Promise<void> {
+    return apiFetch(`/api/v1/listings/${id}/share`, {
+      method: 'POST',
+      body: JSON.stringify({ telegram_chat_ids: chatIds }),
+    });
+  },
+
+  trackInterest: (id: number) =>
+    apiFetch(`/api/v1/listings/${id}/interest`, { method: 'POST' }),
 };

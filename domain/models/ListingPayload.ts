@@ -20,5 +20,4 @@ export interface ListingPayload {
   readonly contactName: string;
   readonly contactEmail?: string;
   readonly contactPhone?: string;
-  readonly sharingTelegramChatIds?: number[];
 }

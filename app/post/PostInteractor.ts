@@ -21,6 +21,7 @@ import { TelegramChat } from '@/domain/models/TelegramChat';
 
 import { Listings } from '@/lib/api';
 import { UserProfile } from '@/domain/models/UserProfile';
+import { ShareListingUseCase } from '@/domain/usecases/listings/ShareListingUseCase';
 
 export class PostInteractor {
   private getCategoriesUseCase: GetCategoriesUseCase;
@@ -32,6 +33,7 @@ export class PostInteractor {
   private deleteListingMediaUseCase: DeleteListingMediaUseCase;
   private getProfileUseCase: GetProfileUseCase;
   private getTelegramChatsUseCase: GetTelegramChatsUseCase;
+  private shareListingUseCase: ShareListingUseCase;
 
   constructor() {
     const taxonomyRepository = new TaxonomyRepositoryImpl();
@@ -48,6 +50,7 @@ export class PostInteractor {
     this.deleteListingMediaUseCase = new DeleteListingMediaUseCase(listingsRepository);
     this.getProfileUseCase = new GetProfileUseCase(profileRepository);
     this.getTelegramChatsUseCase = new GetTelegramChatsUseCase(telegramRepository);
+    this.shareListingUseCase = new ShareListingUseCase(listingsRepository);
   }
 
   async fetchCategoryTree(): Promise<Category[]> {
@@ -99,5 +102,9 @@ export class PostInteractor {
   async reorderMedia(listingId: number, mediaIds: number[]): Promise<void> {
     // This doesn't have a use case yet, so we'll call the API directly
     return await Listings.reorderMedia(listingId, mediaIds);
+  }
+
+  async shareListing(listingId: number, chatIds: number[]): Promise<void> {
+    return await this.shareListingUseCase.execute(listingId, chatIds);
   }
 }

@@ -597,3 +597,241 @@
   }
 }
 
+/* Statistics Modal */
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+  max-width: 500px;
+  width: calc(100% - 24px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.statistics-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.statistics-modal .modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.statistics-modal .modal-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  color: var(--muted);
+  transition: all 0.15s ease;
+}
+
+.statistics-modal .modal-close:hover {
+  background: #f0f2f4;
+  color: var(--fg);
+}
+
+.statistics-modal .modal-body {
+  padding: 20px;
+}
+
+.statistics-listing-info {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.statistics-listing-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.statistics-listing-meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.statistics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.stat-card-views {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+}
+
+.stat-card-views .stat-card-icon {
+  color: #0284c7;
+}
+
+.stat-card-favorites {
+  background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+}
+
+.stat-card-favorites .stat-card-icon {
+  color: #db2777;
+}
+
+.stat-card-interests {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.stat-card-interests .stat-card-icon {
+  color: #059669;
+}
+
+.stat-card-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.stat-card-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.2;
+}
+
+.stat-card-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.statistics-insights {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.insights-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 0 0 12px 0;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.insight-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.insight-item:last-child {
+  border-bottom: none;
+}
+
+.insight-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.insight-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.statistics-tip {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: #eff6ff;
+  border-radius: 8px;
+  border-left: 3px solid #3b82f6;
+}
+
+.statistics-tip p {
+  margin: 0;
+  font-size: 13px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+.statistics-tip svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.statistics-modal .modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.statistics-modal .btn-secondary {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.statistics-modal .btn-secondary:hover {
+  border-color: var(--accent);
+  background: #f8fafc;
+}
+
+@media (max-width: 480px) {
+  .statistics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+  }
+
+  .stat-card-icon {
+    margin-bottom: 0;
+  }
+
+  .stat-card-content {
+    flex: 1;
+  }
+}
+

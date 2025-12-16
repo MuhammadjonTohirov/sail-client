@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import PriceDisplay from '@/components/PriceDisplay';
 import { SearchListing } from '@/domain/models/SearchListing';
+import { trustedImageUrl } from '@/config';
 
 export type ProductHit = {
   id: string;
@@ -71,7 +72,7 @@ export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid
         <div className="product-card-image">
           {img && !imageError ? (
             <img
-              src={img}
+              src={trustedImageUrl(img)}
               alt={hit.title}
               onError={() => setImageError(true)}
               className="w-full h-full object-cover"

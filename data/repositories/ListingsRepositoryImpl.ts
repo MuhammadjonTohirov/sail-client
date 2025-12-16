@@ -61,4 +61,8 @@ export class ListingsRepositoryImpl implements IListingsRepository {
   async deleteMedia(listingId: number, mediaId: number): Promise<void> {
     await Listings.deleteMedia(listingId, mediaId);
   }
+
+  async shareListing(id: number, chatIds: number[]): Promise<void> {
+    await Listings.share(id, chatIds);
+  }
 }

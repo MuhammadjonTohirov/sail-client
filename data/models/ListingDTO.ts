@@ -83,5 +83,4 @@ export interface ListingPayloadDTO {
   contact_name?: string;
   contact_email?: string;
   contact_phone?: string;
-  sharing_telegram_chat_ids?: number[];
 }

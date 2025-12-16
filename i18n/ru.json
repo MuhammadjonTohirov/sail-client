@@ -302,7 +302,27 @@
     "confirmDelete": "Удалить объявление?",
     "confirmDeleteMessage": "Это действие нельзя отменить. Объявление будет удалено навсегда.",
     "confirmButton": "Да, удалить",
-    "cancelButton": "Отмена"
+    "cancelButton": "Отмена",
+    "stats": {
+      "views": "Просмотров",
+      "favorites": "В избранном",
+      "interests": "Интересуются"
+    },
+    "statisticsTooltip": "Статистика объявления",
+    "statisticsModal": {
+      "title": "Статистика объявления",
+      "activeSince": "Опубликовано",
+      "views": "Просмотров",
+      "favorites": "В избранном",
+      "interests": "Интересуются",
+      "insights": "Аналитика",
+      "daysActive": "Дней активно",
+      "avgViewsPerDay": "Просмотров в день",
+      "conversionRate": "Конверсия",
+      "totalEngagement": "Всего взаимодействий",
+      "tip": "Совет: Регулярно поднимайте объявление, чтобы увеличить количество просмотров и интерес к вашему товару.",
+      "close": "Закрыть"
+    }
   },
   "favorites": {
     "pageTitle": "Избранные объявления",

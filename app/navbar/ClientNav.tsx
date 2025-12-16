@@ -98,12 +98,12 @@ export default function ClientNav() {
             className="topbar-logo"
             style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <Image
+            <img
               src={appLogo}
               alt={appConfig.name}
               style={{ height: "32px" }}
-              width={200}
-              height={32}
+              // width={200}
+              // height={32}
             />
           </div>
         </Link>

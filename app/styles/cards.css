@@ -254,10 +254,57 @@
 
 .listing-actions-col {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-shrink: 0;
+}
+
+.listing-actions-buttons {
+  display: flex;
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
-  flex-shrink: 0;
+}
+
+.listing-stats {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: default;
+}
+
+.stat-item svg {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.stat-item span {
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .listing-actions-col {
+    align-items: flex-start;
+  }
+
+  .listing-actions-buttons {
+    justify-content: flex-start;
+  }
+
+  .listing-stats {
+    justify-content: flex-start;
+  }
 }
 
 /* Category Tile */

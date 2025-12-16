@@ -5,6 +5,22 @@ export const API_TIMEOUT = appConfig.api.timeout;
 const SUPPORTED_LOCALES = new Set(appConfig.i18n.locales);
 export type SupportedLocale = typeof appConfig.i18n.locales[number];
 
+const CLIENT_SESSION_KEY = 'client_session_id';
+
+/**
+ * Get or create a persistent client session ID.
+ * Used to identify anonymous users across requests (since we use credentials: 'omit').
+ */
+export function getClientSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  let sessionId = localStorage.getItem(CLIENT_SESSION_KEY);
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem(CLIENT_SESSION_KEY, sessionId);
+  }
+  return sessionId;
+}
+
 export function currentLocale(): SupportedLocale {
   if (typeof window === 'undefined') return appConfig.i18n.defaultLocale as SupportedLocale;
   const stored = window.localStorage.getItem('locale');

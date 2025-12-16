@@ -13,4 +13,5 @@ export interface IListingsRepository {
   refreshListing(id: number): Promise<void>;
   uploadMedia(id: number, file: File): Promise<any>;
   deleteMedia(listingId: number, mediaId: number): Promise<void>;
+  shareListing(id: number, chatIds: number[]): Promise<void>;
 }

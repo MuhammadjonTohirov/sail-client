@@ -5,9 +5,19 @@ import { useI18n } from '@/lib/i18n';
 import Dropdown from '@/components/ui/Dropdown';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { ListingStatisticsModal } from '@/components/listing/ListingStatisticsModal';
 import { appConfig, trustedImageUrl } from '@/config';
 
 type CatNode = { id: number; name: string; slug: string; is_leaf: boolean; children?: CatNode[] };
+
+interface ListingStatistics {
+  id: number;
+  title: string;
+  viewCount: number;
+  favoriteCount: number;
+  interestCount: number;
+  createdAt: string;
+}
 
 export default function MyListings() {
   const { t, locale } = useI18n();
@@ -23,6 +33,20 @@ export default function MyListings() {
   const [tab, setTab] = useState<'active'|'pending_review'|'inactive'>('active');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [listingToDelete, setListingToDelete] = useState<number | null>(null);
+  const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
+  const [selectedListingStats, setSelectedListingStats] = useState<ListingStatistics | null>(null);
+
+  const handleStatisticsClick = (listing: any) => {
+    setSelectedListingStats({
+      id: listing.id,
+      title: listing.title,
+      viewCount: listing.view_count ?? 0,
+      favoriteCount: listing.favorite_count ?? 0,
+      interestCount: listing.interest_count ?? 0,
+      createdAt: listing.created_at,
+    });
+    setStatisticsModalOpen(true);
+  };
 
   const load = async () => {
     try {
@@ -282,63 +306,98 @@ export default function MyListings() {
               </div>
 
               <div className="listing-actions-col">
-                {l.status === 'active' && (
-                  <button
-                    className="action-btn primary"
-                    onClick={() => bump(l.id)}
-                    title={t('myListings.bumpTooltip')}
+                <div className="listing-actions-buttons">
+                  {l.status === 'active' && (
+                    <button
+                      className="action-btn primary"
+                      onClick={() => bump(l.id)}
+                      title={t('myListings.bumpTooltip')}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      {t('myListings.bumpButton')}
+                    </button>
+                  )}
+
+                  <a
+                    href={`/post?edit=${l.id}`}
+                    className="action-btn secondary"
+                    title={t('myListings.editTooltip')}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    {t('myListings.bumpButton')}
-                  </button>
-                )}
+                  </a>
 
-                <a
-                  href={`/post?edit=${l.id}`}
-                  className="action-btn secondary"
-                  title={t('myListings.editTooltip')}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </a>
-
-                {l.status === 'active' && (
                   <button
                     className="action-btn secondary"
-                    onClick={() => deactivate(l.id)}
-                    title={t('myListings.deactivateTooltip')}
+                    onClick={() => handleStatisticsClick(l)}
+                    title={t('myListings.statisticsTooltip')}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </button>
-                )}
 
-                {(l.status === 'paused' || l.status === 'closed') && (
+                  {l.status === 'active' && (
+                    <button
+                      className="action-btn secondary"
+                      onClick={() => deactivate(l.id)}
+                      title={t('myListings.deactivateTooltip')}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  )}
+
+                  {(l.status === 'paused' || l.status === 'closed') && (
+                    <button
+                      className="action-btn primary"
+                      onClick={() => activate(l.id)}
+                      title={t('myListings.activateTooltip')}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+                  )}
+
                   <button
-                    className="action-btn primary"
-                    onClick={() => activate(l.id)}
-                    title={t('myListings.activateTooltip')}
+                    className="action-btn secondary text-red-600 hover:bg-red-50"
+                    onClick={() => handleDeleteClick(l.id)}
+                    title={t('myListings.deleteTooltip')}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
-                )}
+                </div>
 
-                <button
-                  className="action-btn secondary text-red-600 hover:bg-red-50"
-                  onClick={() => handleDeleteClick(l.id)}
-                  title={t('myListings.deleteTooltip')}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
+                {/* Statistics */}
+                <div className="listing-stats">
+                  <div className="stat-item" title={t('myListings.stats.views')}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <span>{l.view_count ?? 0}</span>
+                  </div>
+                  <div className="stat-item" title={t('myListings.stats.favorites')}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span>{l.favorite_count ?? 0}</span>
+                  </div>
+                  <div className="stat-item" title={t('myListings.stats.interests')}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    <span>{l.interest_count ?? 0}</span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -357,6 +416,17 @@ export default function MyListings() {
           setListingToDelete(null);
         }}
         isDestructive
+      />
+
+      <ListingStatisticsModal
+        open={statisticsModalOpen}
+        listing={selectedListingStats}
+        onClose={() => {
+          setStatisticsModalOpen(false);
+          setSelectedListingStats(null);
+        }}
+        t={t}
+        locale={locale}
       />
     </div>
   );

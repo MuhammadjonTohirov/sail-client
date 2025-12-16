@@ -97,7 +97,7 @@
       "title": "Kirish",
       "subtitle": "Yoki",
       "registerLink": "ro'yxatdan o'ting",
-      "loginLabel": "Email yoki telefon",
+      "loginLabel": "Email",
       "loginPlaceholder": "",
       "passwordLabel": "Parol",
       "passwordPlaceholder": "Parolni kiriting",
@@ -111,7 +111,7 @@
       "title": "Ro'yxatdan o'tish",
       "subtitle": "Akkauntingiz bormi?",
       "loginLink": "Kirish",
-      "loginLabel": "Email yoki telefon",
+      "loginLabel": "Email",
       "loginPlaceholder": "user@example.com",
       "loginHint": "Ro'yxatdan o'tish uchun emaildan foydalaning",
       "displayNameLabel": "Ism",
@@ -302,7 +302,27 @@
     "confirmDelete": "E'lonni o'chirish?",
     "confirmDeleteMessage": "Bu amalni bekor qilib bo'lmaydi. E'lon butunlay o'chiriladi.",
     "confirmButton": "Ha, o'chirish",
-    "cancelButton": "Bekor qilish"
+    "cancelButton": "Bekor qilish",
+    "stats": {
+      "views": "Ko'rishlar",
+      "favorites": "Sevimlilarda",
+      "interests": "Qiziqishlar"
+    },
+    "statisticsTooltip": "E'lon statistikasi",
+    "statisticsModal": {
+      "title": "E'lon statistikasi",
+      "activeSince": "Joylangan",
+      "views": "Ko'rishlar",
+      "favorites": "Sevimlilarda",
+      "interests": "Qiziqishlar",
+      "insights": "Tahlil",
+      "daysActive": "Faol kunlar",
+      "avgViewsPerDay": "Kuniga ko'rishlar",
+      "conversionRate": "Konversiya",
+      "totalEngagement": "Jami faollik",
+      "tip": "Maslahat: E'lonni muntazam ko'taring, shunda ko'proq ko'rishlar va qiziqish olasiz.",
+      "close": "Yopish"
+    }
   },
   "favorites": {
     "pageTitle": "Sevimli e'lonlar",

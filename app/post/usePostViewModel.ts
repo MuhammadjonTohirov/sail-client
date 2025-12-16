@@ -528,7 +528,7 @@ export function usePostViewModel(): PostViewModel {
         contactName: contactName.trim(),
         contactEmail: contactEmail || undefined,
         contactPhone: contactPhone || undefined,
-        sharingTelegramChatIds: selectedTelegramChats.length > 0 ? selectedTelegramChats : undefined,
+        // sharingTelegramChatIds: selectedTelegramChats.length > 0 ? selectedTelegramChats : undefined, // Handled separately now
       };
 
       let id: number;
@@ -563,6 +563,17 @@ export function usePostViewModel(): PostViewModel {
         }
       }
 
+      // Share to Telegram if selected (and not edit mode, or if we want to allow sharing on edit too? Usually only on create)
+      // The UI hides the selector in edit mode, so selectedTelegramChats should be empty or ignored.
+      if (!isEditMode && selectedTelegramChats.length > 0) {
+        try {
+          await interactorRef.current.shareListing(Number(id), selectedTelegramChats);
+        } catch (e) {
+          console.error('Failed to share to Telegram:', e);
+          // Don't block success navigation, just log error
+        }
+      }
+
       router.push(`/u/listings`);
     } catch (e: any) {
       setError(e.message);
@@ -573,7 +584,7 @@ export function usePostViewModel(): PostViewModel {
     selectedCat, locationId, title, contactName, attrs, values, description,
     dealType, negotiable, price, priceCurrency, condition, sellerType,
     contactEmail, contactPhone, isEditMode, editId, files, existingMedia,
-    router, t, isCompressing, hasCompressionError
+    router, t, isCompressing, hasCompressionError, selectedTelegramChats
   ]);
 
   return {
