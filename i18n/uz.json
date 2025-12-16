@@ -322,6 +322,23 @@
       "totalEngagement": "Jami faollik",
       "tip": "Maslahat: E'lonni muntazam ko'taring, shunda ko'proq ko'rishlar va qiziqish olasiz.",
       "close": "Yopish"
+    },
+    "shareTooltip": "Ulashish",
+    "shareModal": {
+      "title": "E'lonni ulashish",
+      "copyLink": "Havolani nusxalash",
+      "copied": "Nusxalandi!",
+      "orShareTo": "yoki ulashing",
+      "telegramChats": "Telegram kanallari",
+      "loading": "Yuklanmoqda...",
+      "loadError": "Kanallarni yuklab bo'lmadi",
+      "noChats": "Mavjud kanallar yo'q",
+      "noChatsHint": "Botni Telegram kanal yoki guruhga qo'shing",
+      "success": "Muvaffaqiyatli yuborildi!",
+      "shareError": "Ulashib bo'lmadi",
+      "cancel": "Bekor qilish",
+      "share": "Ulashish",
+      "sharing": "Yuborilmoqda..."
     }
   },
   "favorites": {

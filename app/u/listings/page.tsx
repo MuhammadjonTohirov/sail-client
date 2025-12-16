@@ -6,6 +6,17 @@ import Dropdown from '@/components/ui/Dropdown';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { ListingStatisticsModal } from '@/components/listing/ListingStatisticsModal';
+import { ShareListingModal } from '@/components/listing/ShareListingModal';
+import { Lineicons } from "@lineiconshq/react-lineicons";
+import {
+  Pencil1Outlined as EditIcon,
+  Share1Outlined as ShareIcon,
+  BarChart4Outlined as StatsIcon,
+  PauseOutlined as PauseIcon,
+  PlayOutlined as PlayIcon,
+  Trash3Outlined as TrashIcon,
+  CloudRefreshClockwiseOutlined as RefreshIcon,
+} from "@lineiconshq/free-icons";
 import { appConfig, trustedImageUrl } from '@/config';
 
 type CatNode = { id: number; name: string; slug: string; is_leaf: boolean; children?: CatNode[] };
@@ -35,6 +46,16 @@ export default function MyListings() {
   const [listingToDelete, setListingToDelete] = useState<number | null>(null);
   const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
   const [selectedListingStats, setSelectedListingStats] = useState<ListingStatistics | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedListingForShare, setSelectedListingForShare] = useState<{ id: number; title: string } | null>(null);
+
+  const handleShareClick = (listing: any) => {
+    setSelectedListingForShare({
+      id: listing.id,
+      title: listing.title,
+    });
+    setShareModalOpen(true);
+  };
 
   const handleStatisticsClick = (listing: any) => {
     setSelectedListingStats({
@@ -335,9 +356,15 @@ export default function MyListings() {
                     onClick={() => handleStatisticsClick(l)}
                     title={t('myListings.statisticsTooltip')}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+                    <Lineicons icon={StatsIcon} width={16} height={16} />
+                  </button>
+
+                  <button
+                    className="action-btn secondary"
+                    onClick={() => handleShareClick(l)}
+                    title={t('myListings.shareTooltip')}
+                  >
+                    <Lineicons icon={ShareIcon} width={16} height={16} />
                   </button>
 
                   {l.status === 'active' && (
@@ -427,6 +454,16 @@ export default function MyListings() {
         }}
         t={t}
         locale={locale}
+      />
+
+      <ShareListingModal
+        open={shareModalOpen}
+        listing={selectedListingForShare}
+        onClose={() => {
+          setShareModalOpen(false);
+          setSelectedListingForShare(null);
+        }}
+        t={t}
       />
     </div>
   );
