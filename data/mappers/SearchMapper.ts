@@ -15,18 +15,26 @@ import {
 
 export class SearchMapper {
   static listingToDomain(dto: SearchListingDTO): SearchListing {
-    const seller = dto.seller
-      ? {
-          id: dto.seller.id,
-          name: dto.seller.name,
-          avatarUrl: dto.seller.avatar_url,
-          since: dto.seller.since ?? null,
-          logo: dto.seller.logo ?? null,
-          banner: dto.seller.banner ?? null,
-          phone: dto.seller.phone,
-          lastActiveAt: dto.seller.last_active_at ?? null,
-        }
-      : undefined;
+    // Handle both full seller object and flat seller_name from search API
+    let seller;
+    if (dto.seller) {
+      seller = {
+        id: dto.seller.id,
+        name: dto.seller.name,
+        avatarUrl: dto.seller.avatar_url,
+        since: dto.seller.since ?? null,
+        logo: dto.seller.logo ?? null,
+        banner: dto.seller.banner ?? null,
+        phone: dto.seller.phone,
+        lastActiveAt: dto.seller.last_active_at ?? null,
+      };
+    } else if ((dto as any).seller_name) {
+      // Flat seller_name from OpenSearch results
+      seller = {
+        id: parseInt((dto as any).seller_id || '0', 10),
+        name: (dto as any).seller_name,
+      };
+    }
 
     return {
       id: dto.id,

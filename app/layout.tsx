@@ -1,5 +1,5 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import React from "react";
 import ClientNav from "./navbar/ClientNav";
 import Footer from "@/components/layout/Footer";
@@ -11,8 +11,13 @@ import { appConfig, buildThemeStyle } from "@/config";
 import { cookies } from "next/headers";
 import { Locale } from "@/i18n/config";
 import { ProfileProvider } from "@/components/providers/ProfileProvider";
-// import type { Locale } from '@/i18n/config';
-// import { cookies } from 'next/headers';
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: {

@@ -165,3 +165,75 @@ button.btn-accent {
     margin: 0;
   }
 }
+
+/* Location buttons */
+.location-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.location-detect-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+
+.location-detect-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.location-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: location-spin 0.8s linear infinite;
+}
+
+@keyframes location-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.location-error {
+  color: #d14343;
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+@media (max-width: 480px) {
+  .location-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .location-detect-btn {
+    justify-content: center;
+  }
+
+  .location-btn-text {
+    display: inline;
+  }
+}
+
+/* Prevent iOS zoom on input focus (requires font-size >= 16px) */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="search"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

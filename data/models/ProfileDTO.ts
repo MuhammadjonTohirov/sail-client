@@ -17,6 +17,9 @@ export interface ProfileDTO {
   telegram_id?: number | null;
   telegram_username?: string | null;
   telegram_photo_url?: string | null;
+  notify_new_messages: boolean;
+  notify_saved_searches: boolean;
+  notify_promotions: boolean;
   last_active_at?: string | null;
   created_at: string;
 }
@@ -26,6 +29,9 @@ export interface UpdateProfileRequestDTO {
   location?: number | null;
   logo?: File;
   banner?: File;
+  notify_new_messages?: boolean;
+  notify_saved_searches?: boolean;
+  notify_promotions?: boolean;
 }
 
 export interface DeleteAccountResponseDTO {

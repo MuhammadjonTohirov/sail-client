@@ -153,6 +153,31 @@ async function uploadAttachment(threadId: string, file: File): Promise<ChatAttac
   return mapAttachment(data as ChatAttachmentResponse);
 }
 
+interface SyncAvailabilityResult {
+  synced: number;
+  updated: number;
+}
+
+async function syncAvailability(): Promise<SyncAvailabilityResult> {
+  const data = await apiFetch('/api/v1/chat/sync-availability', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+  return data as SyncAvailabilityResult;
+}
+
+interface BulkListingStatusResult {
+  statuses: Record<number, 'available' | 'unavailable' | 'deleted'>;
+}
+
+async function checkListingStatus(listingIds: number[]): Promise<BulkListingStatusResult> {
+  const data = await apiFetch('/api/v1/listings/status/bulk', {
+    method: 'POST',
+    body: JSON.stringify({ listing_ids: listingIds }),
+  });
+  return data as BulkListingStatusResult;
+}
+
 export const ChatApi = {
   listThreads,
   createThread,
@@ -164,4 +189,6 @@ export const ChatApi = {
   unarchiveThread,
   deleteThread,
   uploadAttachment,
+  syncAvailability,
+  checkListingStatus,
 };

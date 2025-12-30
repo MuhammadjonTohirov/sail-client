@@ -17,7 +17,7 @@ export const Auth = {
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
       localStorage.setItem('profile', JSON.stringify(data.profile));
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
     return data;
   },
@@ -47,7 +47,7 @@ export const Auth = {
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
       localStorage.setItem('profile', JSON.stringify(data.profile));
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
     return data;
   },
@@ -61,7 +61,7 @@ export const Auth = {
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
       localStorage.setItem('profile', JSON.stringify(data.profile));
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
     return data;
   },
@@ -96,7 +96,7 @@ export const Auth = {
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh);
       localStorage.setItem('profile', JSON.stringify(data.profile));
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
     return data;
   },
@@ -137,7 +137,7 @@ export const Auth = {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('profile');
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
     return result;
   },
@@ -147,9 +147,65 @@ export const Auth = {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('profile');
-      try { window.dispatchEvent(new Event('auth-changed')); } catch {}
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
     }
   },
 
   getTelegramChats: () => apiFetch('/api/v1/telegram-chats/'),
+
+  disconnectTelegramChat: (chatId: string) =>
+    apiFetch(`/api/v1/telegram-chats/${chatId}/`, {
+      method: 'DELETE'
+    }),
+
+  verifyTelegramChats: () =>
+    apiFetch('/api/v1/telegram-chats/verify/', {
+      method: 'POST'
+    }),
+
+  // Security endpoints
+  getSecurityInfo: () => apiFetch('/api/v1/security'),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    apiFetch('/api/v1/security/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
+    }),
+
+  setPassword: (newPassword: string) =>
+    apiFetch('/api/v1/security/set-password', {
+      method: 'POST',
+      body: JSON.stringify({ new_password: newPassword })
+    }),
+
+  linkTelegram: async (telegramData: {
+    id: number;
+    first_name?: string;
+    last_name?: string;
+    username?: string;
+    photo_url?: string;
+    auth_date: number;
+    hash: string;
+  }) => {
+    const data = await apiFetch('/api/v1/security/link-telegram', {
+      method: 'POST',
+      body: JSON.stringify(telegramData)
+    });
+    if (typeof window !== 'undefined' && data.profile) {
+      localStorage.setItem('profile', JSON.stringify(data.profile));
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
+    }
+    return data;
+  },
+
+  unlinkTelegram: async () => {
+    const data = await apiFetch('/api/v1/security/unlink-telegram', {
+      method: 'POST'
+    });
+    if (typeof window !== 'undefined' && data.profile) {
+      localStorage.setItem('profile', JSON.stringify(data.profile));
+      try { window.dispatchEvent(new Event('auth-changed')); } catch { }
+    }
+    return data;
+  },
 };

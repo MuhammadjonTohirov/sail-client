@@ -11,6 +11,7 @@ import {
 import { trustedImageUrl } from '@/config';
 import { Lineicons } from "@lineiconshq/react-lineicons";
 import { ArrowLeftOutlined } from "@lineiconshq/free-icons";
+import { useI18n } from '@/lib/i18n';
 
 interface ChatPanelProps {
   thread: ChatThread;
@@ -157,6 +158,8 @@ export function ChatPanel({
   }, []);
 
   const listing = thread.listing;
+  const { t } = useI18n();
+  const isListingUnavailable = listing.availability && listing.availability !== 'available';
 
   return (
     <div className="chat-panel">
@@ -166,7 +169,7 @@ export function ChatPanel({
             type="button"
             className="chat-panel__back-btn mobile-only"
             onClick={onBack}
-            aria-label="Назад"
+            aria-label={t('common.back', 'Назад')}
           >
             <Lineicons icon={ArrowLeftOutlined} width={24} height={24} />
           </button>
@@ -191,11 +194,19 @@ export function ChatPanel({
               {listing.title}
             </div>
             <div className="chat-panel__subtitle">
-              {listingPrice || thread.otherParticipant?.displayName || 'Чат'}
+              {listingPrice || thread.otherParticipant?.displayName || t('chat.chat', 'Чат')}
             </div>
           </div>
         </div>
       </div>
+
+      {isListingUnavailable && (
+        <div className={`chat-panel__availability-banner chat-panel__availability-banner--${listing.availability}`}>
+          {listing.availability === 'deleted'
+            ? t('chat.listingDeletedBanner', 'Это объявление было удалено')
+            : t('chat.listingUnavailableBanner', 'Это объявление больше не активно')}
+        </div>
+      )}
 
       <div className="chat-panel__body">
         {combinedError ? (

@@ -17,6 +17,7 @@ export type ProductHit = {
   refreshed_at?: string;
   is_promoted?: boolean;
   condition?: string;
+  seller_name?: string;
 };
 
 interface ProductCardProps {
@@ -38,6 +39,7 @@ export function searchListinToProductHit(listing: SearchListing): ProductHit {
     refreshed_at: listing.refreshedAt ?? '',
     is_promoted: listing.isPromoted ?? false,
     condition: listing.condition ?? '',
+    seller_name: listing.seller?.name ?? '',
   };
 }
 
@@ -121,6 +123,13 @@ export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid
         <h3 className="product-card-title">
           {hit.title}
         </h3>
+
+        {/* Seller Name */}
+        {hit.seller_name && (
+          <div className="product-card-seller">
+            {hit.seller_name}
+          </div>
+        )}
 
         {/* Location & Time */}
         <div className="product-card-meta">

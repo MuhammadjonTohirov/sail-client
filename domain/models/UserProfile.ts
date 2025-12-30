@@ -13,6 +13,9 @@ export interface UserProfile {
   readonly telegramId?: number | null;
   readonly telegramUsername?: string | null;
   readonly telegramPhotoUrl?: string | null;
+  readonly notifyNewMessages: boolean;
+  readonly notifySavedSearches: boolean;
+  readonly notifyPromotions: boolean;
   readonly lastActiveAt?: Date | null;
   readonly createdAt: Date;
 }
@@ -22,4 +25,7 @@ export interface UpdateProfilePayload {
   readonly location?: number | null;
   readonly logo?: File;
   readonly banner?: File;
+  readonly notifyNewMessages?: boolean;
+  readonly notifySavedSearches?: boolean;
+  readonly notifyPromotions?: boolean;
 }

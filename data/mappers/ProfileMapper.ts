@@ -22,6 +22,9 @@ export class ProfileMapper {
       telegramId: dto.telegram_id,
       telegramUsername: dto.telegram_username,
       telegramPhotoUrl: dto.telegram_photo_url,
+      notifyNewMessages: dto.notify_new_messages ?? true,
+      notifySavedSearches: dto.notify_saved_searches ?? true,
+      notifyPromotions: dto.notify_promotions ?? false,
       lastActiveAt: dto.last_active_at ? new Date(dto.last_active_at) : null,
       createdAt: new Date(dto.created_at),
     };
@@ -33,6 +36,9 @@ export class ProfileMapper {
       location: payload.location,
       logo: payload.logo,
       banner: payload.banner,
+      notify_new_messages: payload.notifyNewMessages,
+      notify_saved_searches: payload.notifySavedSearches,
+      notify_promotions: payload.notifyPromotions,
     };
   }
 }

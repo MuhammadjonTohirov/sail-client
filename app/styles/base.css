@@ -84,3 +84,11 @@ a {
   white-space: nowrap;
   border: 0;
 }
+
+/* Avatar images - prevent stretching */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}

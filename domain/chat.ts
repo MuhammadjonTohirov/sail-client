@@ -1,11 +1,15 @@
 export type ChatThreadStatus = 'active' | 'archived' | 'closed';
 
+export type ListingAvailability = 'available' | 'unavailable' | 'deleted';
+
 export interface ChatListingSnapshot {
   listingId: number;
   title: string;
   priceAmount: string | number | null;
   priceCurrency: string;
   thumbnailUrl?: string;
+  availability?: ListingAvailability;
+  availabilityCheckedAt?: string | null;
 }
 
 export type ChatParticipantRole = 'buyer' | 'seller';
@@ -74,6 +78,8 @@ export interface ChatListingSnapshotResponse {
   price_amount: string | number | null;
   price_currency: string;
   thumbnail_url?: string;
+  availability?: ListingAvailability;
+  availability_checked_at?: string | null;
 }
 
 export interface ChatParticipantSummaryResponse {
@@ -162,6 +168,8 @@ export function mapListingSnapshot(input: ChatListingSnapshotResponse): ChatList
     priceAmount: input.price_amount ?? null,
     priceCurrency: input.price_currency,
     thumbnailUrl: input.thumbnail_url,
+    availability: input.availability ?? 'available',
+    availabilityCheckedAt: input.availability_checked_at ?? null,
   };
 }
 

@@ -1,4 +1,4 @@
-import { ITelegramRepository } from '@/domain/repositories/ITelegramRepository';
+import { ITelegramRepository, VerifyChatsResult } from '@/domain/repositories/ITelegramRepository';
 import { TelegramChat } from '@/domain/models/TelegramChat';
 import { Auth } from '@/lib/authApi';
 
@@ -14,5 +14,13 @@ export class TelegramRepositoryImpl implements ITelegramRepository {
       chatType: item.chat_type,
       isActive: item.is_active,
     }));
+  }
+
+  async disconnectChat(chatId: string): Promise<void> {
+    await Auth.disconnectTelegramChat(chatId);
+  }
+
+  async verifyChats(): Promise<VerifyChatsResult> {
+    return Auth.verifyTelegramChats();
   }
 }

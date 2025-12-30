@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import ChatShell from '@/components/chat/ChatShell';
 import ChatPanel from '@/components/chat/ChatPanel';
 import ThreadList from '@/components/chat/ThreadList';
 import { ChatStoreProvider, useChatStore, useChatThreads } from '@/hooks';
 import { useI18n } from '@/lib/i18n';
+import { ChatApi } from '@/lib/chatApi';
 
 function ChatPageHeader() {
   const { t } = useI18n();
@@ -25,6 +26,7 @@ function ChatPageContentInner() {
   const { selectedThreadId, selectThread } = useChatStore();
   const [viewerId, setViewerId] = useState<number | null>(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+  const hasSyncedAvailability = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -46,6 +48,21 @@ function ChatPageContentInner() {
     window.addEventListener('auth-changed', readProfile);
     return () => window.removeEventListener('auth-changed', readProfile);
   }, []);
+
+  // Sync listing availability when threads are loaded
+  useEffect(() => {
+    if (loading || hasSyncedAvailability.current || threads.length === 0) return;
+
+    hasSyncedAvailability.current = true;
+    ChatApi.syncAvailability()
+      .then(() => {
+        // Reload threads to get updated availability
+        reload();
+      })
+      .catch((err) => {
+        console.error('Failed to sync chat availability:', err);
+      });
+  }, [loading, threads.length, reload]);
 
   const currentThread = useMemo(
     () => {
