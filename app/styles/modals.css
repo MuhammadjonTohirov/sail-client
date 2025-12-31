@@ -97,11 +97,15 @@
   z-index: 50;
 }
 
-.nav-profile-avatar { /* circular 24x24*/
+.nav-profile-avatar { /* circular avatar in nav */
   width: 40px;
   height: 40px;
-  border-radius: 100%;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
   object-fit: cover;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
 }
 
 .dropdown-menu .menu-header {
