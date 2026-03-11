@@ -87,4 +87,8 @@ export class ChatRepositoryImpl implements IChatRepository {
     const attachment = await ChatApi.uploadAttachment(threadId, file);
     return attachment;
   }
+
+  async syncAvailability(): Promise<void> {
+    await ChatApi.syncAvailability();
+  }
 }

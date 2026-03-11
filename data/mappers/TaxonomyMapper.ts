@@ -41,9 +41,14 @@ export class TaxonomyMapper {
     return {
       id: dto.id,
       name: dto.name,
+      nameRu: dto.name_ru,
+      nameUz: dto.name_uz,
       slug: dto.slug,
-      parentId: dto.parent_id,
-      level: dto.level,
+      kind: dto.kind,
+      lat: dto.lat,
+      lon: dto.lon,
+      hasChildren: dto.has_children,
+      parentId: dto.parent,
       children: dto.children?.map(child => this.locationToDomain(child)),
     };
   }

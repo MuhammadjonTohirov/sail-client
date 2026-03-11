@@ -41,6 +41,9 @@ export interface ListingDetailViewModel {
   closeChat: () => void;
   updateChatThread: (thread: ChatThread) => void;
 
+  // Interest tracking
+  trackInterest: (id: number) => void;
+
   // Report modal state
   reportModalOpen: boolean;
   reportMsg: string;
@@ -336,6 +339,10 @@ export const useListingDetailViewModel = (
     setChatError(null);
   }, []);
 
+  const trackInterest = useCallback((listingId: number) => {
+    interactorRef.current.trackInterest(listingId).catch(() => {});
+  }, []);
+
   const updateChatThread = useCallback((thread: ChatThread) => {
     setChatThread(thread);
     setChatError(null);
@@ -374,6 +381,9 @@ export const useListingDetailViewModel = (
     openChat,
     closeChat,
     updateChatThread,
+
+    // Interest tracking
+    trackInterest,
 
     // Report modal state
     reportModalOpen,

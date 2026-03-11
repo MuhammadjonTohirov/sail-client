@@ -1,7 +1,7 @@
 import { ITaxonomyRepository } from '../../domain/repositories/ITaxonomyRepository';
 import { Category } from '../../domain/models/Category';
 import { Attribute } from '../../domain/models/Attribute';
-import { Location } from '../../domain/models/Location';
+import { Location, ReverseGeocodeLocation } from '../../domain/models/Location';
 import { CategoryDTO, AttributeDTO, LocationDTO } from '../models/TaxonomyDTO';
 import { TaxonomyMapper } from '../mappers/TaxonomyMapper';
 import { Taxonomy } from '../../lib/taxonomyApi';
@@ -20,5 +20,19 @@ export class TaxonomyRepositoryImpl implements ITaxonomyRepository {
   async getLocations(parentId?: number, language?: string): Promise<Location[]> {
     const dtos: LocationDTO[] = await Taxonomy.locations(parentId);
     return TaxonomyMapper.locationsToDomain(dtos);
+  }
+
+  async reverseGeocode(lat: number, lon: number): Promise<ReverseGeocodeLocation | null> {
+    const result = await Taxonomy.reverseGeocode(lat, lon);
+    if (!result) return null;
+    return {
+      id: result.id,
+      name: result.name,
+      nameRu: result.name_ru,
+      nameUz: result.name_uz,
+      kind: result.kind,
+      path: result.path,
+      distance: result.distance,
+    };
   }
 }

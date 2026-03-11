@@ -13,7 +13,7 @@ interface ThreadListProps {
   onSelect: (thread: ChatThread) => void;
 }
 
-function getAvailabilityBadge(availability: ListingAvailability | undefined, t: (key: string, fallback?: string) => string) {
+function getAvailabilityBadge(availability: ListingAvailability | undefined, t: (key: string, defaultValue?: string) => string) {
   if (!availability || availability === 'available') return null;
 
   const label = availability === 'deleted'
@@ -72,7 +72,7 @@ export function ThreadList({ threads, selectedId, loading, error, onRetry, onSel
                 <div className="thread-list__title">
                   {other?.displayName || thread.listing.title}
                 </div>
-                {getAvailabilityBadge(thread.listing.availability, t)}
+                {getAvailabilityBadge(thread.listing.availability, (k, d) => t(k, d ?? ''))}
               </div>
               <div className="thread-list__subtitle">
                 {thread.lastMessagePreview || t('chat.noMessagesYet', 'Без сообщений')}

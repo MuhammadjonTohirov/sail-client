@@ -7,6 +7,7 @@ import { UpdateListingUseCase } from '@/domain/usecases/listings/UpdateListingUs
 import { GetListingDetailUseCase } from '@/domain/usecases/listings/GetListingDetailUseCase';
 import { UploadListingMediaUseCase } from '@/domain/usecases/listings/UploadListingMediaUseCase';
 import { DeleteListingMediaUseCase } from '@/domain/usecases/listings/DeleteListingMediaUseCase';
+import { ReorderListingMediaUseCase } from '@/domain/usecases/listings/ReorderListingMediaUseCase';
 import { GetProfileUseCase } from '@/domain/usecases/profile/GetProfileUseCase';
 import { GetTelegramChatsUseCase } from '@/domain/usecases/telegram/GetTelegramChatsUseCase';
 import { TaxonomyRepositoryImpl } from '@/data/repositories/TaxonomyRepositoryImpl';
@@ -19,7 +20,6 @@ import { Listing } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
 import { TelegramChat } from '@/domain/models/TelegramChat';
 
-import { Listings } from '@/lib/api';
 import { UserProfile } from '@/domain/models/UserProfile';
 import { ShareListingUseCase } from '@/domain/usecases/listings/ShareListingUseCase';
 
@@ -31,6 +31,7 @@ export class PostInteractor {
   private getListingDetailUseCase: GetListingDetailUseCase;
   private uploadListingMediaUseCase: UploadListingMediaUseCase;
   private deleteListingMediaUseCase: DeleteListingMediaUseCase;
+  private reorderListingMediaUseCase: ReorderListingMediaUseCase;
   private getProfileUseCase: GetProfileUseCase;
   private getTelegramChatsUseCase: GetTelegramChatsUseCase;
   private shareListingUseCase: ShareListingUseCase;
@@ -48,6 +49,7 @@ export class PostInteractor {
     this.getListingDetailUseCase = new GetListingDetailUseCase(listingsRepository);
     this.uploadListingMediaUseCase = new UploadListingMediaUseCase(listingsRepository);
     this.deleteListingMediaUseCase = new DeleteListingMediaUseCase(listingsRepository);
+    this.reorderListingMediaUseCase = new ReorderListingMediaUseCase(listingsRepository);
     this.getProfileUseCase = new GetProfileUseCase(profileRepository);
     this.getTelegramChatsUseCase = new GetTelegramChatsUseCase(telegramRepository);
     this.shareListingUseCase = new ShareListingUseCase(listingsRepository);
@@ -100,8 +102,7 @@ export class PostInteractor {
   }
 
   async reorderMedia(listingId: number, mediaIds: number[]): Promise<void> {
-    // This doesn't have a use case yet, so we'll call the API directly
-    return await Listings.reorderMedia(listingId, mediaIds);
+    return await this.reorderListingMediaUseCase.execute(listingId, mediaIds);
   }
 
   async shareListing(listingId: number, chatIds: number[]): Promise<void> {

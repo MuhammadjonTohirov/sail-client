@@ -1,18 +1,20 @@
 "use client";
-import { Auth } from '@/lib/api';
 import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { useAuth } from '@/hooks/useAuth';
+import type { OtpRequestResult } from '@/domain/models/AuthToken';
 import Link from 'next/link';
 
 function RegisterPageContent() {
   const { t } = useI18n();
+  const auth = useAuth();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [code, setCode] = useState('');
-  const [sent, setSent] = useState<{ status?: string; debug_code?: string; login?: string } | null>(null);
+  const [sent, setSent] = useState<(OtpRequestResult & { login?: string }) | null>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -54,7 +56,7 @@ function RegisterPageContent() {
     setLoading(true);
 
     try {
-      const r = await Auth.register(login, password, displayName);
+      const r = await auth.register(login, password, displayName);
       setSent({ ...r, login });
       setCountdown(60);
 
@@ -62,8 +64,8 @@ function RegisterPageContent() {
         const codeInput = document.getElementById('code-input');
         if (codeInput) codeInput.focus();
       }, 100);
-    } catch (e: any) {
-      setError(e.message || t('auth.register.error'));
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : t('auth.register.error'));
     } finally {
       setLoading(false);
     }
@@ -80,10 +82,10 @@ function RegisterPageContent() {
     setLoading(true);
 
     try {
-      await Auth.registerVerify(login, value, password, displayName);
+      await auth.registerVerify(login, value, password, displayName);
       router.push(redirectTo);
-    } catch (e: any) {
-      setError(e.message || t('auth.register.verifyError'));
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : t('auth.register.verifyError'));
     } finally {
       setLoading(false);
     }
@@ -273,13 +275,13 @@ function RegisterPageContent() {
               </div>
 
               {/* Debug code in development */}
-              {sent.debug_code && (
+              {sent.debugCode && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                   <p className="text-xs font-medium text-yellow-800 mb-1">
                     {t('auth.developmentMode')}
                   </p>
                   <p className="text-sm font-mono text-yellow-900">
-                    {t('auth.register.debugCode')}: <span className="font-bold">{sent.debug_code}</span>
+                    {t('auth.register.debugCode')}: <span className="font-bold">{sent.debugCode}</span>
                   </p>
                 </div>
               )}

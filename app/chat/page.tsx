@@ -6,7 +6,7 @@ import ChatPanel from '@/components/chat/ChatPanel';
 import ThreadList from '@/components/chat/ThreadList';
 import { ChatStoreProvider, useChatStore, useChatThreads } from '@/hooks';
 import { useI18n } from '@/lib/i18n';
-import { ChatApi } from '@/lib/chatApi';
+import { ChatRepositoryImpl } from '@/data/repositories/ChatRepositoryImpl';
 
 function ChatPageHeader() {
   const { t } = useI18n();
@@ -27,6 +27,7 @@ function ChatPageContentInner() {
   const [viewerId, setViewerId] = useState<number | null>(null);
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const hasSyncedAvailability = useRef(false);
+  const chatRepo = useMemo(() => new ChatRepositoryImpl(), []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -54,12 +55,11 @@ function ChatPageContentInner() {
     if (loading || hasSyncedAvailability.current || threads.length === 0) return;
 
     hasSyncedAvailability.current = true;
-    ChatApi.syncAvailability()
+    chatRepo.syncAvailability()
       .then(() => {
-        // Reload threads to get updated availability
         reload();
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error('Failed to sync chat availability:', err);
       });
   }, [loading, threads.length, reload]);

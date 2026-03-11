@@ -1,13 +1,13 @@
 import { IModerationRepository } from '../../domain/repositories/IModerationRepository';
 import { ReportReason } from '../../domain/models/ReportReason';
 import { ReportPayload } from '../../domain/models/ReportPayload';
-import { ReportReasonDTO } from '../models/ModerationDTO';
 import { ModerationMapper } from '../mappers/ModerationMapper';
 import { Moderation } from '../../lib/moderationApi';
+import type { SupportedLocale } from '@/lib/apiUtils';
 
 export class ModerationRepositoryImpl implements IModerationRepository {
   async getReportReasons(language?: string): Promise<ReportReason[]> {
-    const dtos: ReportReasonDTO[] = await Moderation.reasons(language as any);
+    const dtos = await Moderation.reasons(language as SupportedLocale);
     return ModerationMapper.reasonsToDomain(dtos);
   }
 

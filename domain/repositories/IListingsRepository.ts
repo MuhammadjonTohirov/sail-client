@@ -1,7 +1,6 @@
-import { Listing } from '../models/Listing';
+import { Listing, ListingMedia } from '../models/Listing';
 import { ListingPayload } from '../models/ListingPayload';
 import { SearchListing } from '../models/SearchListing';
-import { SearchResult } from '../models/SearchResult';
 import { UserListingsParams } from '../models/UserListingsParams';
 
 export interface IListingsRepository {
@@ -11,7 +10,12 @@ export interface IListingsRepository {
   getUserListings(params: UserListingsParams): Promise<SearchListing[]>;
   updateListing(id: number, payload: Partial<ListingPayload>): Promise<Listing>;
   refreshListing(id: number): Promise<void>;
-  uploadMedia(id: number, file: File): Promise<any>;
+  uploadMedia(id: number, file: File): Promise<ListingMedia>;
   deleteMedia(listingId: number, mediaId: number): Promise<void>;
   shareListing(id: number, chatIds: number[]): Promise<void>;
+  activateListing(id: number): Promise<void>;
+  deactivateListing(id: number): Promise<void>;
+  deleteListing(id: number): Promise<void>;
+  reorderMedia(listingId: number, mediaIds: number[]): Promise<void>;
+  trackInterest(id: number): Promise<void>;
 }

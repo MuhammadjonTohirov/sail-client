@@ -8,7 +8,7 @@ export { Auth } from './authApi';
 export { Taxonomy } from './taxonomyApi';
 
 // Listings
-export { Listings, type ListingPayload } from './listingsApi';
+export { Listings } from './listingsApi';
 
 // Search
 export { Search } from './searchApi';
@@ -29,4 +29,4 @@ export { Favorites } from './favoritesApi';
 export { RecentlyViewed } from './recentlyViewedApi';
 
 // Currency
-export { CurrencyApi, type Currency, type ExchangeRates, type CurrencyConfig } from './currencyApi';
+export { CurrencyApi } from './currencyApi';

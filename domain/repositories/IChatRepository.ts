@@ -16,4 +16,5 @@ export interface IChatRepository {
   deleteThread(threadId: string): Promise<void>;
 
   uploadAttachment(threadId: string, file: File): Promise<ChatAttachment>;
+  syncAvailability(): Promise<void>;
 }

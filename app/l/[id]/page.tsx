@@ -12,7 +12,6 @@ import { PriceContactView } from './views/PriceContactView';
 import { SellerInfoView } from './views/SellerInfoView';
 import { RelatedListingsView } from './views/RelatedListingsView';
 import { trustedImageUrl } from '@/config';
-import { Listings } from '@/lib/listingsApi';
 
 export default function ListingDetail({ params }: { params: { id: string } }) {
   const { t, locale } = useI18n();
@@ -141,7 +140,7 @@ export default function ListingDetail({ params }: { params: { id: string } }) {
             onChatClick={handleChatClick}
             onShowPhoneClick={() => {
               if (!vm.showPhone) {
-                Listings.trackInterest(id).catch(() => {});
+                vm.trackInterest(id);
               }
               vm.setShowPhone(true);
             }}

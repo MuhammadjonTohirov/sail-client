@@ -1,4 +1,6 @@
-export type TranslateFn = (key: string, options?: Record<string, any>) => string;
+import type { TFunction } from 'i18next';
+
+export type TranslateFn = TFunction;
 
 export type PostFile = {
   id: string;

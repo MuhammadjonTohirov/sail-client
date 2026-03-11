@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Listing } from '@/domain/models/Listing';
+import { Listing, ListingMedia } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
 import { UserListingsParams } from '@/domain/models/UserListingsParams';
 import { SearchListing } from '@/domain/models/SearchListing';
@@ -11,6 +11,9 @@ import { UpdateListingUseCase } from '@/domain/usecases/listings/UpdateListingUs
 import { RefreshListingUseCase } from '@/domain/usecases/listings/RefreshListingUseCase';
 import { UploadListingMediaUseCase } from '@/domain/usecases/listings/UploadListingMediaUseCase';
 import { DeleteListingMediaUseCase } from '@/domain/usecases/listings/DeleteListingMediaUseCase';
+import { ActivateListingUseCase } from '@/domain/usecases/listings/ActivateListingUseCase';
+import { DeactivateListingUseCase } from '@/domain/usecases/listings/DeactivateListingUseCase';
+import { DeleteListingUseCase } from '@/domain/usecases/listings/DeleteListingUseCase';
 import { ListingsRepositoryImpl } from '@/data/repositories/ListingsRepositoryImpl';
 
 export function useListings() {
@@ -27,6 +30,9 @@ export function useListings() {
   const refreshUseCase = useMemo(() => new RefreshListingUseCase(repository), [repository]);
   const uploadMediaUseCase = useMemo(() => new UploadListingMediaUseCase(repository), [repository]);
   const deleteMediaUseCase = useMemo(() => new DeleteListingMediaUseCase(repository), [repository]);
+  const activateUseCase = useMemo(() => new ActivateListingUseCase(repository), [repository]);
+  const deactivateUseCase = useMemo(() => new DeactivateListingUseCase(repository), [repository]);
+  const deleteUseCase = useMemo(() => new DeleteListingUseCase(repository), [repository]);
 
   const createListing = useCallback(async (payload: ListingPayload): Promise<Listing | null> => {
     try {
@@ -112,7 +118,7 @@ export function useListings() {
     }
   }, [refreshUseCase]);
 
-  const uploadMedia = useCallback(async (id: number, file: File): Promise<any> => {
+  const uploadMedia = useCallback(async (id: number, file: File): Promise<ListingMedia> => {
     try {
       setLoading(true);
       setError(null);
@@ -140,6 +146,48 @@ export function useListings() {
     }
   }, [deleteMediaUseCase]);
 
+  const activateListing = useCallback(async (id: number): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+      await activateUseCase.execute(id);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to activate listing';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [activateUseCase]);
+
+  const deactivateListing = useCallback(async (id: number): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+      await deactivateUseCase.execute(id);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to deactivate listing';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [deactivateUseCase]);
+
+  const deleteListing = useCallback(async (id: number): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+      await deleteUseCase.execute(id);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete listing';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [deleteUseCase]);
+
   return {
     loading,
     error,
@@ -151,5 +199,8 @@ export function useListings() {
     refreshListing,
     uploadMedia,
     deleteMedia,
+    activateListing,
+    deactivateListing,
+    deleteListing,
   };
 }

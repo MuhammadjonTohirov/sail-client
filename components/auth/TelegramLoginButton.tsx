@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { appConfig } from '@/config/app.config';
-import { Auth } from '@/lib/authApi';
+import { useAuth } from '@/hooks/useAuth';
+import { TelegramAuthData } from '@/domain/models/AuthToken';
 import { useI18n } from '@/lib/i18n';
 
 interface TelegramUser {
@@ -33,6 +34,7 @@ export function TelegramLoginButton({ onSuccess, onError, skipConfirmation = fal
   const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { telegramAuth } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -79,7 +81,16 @@ export function TelegramLoginButton({ onSuccess, onError, skipConfirmation = fal
     setShowConfirmation(false);
 
     try {
-      await Auth.telegram(user);
+      const data: TelegramAuthData = {
+        id: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        username: user.username,
+        photoUrl: user.photo_url,
+        authDate: user.auth_date,
+        hash: user.hash,
+      };
+      await telegramAuth(data);
       onSuccess?.();
       router.push(redirectTo);
     } catch (e: any) {

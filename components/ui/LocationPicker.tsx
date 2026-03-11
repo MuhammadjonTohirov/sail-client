@@ -3,15 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Taxonomy } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
-
-interface Location {
-  id: number;
-  name: string;
-  name_ru?: string;
-  name_uz?: string;
-  kind: string;
-  parent?: number;
-}
+import type { LocationDTO } from '@/data/models/TaxonomyDTO';
 
 interface SelectedLocation {
   id: number;
@@ -27,15 +19,15 @@ interface Props {
 
 export default function LocationPicker({ open, onClose, onSelect }: Props) {
   const { t, locale } = useI18n();
-  const [regions, setRegions] = useState<Location[]>([]);
-  const [cities, setCities] = useState<Location[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<Location | null>(null);
-  const [selectedCity, setSelectedCity] = useState<Location | null>(null);
+  const [regions, setRegions] = useState<LocationDTO[]>([]);
+  const [cities, setCities] = useState<LocationDTO[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<LocationDTO | null>(null);
+  const [selectedCity, setSelectedCity] = useState<LocationDTO | null>(null);
   const [loading, setLoading] = useState(false);
   const [cityLoading, setCityLoading] = useState(false);
 
   // Helper function to get display name based on locale
-  const getDisplayName = (location: Location) => {
+  const getDisplayName = (location: LocationDTO) => {
     if (locale === 'uz') {
       return location.name_uz || location.name;
     }
@@ -54,17 +46,17 @@ export default function LocationPicker({ open, onClose, onSelect }: Props) {
     try {
       // Get all locations to find Uzbekistan
       const allLocs = await Taxonomy.locations();
-      const uzbekistan = allLocs.find((loc: Location) =>
+      const uzbekistan = allLocs.find((loc: LocationDTO) =>
         loc.kind === 'COUNTRY' && (loc.name === 'Uzbekistan' || loc.name === 'O\'zbekiston')
       );
 
       if (uzbekistan) {
         // Get children of Uzbekistan (regions)
         const regionsList = await Taxonomy.locations(uzbekistan.id);
-        const filteredRegions = regionsList.filter((r: Location) => r.kind === 'REGION');
+        const filteredRegions = regionsList.filter((r: LocationDTO) => r.kind === 'REGION');
 
         // Sort alphabetically by display name
-        filteredRegions.sort((a: Location, b: Location) => {
+        filteredRegions.sort((a: LocationDTO, b: LocationDTO) => {
           const nameA = getDisplayName(a);
           const nameB = getDisplayName(b);
           return nameA.localeCompare(nameB, locale);
@@ -73,8 +65,8 @@ export default function LocationPicker({ open, onClose, onSelect }: Props) {
         setRegions(filteredRegions);
       } else {
         // Fallback: filter regions from all locations
-        const filteredRegions = allLocs.filter((loc: Location) => loc.kind === 'REGION');
-        filteredRegions.sort((a: Location, b: Location) => {
+        const filteredRegions = allLocs.filter((loc: LocationDTO) => loc.kind === 'REGION');
+        filteredRegions.sort((a: LocationDTO, b: LocationDTO) => {
           const nameA = getDisplayName(a);
           const nameB = getDisplayName(b);
           return nameA.localeCompare(nameB, locale);
@@ -88,7 +80,7 @@ export default function LocationPicker({ open, onClose, onSelect }: Props) {
     }
   };
 
-  const handleRegionClick = async (region: Location) => {
+  const handleRegionClick = async (region: LocationDTO) => {
     setSelectedRegion(region);
     setSelectedCity(null);
     setCityLoading(true);
@@ -96,10 +88,10 @@ export default function LocationPicker({ open, onClose, onSelect }: Props) {
     try {
       const citiesList = await Taxonomy.locations(region.id);
       // Filter only DISTRICT kind (cities/districts for selection)
-      const filteredCities = citiesList.filter((c: Location) => c.kind === 'DISTRICT');
+      const filteredCities = citiesList.filter((c: LocationDTO) => c.kind === 'DISTRICT');
       
       // Sort alphabetically
-      filteredCities.sort((a: Location, b: Location) => {
+      filteredCities.sort((a: LocationDTO, b: LocationDTO) => {
         const nameA = getDisplayName(a);
         const nameB = getDisplayName(b);
         return nameA.localeCompare(nameB, locale);
@@ -114,7 +106,7 @@ export default function LocationPicker({ open, onClose, onSelect }: Props) {
     }
   };
 
-  const handleCityClick = (city: Location) => {
+  const handleCityClick = (city: LocationDTO) => {
     setSelectedCity(city);
   };
 

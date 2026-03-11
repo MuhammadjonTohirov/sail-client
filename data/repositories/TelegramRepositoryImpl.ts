@@ -1,19 +1,12 @@
 import { ITelegramRepository, VerifyChatsResult } from '@/domain/repositories/ITelegramRepository';
 import { TelegramChat } from '@/domain/models/TelegramChat';
 import { Auth } from '@/lib/authApi';
+import { AuthMapper } from '../mappers/AuthMapper';
 
 export class TelegramRepositoryImpl implements ITelegramRepository {
   async getTelegramChats(): Promise<TelegramChat[]> {
-    const data = await Auth.getTelegramChats();
-    return data.map((item: any) => ({
-      id: item.id,
-      chatId: item.chat_id,
-      chatTitle: item.chat_title,
-      chatUsername: item.chat_username,
-      chatPhoto: item.chat_photo,
-      chatType: item.chat_type,
-      isActive: item.is_active,
-    }));
+    const dtos = await Auth.getTelegramChats();
+    return AuthMapper.telegramChatsToDomain(dtos);
   }
 
   async disconnectChat(chatId: string): Promise<void> {
@@ -21,6 +14,7 @@ export class TelegramRepositoryImpl implements ITelegramRepository {
   }
 
   async verifyChats(): Promise<VerifyChatsResult> {
-    return Auth.verifyTelegramChats();
+    const dto = await Auth.verifyTelegramChats();
+    return AuthMapper.verifyChatsResponseToDomain(dto);
   }
 }

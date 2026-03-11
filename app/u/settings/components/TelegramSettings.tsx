@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { useProfile } from '@/hooks';
+import { useAuth } from '@/hooks/useAuth';
+import { SecurityInfo, TelegramAuthData } from '@/domain/models/AuthToken';
 import { appConfig, trustedImageUrl } from '@/config';
-import { Auth } from '@/lib/authApi';
 import { Lineicons } from "@lineiconshq/react-lineicons";
 import {
   TelegramOutlined as TelegramIcon,
@@ -16,16 +17,6 @@ import { GetTelegramChatsUseCase } from '@/domain/usecases/telegram/GetTelegramC
 import { DisconnectTelegramChatUseCase } from '@/domain/usecases/telegram/DisconnectTelegramChatUseCase';
 import { VerifyTelegramChatsUseCase } from '@/domain/usecases/telegram/VerifyTelegramChatsUseCase';
 import { TelegramRepositoryImpl } from '@/data/repositories/TelegramRepositoryImpl';
-
-export interface SecurityInfo {
-  has_password: boolean;
-  has_email: boolean;
-  has_phone: boolean;
-  has_telegram: boolean;
-  telegram_username: string | null;
-  email: string | null;
-  phone: string | null;
-}
 
 interface TelegramUser {
   id: number;
@@ -152,7 +143,8 @@ interface TelegramSettingsProps {
 export default function TelegramSettings({ securityInfo, loading, onReloadSecurity }: TelegramSettingsProps) {
   const { t } = useI18n();
   const { getProfile } = useProfile();
-  
+  const { linkTelegram, unlinkTelegram } = useAuth();
+
   const [telegramLinking, setTelegramLinking] = useState(false);
   const [telegramError, setTelegramError] = useState('');
   const [telegramSuccess, setTelegramSuccess] = useState(false);
@@ -163,7 +155,7 @@ export default function TelegramSettings({ securityInfo, loading, onReloadSecuri
   const [showTelegramLogoutInstructions, setShowTelegramLogoutInstructions] = useState(false);
 
   useEffect(() => {
-    if (securityInfo && !securityInfo.has_telegram && appConfig.telegram.enabled && appConfig.telegram.botUsername) {
+    if (securityInfo && !securityInfo.hasTelegram && appConfig.telegram.enabled && appConfig.telegram.botUsername) {
       renderTelegramLinkButton();
     }
 
@@ -205,7 +197,16 @@ export default function TelegramSettings({ securityInfo, loading, onReloadSecuri
     setTelegramSuccess(false);
 
     try {
-      await Auth.linkTelegram(pendingTelegramUser);
+      const data: TelegramAuthData = {
+        id: pendingTelegramUser.id,
+        firstName: pendingTelegramUser.first_name,
+        lastName: pendingTelegramUser.last_name,
+        username: pendingTelegramUser.username,
+        photoUrl: pendingTelegramUser.photo_url,
+        authDate: pendingTelegramUser.auth_date,
+        hash: pendingTelegramUser.hash,
+      };
+      await linkTelegram(data);
       setTelegramSuccess(true);
       await onReloadSecurity();
       await getProfile();
@@ -234,7 +235,7 @@ export default function TelegramSettings({ securityInfo, loading, onReloadSecuri
   };
 
   // Check if user can disconnect Telegram (must have another login method)
-  const canDisconnectTelegram = securityInfo?.has_telegram && (securityInfo?.has_password || securityInfo?.has_phone);
+  const canDisconnectTelegram = securityInfo?.hasTelegram && (securityInfo?.hasPassword || !!securityInfo?.phoneE164);
 
   const handleUnlinkTelegram = async () => {
     // Prevent disconnect if this is the only auth method
@@ -251,7 +252,7 @@ export default function TelegramSettings({ securityInfo, loading, onReloadSecuri
     setTelegramError('');
 
     try {
-      await Auth.unlinkTelegram();
+      await unlinkTelegram();
       await onReloadSecurity();
       await getProfile();
     } catch (e: any) {
@@ -281,15 +282,15 @@ export default function TelegramSettings({ securityInfo, loading, onReloadSecuri
               <div className="spinner-small"></div>
               <span>{t('settings.loading')}</span>
             </div>
-          ) : securityInfo?.has_telegram ? (
+          ) : securityInfo?.hasTelegram ? (
             <div className="flex-col gap-6">
               <div className="telegram-connected" style={{ marginBottom: '32px' }}>
                 <div className="telegram-connected-info">
                   <Lineicons icon={CheckIcon} width={20} height={20} className="success-icon" />
                   <div>
                     <p className="telegram-status">{t('settings.telegram.connected')}</p>
-                    {securityInfo.telegram_username && (
-                      <p className="telegram-username">@{securityInfo.telegram_username}</p>
+                    {securityInfo.telegramUsername && (
+                      <p className="telegram-username">@{securityInfo.telegramUsername}</p>
                     )}
                   </div>
                 </div>

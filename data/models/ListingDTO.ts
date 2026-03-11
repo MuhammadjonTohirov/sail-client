@@ -61,6 +61,9 @@ export interface ListingDTO {
   contact_phone_masked?: string | null;
   price_normalized?: number | null;
   is_promoted?: boolean | null;
+  view_count?: number;
+  favorite_count?: number;
+  interest_count?: number;
   user_id?: number;
   user?: ListingUserDTO;
   seller?: ListingSellerDTO;

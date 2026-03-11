@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
-import { Auth } from '@/lib/authApi';
+import { useAuth } from '@/hooks/useAuth';
+import { SecurityInfo } from '@/domain/models/AuthToken';
 import { Lineicons } from "@lineiconshq/react-lineicons";
 import {
   Locked1Outlined as LockIcon,
   EyeOutlined as EyeIcon,
 } from "@lineiconshq/free-icons";
-import { SecurityInfo } from './TelegramSettings';
 
 interface SecuritySettingsProps {
   securityInfo: SecurityInfo | null;
@@ -18,6 +18,7 @@ interface SecuritySettingsProps {
 
 export default function SecuritySettings({ securityInfo, loading, onReloadSecurity }: SecuritySettingsProps) {
   const { t } = useI18n();
+  const { changePassword: authChangePassword, setPassword: authSetPassword } = useAuth();
 
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -45,15 +46,15 @@ export default function SecuritySettings({ securityInfo, loading, onReloadSecuri
     setPasswordChanging(true);
 
     try {
-      if (securityInfo?.has_password) {
+      if (securityInfo?.hasPassword) {
         if (!currentPassword) {
           setPasswordError(t('settings.security.currentPasswordRequired'));
           setPasswordChanging(false);
           return;
         }
-        await Auth.changePassword(currentPassword, newPassword);
+        await authChangePassword(currentPassword, newPassword);
       } else {
-        await Auth.setPassword(newPassword);
+        await authSetPassword(newPassword);
       }
 
       setPasswordSuccess(true);
@@ -85,13 +86,13 @@ export default function SecuritySettings({ securityInfo, loading, onReloadSecuri
         ) : (
           <div className="password-change-form">
             <p className="security-description">
-              {securityInfo?.has_password
+              {securityInfo?.hasPassword
                 ? t('settings.security.changePasswordDescription')
                 : t('settings.security.setPasswordDescription')
               }
             </p>
 
-            {securityInfo?.has_password && (
+            {securityInfo?.hasPassword && (
               <div className="form-group">
                 <label className="form-label">{t('settings.security.currentPassword')}</label>
                 <div className="password-input-wrapper">
@@ -176,7 +177,7 @@ export default function SecuritySettings({ securityInfo, loading, onReloadSecuri
         >
           {passwordChanging
             ? t('settings.security.changing')
-            : (securityInfo?.has_password ? t('settings.security.changeButton') : t('settings.security.setButton'))
+            : (securityInfo?.hasPassword ? t('settings.security.changeButton') : t('settings.security.setButton'))
           }
         </button>
       </div>

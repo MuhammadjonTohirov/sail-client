@@ -61,6 +61,9 @@ export interface Listing {
   readonly contactPhoneMasked?: string | null;
   readonly priceNormalized?: number | null;
   readonly isPromoted?: boolean | null;
+  readonly viewCount?: number;
+  readonly favoriteCount?: number;
+  readonly interestCount?: number;
   readonly userId?: number;
   readonly user?: ListingUser;
   readonly seller?: ListingSeller;

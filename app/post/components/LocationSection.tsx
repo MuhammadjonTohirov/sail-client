@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import LocationPicker from '@/components/ui/LocationPicker';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { Taxonomy } from '@/lib/taxonomyApi';
+import { TaxonomyRepositoryImpl } from '@/data/repositories/TaxonomyRepositoryImpl';
 import type { TranslateFn } from './types';
 
 interface LocationSectionProps {
@@ -24,6 +24,7 @@ export function LocationSection({
   onSelectLocation,
 }: LocationSectionProps) {
   const { requestLocation, loading: geoLoading, error: geoError, isSupported } = useGeolocation();
+  const taxonomyRepo = useMemo(() => new TaxonomyRepositoryImpl(), []);
   const [detectingLocation, setDetectingLocation] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -43,7 +44,7 @@ export function LocationSection({
         return;
       }
 
-      const result = await Taxonomy.reverseGeocode(position.lat, position.lon);
+      const result = await taxonomyRepo.reverseGeocode(position.lat, position.lon);
       if (result) {
         onSelectLocation({ id: result.id, path: result.path });
         setLocationError(null);

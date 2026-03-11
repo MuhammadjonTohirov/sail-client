@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Lineicons } from "@lineiconshq/react-lineicons";
 import {
   XmarkOutlined as Xmark,
@@ -9,8 +9,8 @@ import {
   CheckOutlined as CheckIcon,
 } from "@lineiconshq/free-icons";
 import { TelegramChat } from '@/domain/models/TelegramChat';
-import { Auth } from '@/lib/authApi';
-import { Listings } from '@/lib/listingsApi';
+import { TelegramRepositoryImpl } from '@/data/repositories/TelegramRepositoryImpl';
+import { ListingsRepositoryImpl } from '@/data/repositories/ListingsRepositoryImpl';
 import { appConfig, trustedImageUrl } from '@/config';
 
 interface ShareListingModalProps {
@@ -27,6 +27,8 @@ export function ShareListingModal({
   t,
 }: ShareListingModalProps) {
   const backdropRef = useRef<HTMLDivElement>(null);
+  const telegramRepo = useMemo(() => new TelegramRepositoryImpl(), []);
+  const listingsRepo = useMemo(() => new ListingsRepositoryImpl(), []);
   const [chats, setChats] = useState<TelegramChat[]>([]);
   const [selectedChats, setSelectedChats] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -43,17 +45,8 @@ export function ShareListingModal({
       setSelectedChats(new Set());
       setCopied(false);
 
-      Auth.getTelegramChats()
-        .then((data: any[]) => {
-          const mappedChats: TelegramChat[] = data.map((item: any) => ({
-            id: item.id,
-            chatId: item.chat_id,
-            chatTitle: item.chat_title,
-            chatUsername: item.chat_username,
-            chatPhoto: item.chat_photo,
-            chatType: item.chat_type,
-            isActive: item.is_active,
-          }));
+      telegramRepo.getTelegramChats()
+        .then((mappedChats) => {
           setChats(mappedChats);
         })
         .catch((err) => {
@@ -116,7 +109,7 @@ export function ShareListingModal({
 
     try {
       const chatIds = Array.from(selectedChats);
-      await Listings.share(listing.id, chatIds);
+      await listingsRepo.shareListing(listing.id, chatIds);
       setShareSuccess(true);
       setTimeout(() => {
         onClose();

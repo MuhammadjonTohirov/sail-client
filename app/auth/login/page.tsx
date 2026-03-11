@@ -1,6 +1,6 @@
 "use client";
-import { Auth } from '@/lib/api';
 import { Suspense, useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import { appConfig } from '@/config/app.config';
 
 function LoginPageContent() {
   const { t } = useI18n();
+  const auth = useAuth();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
@@ -33,10 +34,10 @@ function LoginPageContent() {
     setLoading(true);
 
     try {
-      await Auth.login(login, password);
+      await auth.login(login, password);
       router.push(redirectTo);
-    } catch (e: any) {
-      setError(e.message || t('auth.login.error'));
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : t('auth.login.error'));
     } finally {
       setLoading(false);
     }

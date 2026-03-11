@@ -22,8 +22,13 @@ export interface AttributeDTO {
 export interface LocationDTO {
   id: number;
   name: string;
+  name_ru?: string;
+  name_uz?: string;
   slug: string;
-  parent_id?: number;
-  level?: number;
+  kind?: string;
+  lat?: number;
+  lon?: number;
+  has_children?: boolean;
+  parent?: number;
   children?: LocationDTO[];
 }

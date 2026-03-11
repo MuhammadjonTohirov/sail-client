@@ -7,7 +7,7 @@ import { CreateSavedSearchUseCase } from '@/domain/usecases/savedSearches/Create
 import { TaxonomyRepositoryImpl } from '@/data/repositories/TaxonomyRepositoryImpl';
 import { SearchRepositoryImpl } from '@/data/repositories/SearchRepositoryImpl';
 import { SavedSearchesRepositoryImpl } from '@/data/repositories/SavedSearchesRepositoryImpl';
-import { CategoryNode, Attr, Hit } from './types';
+import { CategoryNode, Attr } from './types';
 import { SearchListing } from '@/domain/models/SearchListing';
 import { Category } from '@/domain/models/Category';
 import { Attribute } from '@/domain/models/Attribute';
@@ -20,7 +20,7 @@ interface SearchQueryParams {
   sort?: string;
   per_page?: number;
   page?: number;
-  [key: string]: any;
+  [key: string]: string | number | undefined;
 }
 
 export class SearchInteractor {
@@ -57,7 +57,7 @@ export class SearchInteractor {
       slug: category.slug,
       is_leaf: category.isLeaf,
       icon: category.icon,
-      children: category.children?.map((c: any) => this.mapCategoryToNode(c))
+      children: category.children?.map((c) => this.mapCategoryToNode(c))
     };
   }
 
@@ -73,25 +73,24 @@ export class SearchInteractor {
 
   async fetchListings(params: SearchQueryParams): Promise<{ results?: SearchListing[]; total?: number }> {
     // Extract attributes from params (attrs.*)
-    const attributes: Record<string, any> = {};
-    const cleanParams: any = { ...params };
+    const attributes: Record<string, string | number | undefined> = {};
+    const { q, category_slug, min_price, max_price, sort, per_page, page, ...rest } = params;
 
-    Object.keys(params).forEach(key => {
+    Object.keys(rest).forEach(key => {
       if (key.startsWith('attrs.')) {
-        attributes[key] = params[key];
-        delete cleanParams[key];
+        attributes[key] = rest[key];
       }
     });
 
     // Convert to domain SearchParams
     const searchParams = {
-      q: cleanParams.q,
-      categorySlug: cleanParams.category_slug,
-      minPrice: cleanParams.min_price,
-      maxPrice: cleanParams.max_price,
-      sort: cleanParams.sort,
-      perPage: cleanParams.per_page,
-      page: cleanParams.page,
+      q,
+      categorySlug: category_slug,
+      minPrice: min_price,
+      maxPrice: max_price,
+      sort,
+      perPage: per_page,
+      page,
       attributes,
     };
 
@@ -104,7 +103,7 @@ export class SearchInteractor {
     };
   }
 
-  async saveSearch(payload: { title: string; query: Record<string, any> }) {
+  async saveSearch(payload: { title: string; query: Record<string, unknown> }) {
     const savedSearch = await this.createSavedSearchUseCase.execute(payload);
     return savedSearch;
   }

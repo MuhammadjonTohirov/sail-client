@@ -1,14 +1,16 @@
 "use client";
-import { Auth } from '@/lib/api';
 import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { useAuth } from '@/hooks/useAuth';
+import type { OtpRequestResult } from '@/domain/models/AuthToken';
 
 function OTPPageContent() {
   const { t } = useI18n();
+  const auth = useAuth();
   const [phone, setPhone] = useState('+998');
   const [code, setCode] = useState('');
-  const [sent, setSent] = useState<{ status?: string; debug_code?: string } | null>(null);
+  const [sent, setSent] = useState<OtpRequestResult | null>(null);
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -40,17 +42,16 @@ function OTPPageContent() {
     setLoading(true);
 
     try {
-      const r = await Auth.requestOtp(phone);
+      const r = await auth.requestOtp(phone);
       setSent(r);
-      setCountdown(60); // Start 60 second countdown
+      setCountdown(60);
 
-      // Auto-focus code input after sending
       setTimeout(() => {
         const codeInput = document.getElementById('code-input');
         if (codeInput) codeInput.focus();
       }, 100);
-    } catch (e: any) {
-      setError(e.message || t('auth.errorGeneric'));
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : t('auth.errorGeneric'));
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,6 @@ function OTPPageContent() {
 
   const verify = async (otp?: string) => {
     const value = otp ?? code;
-    console.log('Verifying code:', value);
 
     if (!value || value.length !== 6) {
       setError(t('auth.errorCodeRequired'));
@@ -69,10 +69,10 @@ function OTPPageContent() {
     setLoading(true);
 
     try {
-      await Auth.verifyOtp(phone, value);
+      await auth.verifyOtp(phone, value);
       router.push(redirectTo);
-    } catch (e: any) {
-      setError(e.message || t('auth.errorInvalidCode'));
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : t('auth.errorInvalidCode'));
     } finally {
       setLoading(false);
     }
@@ -204,13 +204,13 @@ function OTPPageContent() {
               </div>
 
               {/* Debug code in development */}
-              {sent.debug_code && (
+              {sent.debugCode && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                   <p className="text-xs font-medium text-yellow-800 mb-1">
                     {t('auth.developmentMode')}
                   </p>
                   <p className="text-sm font-mono text-yellow-900">
-                    {t('auth.codeLabel2')} <span className="font-bold">{sent.debug_code}</span>
+                    {t('auth.codeLabel2')} <span className="font-bold">{sent.debugCode}</span>
                   </p>
                 </div>
               )}

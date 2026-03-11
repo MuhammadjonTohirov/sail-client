@@ -1,7 +1,10 @@
 "use client";
-import { Listings, Taxonomy } from '@/lib/api';
 import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
+import { useListings } from '@/hooks/useListings';
+import { useTaxonomy } from '@/hooks/useTaxonomy';
+import { Listing } from '@/domain/models/Listing';
+import { Category } from '@/domain/models/Category';
 import Dropdown from '@/components/ui/Dropdown';
 import CategoryPicker from '@/components/ui/CategoryPicker';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -9,13 +12,8 @@ import { ListingStatisticsModal } from '@/components/listing/ListingStatisticsMo
 import { ShareListingModal } from '@/components/listing/ShareListingModal';
 import { Lineicons } from "@lineiconshq/react-lineicons";
 import {
-  Pencil1Outlined as EditIcon,
   Share1Outlined as ShareIcon,
   BarChart4Outlined as StatsIcon,
-  PauseOutlined as PauseIcon,
-  PlayOutlined as PlayIcon,
-  Trash3Outlined as TrashIcon,
-  CloudRefreshClockwiseOutlined as RefreshIcon,
 } from "@lineiconshq/free-icons";
 import { appConfig, trustedImageUrl } from '@/config';
 
@@ -30,12 +28,23 @@ interface ListingStatistics {
   createdAt: string;
 }
 
+function mapCategoryToNode(cat: Category): CatNode {
+  return {
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    is_leaf: cat.isLeaf,
+    children: cat.children?.map(mapCategoryToNode),
+  };
+}
+
 export default function MyListings() {
   const { t, locale } = useI18n();
+  const listings = useListings();
+  const taxonomy = useTaxonomy();
 
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState<Listing[]>([]);
   const [error, setError] = useState<string>('');
-  const [cats, setCats] = useState<CatNode[]>([]);
   const [q, setQ] = useState('');
   const [catId, setCatId] = useState<string>('');
   const [catPath, setCatPath] = useState<string>('');
@@ -49,55 +58,59 @@ export default function MyListings() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedListingForShare, setSelectedListingForShare] = useState<{ id: number; title: string } | null>(null);
 
-  const handleShareClick = (listing: any) => {
-    setSelectedListingForShare({
-      id: listing.id,
-      title: listing.title,
-    });
+  const catNodes = useMemo(() => taxonomy.categories.map(mapCategoryToNode), [taxonomy.categories]);
+
+  const handleShareClick = (listing: Listing) => {
+    setSelectedListingForShare({ id: listing.id, title: listing.title });
     setShareModalOpen(true);
   };
 
-  const handleStatisticsClick = (listing: any) => {
+  const handleStatisticsClick = (listing: Listing) => {
     setSelectedListingStats({
       id: listing.id,
       title: listing.title,
-      viewCount: listing.view_count ?? 0,
-      favoriteCount: listing.favorite_count ?? 0,
-      interestCount: listing.interest_count ?? 0,
-      createdAt: listing.created_at,
+      viewCount: listing.viewCount ?? 0,
+      favoriteCount: listing.favoriteCount ?? 0,
+      interestCount: listing.interestCount ?? 0,
+      createdAt: listing.createdAt ?? '',
     });
     setStatisticsModalOpen(true);
   };
 
   const load = async () => {
     try {
-      const [data, tree] = await Promise.all([Listings.mine(), Taxonomy.categories()]);
+      const data = await listings.getMyListings();
       setItems(data);
-      setCats(tree);
-    } catch (e: any) { setError(e.message); }
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to load listings');
+    }
   };
-  useEffect(() => { load(); }, []);
 
-  const bump = async (id: number) => { await Listings.refresh(id); await load(); };
-  const upload = async (id: number, file?: File | null) => {
-    if (!file) return; await Listings.uploadMedia(id, file); await load();
+  useEffect(() => {
+    load();
+    taxonomy.loadCategories();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const bump = async (id: number) => {
+    await listings.refreshListing(id);
+    await load();
   };
 
   const deactivate = async (id: number) => {
     try {
-      await Listings.deactivate(id);
+      await listings.deactivateListing(id);
       await load();
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to deactivate');
     }
   };
 
   const activate = async (id: number) => {
     try {
-      await Listings.activate(id);
+      await listings.activateListing(id);
       await load();
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to activate');
     }
   };
 
@@ -109,18 +122,16 @@ export default function MyListings() {
   const confirmDelete = async () => {
     if (!listingToDelete) return;
     try {
-      await Listings.delete(listingToDelete);
+      await listings.deleteListing(listingToDelete);
       setDeleteModalOpen(false);
       setListingToDelete(null);
       await load();
-    } catch (e: any) {
-      setError(e.message);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to delete');
       setDeleteModalOpen(false);
       setListingToDelete(null);
     }
   };
-
-  // Category tree is provided to CategoryPicker; no need to flatten here
 
   const filtered = useMemo(() => {
     const inactive = new Set(['paused','closed','expired']);
@@ -128,15 +139,15 @@ export default function MyListings() {
       .filter((it) => (
         tab === 'active' ? it.status === 'active'
         : tab === 'pending_review' ? it.status === 'pending_review'
-        : inactive.has(it.status)
+        : inactive.has(it.status ?? '')
       ))
       .filter((it) => (q ? (it.title?.toLowerCase()?.includes(q.toLowerCase()) || String(it.id) === q.trim()) : true))
-      .filter((it) => (catId ? String(it.category) === catId : true))
-      .sort((a: any, b: any) => {
-        if (sort === 'newest') return new Date(b.refreshed_at).getTime() - new Date(a.refreshed_at).getTime();
-        if (sort === 'oldest') return new Date(a.refreshed_at).getTime() - new Date(b.refreshed_at).getTime();
-        if (sort === 'price_asc') return Number(a.price_amount) - Number(b.price_amount);
-        if (sort === 'price_desc') return Number(b.price_amount) - Number(a.price_amount);
+      .filter((it) => (catId ? String(it.categoryId) === catId : true))
+      .sort((a, b) => {
+        if (sort === 'newest') return new Date(b.refreshedAt ?? '').getTime() - new Date(a.refreshedAt ?? '').getTime();
+        if (sort === 'oldest') return new Date(a.refreshedAt ?? '').getTime() - new Date(b.refreshedAt ?? '').getTime();
+        if (sort === 'price_asc') return Number(a.priceAmount) - Number(b.priceAmount);
+        if (sort === 'price_desc') return Number(b.priceAmount) - Number(a.priceAmount);
         return 0;
       });
   }, [items, tab, q, catId, sort]);
@@ -144,15 +155,13 @@ export default function MyListings() {
   const counts = useMemo(() => {
     const c = { active: 0, pending_review: 0, inactive: 0 } as Record<string, number>;
     const inactive = new Set(['paused','closed','expired']);
-    items.forEach((it: any) => {
+    items.forEach((it) => {
       if (it.status === 'active') c.active++;
       else if (it.status === 'pending_review') c.pending_review++;
-      else if (inactive.has(it.status)) c.inactive++;
+      else if (inactive.has(it.status ?? '')) c.inactive++;
     });
     return c;
   }, [items]);
-
-  const [loading, setLoading] = useState(false);
 
   if (error) {
     return (
@@ -259,7 +268,7 @@ export default function MyListings() {
 
         <CategoryPicker
           open={catPickerOpen}
-          categories={cats}
+          categories={catNodes}
           onClose={() => setCatPickerOpen(false)}
           onSelect={({ id, path }) => { setCatId(String(id)); setCatPath(path); setCatPickerOpen(false); }}
         />
@@ -292,11 +301,11 @@ export default function MyListings() {
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((l: any) => (
+          {filtered.map((l) => (
             <div className="my-listing-card" key={l.id}>
               <a href={`/l/${l.id}`} className="listing-image-link">
-                {l.media?.[0]?.image_url ? (
-                  <img className="listing-image" src={trustedImageUrl(l.media[0].image_url)} alt={l.title} />
+                {l.media?.[0]?.imageUrl ? (
+                  <img className="listing-image" src={trustedImageUrl(l.media[0].imageUrl)} alt={l.title} />
                 ) : (
                   <div className="listing-image-placeholder">
                     <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,12 +320,12 @@ export default function MyListings() {
                   <h3 className="listing-title">{l.title}</h3>
                 </a>
                 <div className="listing-price">
-                  {l.price_amount} {l.price_currency === 'UZS' ? t('myListings.currencySom') : l.price_currency}
+                  {l.priceAmount} {l.priceCurrency === 'UZS' ? t('myListings.currencySom') : l.priceCurrency}
                 </div>
                 <div className="listing-meta">
                   <span>ID: {l.id}</span>
                   <span>•</span>
-                  <span>{new Date(l.created_at).toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU')}</span>
+                  <span>{new Date(l.createdAt ?? '').toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU')}</span>
                   <span>•</span>
                   <span className={`status-badge status-${l.status}`}>
                     {l.status === 'active' ? t('myListings.statusActive') :
@@ -410,19 +419,19 @@ export default function MyListings() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
-                    <span>{l.view_count ?? 0}</span>
+                    <span>{l.viewCount ?? 0}</span>
                   </div>
                   <div className="stat-item" title={t('myListings.stats.favorites')}>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span>{l.favorite_count ?? 0}</span>
+                    <span>{l.favoriteCount ?? 0}</span>
                   </div>
                   <div className="stat-item" title={t('myListings.stats.interests')}>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
-                    <span>{l.interest_count ?? 0}</span>
+                    <span>{l.interestCount ?? 0}</span>
                   </div>
                 </div>
               </div>

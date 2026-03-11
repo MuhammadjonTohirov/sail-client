@@ -1,36 +1,25 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { apiFetch } from '@/lib/api';
+import { useEffect } from 'react';
 import { appConfig } from '@/config';
 import { useI18n } from '@/lib/i18n';
-
-type Saved = { id: number; title: string; query: any; is_active: boolean; created_at: string };
+import { useSavedSearches } from '@/hooks/useSavedSearches';
 
 export default function SavedPage() {
   const { t } = useI18n();
-  const [items, setItems] = useState<Saved[]>([]);
-  const [error, setError] = useState('');
-
-  const load = async () => {
-    try {
-      const res = await apiFetch('/api/v1/saved-searches');
-      setItems(res);
-    } catch (e: any) { setError(e.message); }
-  };
+  const { savedSearches, loading, error, loadSavedSearches, updateSavedSearch, deleteSavedSearch } = useSavedSearches();
 
   useEffect(() => {
     if (appConfig.features.enableSavedSearches) {
-      load();
+      loadSavedSearches();
     }
-  }, []);
+  }, [loadSavedSearches]);
 
   const toggle = async (id: number, isActive: boolean) => {
-    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'PATCH', body: JSON.stringify({ is_active: !isActive }) });
-    await load();
+    await updateSavedSearch(id, { isActive: !isActive });
   };
+
   const del = async (id: number) => {
-    await apiFetch(`/api/v1/saved-searches/${id}`, { method: 'DELETE' });
-    await load();
+    await deleteSavedSearch(id);
   };
 
   if (!appConfig.features.enableSavedSearches) {
@@ -49,17 +38,18 @@ export default function SavedPage() {
   }
 
   if (error) return <p>{error}</p>;
+  if (loading) return <p>{t('savedSearches.loading')}</p>;
   return (
     <div>
       <h2>{t('savedSearches.pageTitle')}</h2>
-      {items.length === 0 && <p className="muted">{t('savedSearches.noSearches')}</p>}
+      {savedSearches.length === 0 && <p className="muted">{t('savedSearches.noSearches')}</p>}
       <ul>
-        {items.map(s => (
+        {savedSearches.map(s => (
           <li key={s.id} className="row" style={{ alignItems: 'center' }}>
             <div style={{ flex: 1 }}>
-              <strong>{s.title}</strong> <span className="muted">({s.is_active ? t('savedSearches.statusActive') : t('savedSearches.statusInactive')})</span>
+              <strong>{s.title}</strong> <span className="muted">({s.isActive ? t('savedSearches.statusActive') : t('savedSearches.statusInactive')})</span>
             </div>
-            <button onClick={() => toggle(s.id, s.is_active)}>{s.is_active ? t('savedSearches.deactivateButton') : t('savedSearches.activateButton')}</button>
+            <button onClick={() => toggle(s.id, !!s.isActive)}>{s.isActive ? t('savedSearches.deactivateButton') : t('savedSearches.activateButton')}</button>
             <button onClick={() => del(s.id)}>{t('savedSearches.deleteButton')}</button>
           </li>
         ))}

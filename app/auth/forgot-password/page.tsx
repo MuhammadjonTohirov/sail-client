@@ -3,13 +3,13 @@
 import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Auth } from '@/lib/authApi';
-// import { useTranslation } from '@/components/providers/I18nProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { useI18n } from '@/lib/i18n';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const { t } = useI18n();
+  const { forgotPassword, resetPassword } = useAuth();
   const codeInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<'request' | 'reset'>('request');
@@ -20,7 +20,6 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
-  const [debugCode, setDebugCode] = useState('');
 
   useEffect(() => {
     if (countdown > 0) {
@@ -41,12 +40,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      const response = await Auth.forgotPassword(login);
-
-      if (response.debug_code) {
-        setDebugCode(response.debug_code);
-      }
-
+      await forgotPassword(login);
       setStep('reset');
       setCountdown(60);
     } catch (err: any) {
@@ -78,7 +72,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      await Auth.resetPassword(login, code, password);
+      await resetPassword(login, code, password);
 
       router.push('/auth/login?reset=success');
     } catch (err: any) {
@@ -95,12 +89,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      const response = await Auth.forgotPassword(login);
-
-      if (response.debug_code) {
-        setDebugCode(response.debug_code);
-      }
-
+      await forgotPassword(login);
       setCountdown(60);
       setCode('');
     } catch (err: any) {
@@ -115,7 +104,6 @@ export default function ForgotPasswordPage() {
     setCode('');
     setPassword('');
     setConfirmPassword('');
-    setDebugCode('');
     setError('');
   };
 
@@ -210,18 +198,6 @@ export default function ForgotPasswordPage() {
             {t('auth.forgotPassword.resetSubtitle', { login })}
           </p>
         </div>
-
-        {/* Debug code in development */}
-        {debugCode && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-            <p className="text-xs font-medium text-yellow-800 mb-1">
-              {t('auth.developmentMode')}
-            </p>
-            <p className="text-sm font-mono text-yellow-900">
-              {t('auth.forgotPassword.debugCode')} <span className="font-bold">{debugCode}</span>
-            </p>
-          </div>
-        )}
 
         <div>
           <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
