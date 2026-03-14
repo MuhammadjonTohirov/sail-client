@@ -131,19 +131,14 @@ export default function ListingDetail({ params }: { params: { id: string } }) {
             priceCurrency={listing.priceCurrency}
             isPriceNegotiable={listing.isPriceNegotiable || false}
             createdAt={listing.createdAt ?? undefined}
-            contactPhoneMasked={listing.contactPhone || listing.user?.phoneE164 || listing.user?.phone || listing.contactPhoneMasked || t('listing.noPhone')}
-            userPhone={listing.contactPhone || listing.user?.phoneE164 || listing.user?.phone}
+            revealedPhone={vm.revealedPhone}
+            revealedEmail={vm.revealedEmail}
             showPhone={vm.showPhone}
+            revealLoading={vm.revealLoading}
             isOwnListing={vm.isOwnListing}
             chatLoading={vm.chatLoading}
-            locale={locale}
             onChatClick={handleChatClick}
-            onShowPhoneClick={() => {
-              if (!vm.showPhone) {
-                vm.trackInterest(id);
-              }
-              vm.setShowPhone(true);
-            }}
+            onShowPhoneClick={() => vm.revealContact(id)}
             t={t}
           />
 

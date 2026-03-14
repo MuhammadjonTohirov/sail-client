@@ -66,7 +66,9 @@ export async function refreshAccessToken(): Promise<string | null> {
         body: JSON.stringify({ refresh }),
       });
       if (!res.ok) return null;
-      const data = await res.json();
+      const json = await res.json();
+      // Unwrap envelope if present
+      const data = (json && 'success' in json && 'data' in json) ? json.data : json;
       if (data?.access) {
         localStorage.setItem('access_token', data.access);
         try { window.dispatchEvent(new Event('auth-changed')); } catch {}
@@ -117,14 +119,24 @@ export async function apiFetch(path: string, opts: RequestInit = {}, isJson = tr
   }
   if (!res.ok) {
     let detail = '';
-    try { const j = await res.json(); detail = j.detail || JSON.stringify(j); } catch {}
+    try {
+      const j = await res.json();
+      // Support both envelope format and legacy format
+      detail = j.error || j.detail || JSON.stringify(j.data || j);
+    } catch {}
     if (res.status === 401) detail = 'Unauthorized';
     throw new Error(`API ${res.status}: ${detail || res.statusText}`);
   }
   if (!isJson) return res;
   // Handle 204 No Content responses (e.g., DELETE operations)
   if (res.status === 204) return null;
-  return res.json();
+  const json = await res.json();
+  // Unwrap standard envelope: {success, data, error, code} → data
+  if (json && typeof json === 'object' && 'success' in json && 'data' in json && 'code' in json) {
+    return json.data;
+  }
+  // Fallback for non-envelope responses
+  return json;
 }
 
 export function absolutizeUrl(url: string): string {

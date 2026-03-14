@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { SavedSearches } from '@/lib/api';
 import { appConfig } from '@/config';
+import { useI18n } from '@/lib/i18n';
 
 interface SaveSearchButtonProps {
   searchParams: {
@@ -14,7 +15,6 @@ interface SaveSearchButtonProps {
     [key: string]: any;
   };
   title?: string;
-  locale?: 'ru' | 'uz';
   className?: string;
   variant?: 'icon' | 'button';
 }
@@ -22,29 +22,26 @@ interface SaveSearchButtonProps {
 export function SaveSearchButton({
   searchParams,
   title,
-  locale = 'ru',
   className = '',
   variant = 'button'
 }: SaveSearchButtonProps) {
+  const { t } = useI18n();
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
-  const label = (ru: string, uz: string) => locale === 'uz' ? uz : ru;
 
   const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (isSaved) {
-      alert(label('Этот поиск уже сохранен', 'Bu qidiruv allaqachon saqlangan'));
+      alert(t('common.searchAlreadySaved'));
       return;
     }
 
     try {
       setIsSaving(true);
 
-      // Generate a meaningful title from search params
-      const searchTitle = title || generateTitle(searchParams, locale);
+      const searchTitle = title || generateTitle(searchParams, t);
 
       const payload = {
         title: searchTitle,
@@ -55,17 +52,10 @@ export function SaveSearchButton({
       await SavedSearches.create(payload);
       setIsSaved(true);
 
-      // Show success message
-      alert(label(
-        'Поиск сохранен! Вы будете получать уведомления о новых объявлениях.',
-        'Qidiruv saqlandi! Yangi e\'lonlar haqida xabarnoma olasiz.'
-      ));
+      alert(t('common.searchSavedSuccess'));
     } catch (error) {
       console.error('Failed to save search:', error);
-      alert(label(
-        'Не удалось сохранить поиск. Пожалуйста, войдите в систему.',
-        'Qidiruvni saqlab bo\'lmadi. Iltimos, tizimga kiring.'
-      ));
+      alert(t('common.searchSaveLoginRequired'));
     } finally {
       setIsSaving(false);
     }
@@ -79,7 +69,7 @@ export function SaveSearchButton({
         onClick={handleSave}
         disabled={isSaving || isSaved}
         className={`save-search-icon ${isSaved ? 'saved' : ''} ${className}`}
-        title={label('Сохранить поиск', 'Qidiruvni saqlash')}
+        title={t('common.saveSearch')}
         style={{
           background: isSaved ? accentColor : 'white',
           border: `1px solid ${isSaved ? accentColor : '#ddd'}`,
@@ -139,16 +129,16 @@ export function SaveSearchButton({
         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
       </svg>
       {isSaving
-        ? label('Сохранение...', 'Saqlanmoqda...')
+        ? t('common.saving')
         : isSaved
-        ? label('Поиск сохранен', 'Qidiruv saqlandi')
-        : label('Сохранить поиск', 'Qidiruvni saqlash')
+        ? t('common.saved')
+        : t('common.saveSearch')
       }
     </button>
   );
 }
 
-function generateTitle(params: Record<string, any>, locale: 'ru' | 'uz'): string {
+function generateTitle(params: Record<string, any>, t: (key: string) => string): string {
   const parts: string[] = [];
 
   if (params.q) {
@@ -164,13 +154,12 @@ function generateTitle(params: Record<string, any>, locale: 'ru' | 'uz'): string
   }
 
   if (params.min_price || params.max_price) {
-    const priceLabel = locale === 'uz' ? 'Narxi:' : 'Цена:';
     const priceRange = `${params.min_price || '0'} - ${params.max_price || '∞'}`;
-    parts.push(`${priceLabel} ${priceRange}`);
+    parts.push(`${t('common.priceLabel')} ${priceRange}`);
   }
 
   if (parts.length === 0) {
-    return locale === 'uz' ? 'Mening qidiruvim' : 'Мой поиск';
+    return t('common.mySearch');
   }
 
   return parts.join(' • ');

@@ -128,7 +128,12 @@ export const useCurrency = create<CurrencyState>()(
         const currency = state.currencies.find((c) => c.code === currencyCode);
 
         if (!currency) {
-          return amount.toLocaleString();
+          const formatted = amount.toLocaleString('ru-RU', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: currencyCode === 'USD' ? 2 : 0,
+          });
+          if (currencyCode === 'USD') return `$${formatted}`;
+          return `${formatted} ${currencyCode}`;
         }
 
         // Format number with proper locale

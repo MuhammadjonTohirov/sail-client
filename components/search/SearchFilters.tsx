@@ -12,6 +12,8 @@ interface SearchFiltersProps {
   setMinPrice: (value: string) => void;
   maxPrice: string;
   setMaxPrice: (value: string) => void;
+  currency: string;
+  setCurrency: (value: string) => void;
   attributes: Attr[];
   attrValues: Record<string, any>;
   setAttrValue: (key: string, value: any) => void;
@@ -27,6 +29,8 @@ export default function SearchFilters({
   setMinPrice,
   maxPrice,
   setMaxPrice,
+  currency,
+  setCurrency,
   attributes,
   attrValues,
   setAttrValue,
@@ -94,7 +98,7 @@ export default function SearchFilters({
     }, 0);
   }, [attrValues]);
 
-  const filtersCount = (selectedCategory ? 1 : 0) + (minPrice ? 1 : 0) + (maxPrice ? 1 : 0) + attrFilterCount;
+  const filtersCount = (selectedCategory ? 1 : 0) + (minPrice ? 1 : 0) + (maxPrice ? 1 : 0) + (currency ? 1 : 0) + attrFilterCount;
   const hasActiveFilters = filtersCount > 0;
   const { t } = useI18n();
   
@@ -136,6 +140,21 @@ export default function SearchFilters({
               suppressHydrationWarning
             />
           </div>
+        </div>
+
+        <div className="filter-group">
+          <label className="muted-small" suppressHydrationWarning>
+            {t('searchPage.currencyLabel')}
+          </label>
+          <Dropdown
+            value={currency}
+            onChange={setCurrency}
+            options={[
+              { value: '', label: t('searchPage.allCurrencies') },
+              { value: 'UZS', label: 'UZS' },
+              { value: 'USD', label: 'USD' },
+            ]}
+          />
         </div>
 
         {attributes.map((a) => {

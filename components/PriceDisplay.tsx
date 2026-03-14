@@ -5,7 +5,9 @@ interface PriceDisplayProps {
   amount: number;
   currency: string;
   className?: string;
-  showOriginal?: boolean; // Show original currency if different from selected
+  showOriginal?: boolean;
+  /** Override the target currency for conversion (e.g. from search filter). */
+  targetCurrency?: string;
 }
 
 export default function PriceDisplay({
@@ -13,17 +15,32 @@ export default function PriceDisplay({
   currency,
   className = '',
   showOriginal = false,
+  targetCurrency,
 }: PriceDisplayProps) {
-  const { selectedCurrency, convertPrice, formatPrice } = useCurrency();
+  const { selectedCurrency, exchangeRates, formatPrice } = useCurrency();
 
-  // Convert to user's selected currency
-  const convertedAmount = convertPrice(amount, currency);
+  // Use targetCurrency if provided, otherwise fall back to global selectedCurrency.
+  // Empty string means "no filter" — show original currency.
+  const target = targetCurrency || selectedCurrency;
 
-  // Format the converted price
-  const formattedPrice = formatPrice(convertedAmount, selectedCurrency);
+  // Convert
+  let convertedAmount = amount;
+  let displayCurrency = currency;
 
-  // Show original currency if different and showOriginal is true
-  const showOriginalCurrency = showOriginal && currency !== selectedCurrency;
+  if (target && target !== currency) {
+    const rate = exchangeRates[currency]?.[target];
+    if (rate) {
+      convertedAmount = amount * rate;
+      displayCurrency = target;
+    }
+    // No rate available — keep original amount and currency
+  } else if (target === currency) {
+    displayCurrency = currency;
+  }
+
+  const formattedPrice = formatPrice(convertedAmount, displayCurrency);
+
+  const showOriginalCurrency = showOriginal && currency !== displayCurrency;
   const originalFormatted = showOriginalCurrency
     ? formatPrice(amount, currency)
     : null;

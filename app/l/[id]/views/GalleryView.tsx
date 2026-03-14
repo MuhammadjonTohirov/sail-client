@@ -60,11 +60,15 @@ export const GalleryView = ({
           <>
             <div className="gallery-nav">
               <button onClick={onPrevious} aria-label="Previous">
-                ←
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
               </button>
-              
+
               <button onClick={onNext} aria-label="Next">
-                →
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 6 15 12 9 18" />
+                </svg>
               </button>
             </div>
             <div className="gallery-counter">

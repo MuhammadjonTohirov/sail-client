@@ -57,7 +57,10 @@
     "noResultsDescription": "Qidiruv parametrlarini o'zgartiring.",
     "filtersApplied": "{{count}} ta filtr",
     "filtersBack": "Natijalarga qaytish",
-    "select": "Tanlash"
+    "select": "Tanlash",
+    "endOfResults": "Boshqa e'lonlar yo'q",
+    "currencyLabel": "Valyuta",
+    "allCurrencies": "Barchasi"
   },
   "features": {
     "promotions": "Reklama qilingan eʼlonlar",
@@ -201,6 +204,7 @@
     "sendMessage": "Xabar yozish",
     "ownListing": "Bu sizning e'loningiz",
     "showPhone": "Telefonni ko'rsatish",
+    "showContact": "Kontaktni ko'rsatish",
     "seller": "Sotuvchi",
     "user": "Foydalanuvchi",
     "onSiteSince": "Saytda",
@@ -412,7 +416,26 @@
     "reportListing": "E'lonni shikoyat qilish",
     "deliveryNotice": "{{brand}} yetkazib berish xizmatini taqdim etmaydi. Barcha savdolar xaridor va sotuvchi o'rtasida bevosita amalga oshadi.",
     "retry": "Qayta urinish",
-    "back": "Orqaga"
+    "back": "Orqaga",
+    "loadingMore": "Ko'proq yuklanmoqda...",
+    "share": "Ulashish",
+    "copyLink": "Havolani nusxalash",
+    "free": "Bepul",
+    "today": "Bugun",
+    "yesterday": "Kecha",
+    "daysAgo": "{{count}} kun oldin",
+    "top": "TOP",
+    "yes": "Ha",
+    "mySearch": "Mening qidiruvim",
+    "priceLabel": "Narxi:",
+    "searchSaved": "Qidiruv saqlandi",
+    "searchSaveError": "Xatolik yuz berdi",
+    "searchAlreadySaved": "Bu qidiruv allaqachon saqlangan",
+    "searchSavedSuccess": "Qidiruv saqlandi! Yangi e'lonlar haqida xabarnoma olasiz.",
+    "searchSaveLoginRequired": "Qidiruvni saqlab bo'lmadi. Iltimos, tizimga kiring.",
+    "saving": "Saqlanmoqda...",
+    "saved": "Qidiruv saqlandi",
+    "saveSearch": "Qidiruvni saqlash"
   },
   "settings": {
     "pageTitle": "Sozlamalar",
@@ -500,6 +523,26 @@
       "savedSearchesDescription": "Saqlangan qidiruvlaringiz bo'yicha yangi e'lonlar haqida kunlik bildirishnomalar",
       "promotions": "Aksiyalar va takliflar",
       "promotionsDescription": "Maxsus takliflar va aksiyalar haqida bildirishnoma olish"
+    },
+    "menu": {
+      "profile": "Profil",
+      "notifications": "Bildirishnomalar",
+      "telegram": "Telegram",
+      "security": "Xavfsizlik",
+      "appearance": "Tashqi ko'rinish",
+      "account": "Hisob"
+    },
+    "appearance": {
+      "title": "Tashqi ko'rinish",
+      "subtitle": "Sail ko'rinishini qurilmangizda sozlang",
+      "themeLabel": "Mavzu",
+      "light": "Yorug'",
+      "dark": "Qorong'u",
+      "system": "Tizim",
+      "lightDesc": "Doim yorug' mavzuni ishlatish",
+      "darkDesc": "Doim qorong'u mavzuni ishlatish",
+      "systemDesc": "Tizim sozlamalariga amal qilish",
+      "currentTheme": "Joriy"
     }
   },
   "locationPicker": {
@@ -548,5 +591,48 @@
     "switchRU": "RU",
     "switchUZ": "UZ",
     "language": "Til"
+  },
+  "error": {
+    "title": "Nimadir xato ketdi",
+    "message": "Kutilmagan xatolik yuz berdi. Iltimos, qayta urinib ko'ring.",
+    "tryAgain": "Qayta urinish",
+    "goHome": "Bosh sahifaga"
+  },
+  "shortcuts": {
+    "title": "Tezkor tugmalar",
+    "search": "Qidiruvga o'tish",
+    "post": "E'lon yaratish",
+    "home": "Bosh sahifa",
+    "favorites": "Sevimlilar",
+    "myListings": "Mening e'lonlarim",
+    "close": "Yopish",
+    "help": "Yordam ko'rsatish",
+    "hint": "Yordam uchun ? tugmasini bosing"
+  },
+  "toast": {
+    "copied": "Nusxa olindi",
+    "linkCopied": "Havola nusxalandi",
+    "savedToFavorites": "Sevimlilarga qo'shildi",
+    "removedFromFavorites": "Sevimlilardan o'chirildi",
+    "listingCreated": "E'lon yaratildi",
+    "listingUpdated": "E'lon yangilandi",
+    "listingDeleted": "E'lon o'chirildi",
+    "messageSent": "Xabar yuborildi",
+    "errorOccurred": "Xatolik yuz berdi"
+  },
+  "theme": {
+    "light": "Yorug' mavzu",
+    "dark": "Qorong'u mavzu",
+    "system": "Tizim mavzusi"
+  },
+  "pullToRefresh": {
+    "pull": "Yangilash uchun torting",
+    "release": "Yangilash uchun qo'yib yuboring",
+    "refreshing": "Yangilanmoqda..."
+  },
+  "onlineStatus": {
+    "online": "Onlayn",
+    "recently": "Yaqinda faol edi",
+    "unknown": "Noma'lum"
   }
 }

@@ -20,6 +20,10 @@ export interface ListingDetailViewModel {
   // Gallery state
   currentImageIndex: number;
   showPhone: boolean;
+  revealedPhone: string | null;
+  revealedEmail: string | null;
+  revealedName: string | null;
+  revealLoading: boolean;
   setCurrentImageIndex: (index: number) => void;
   setShowPhone: (show: boolean) => void;
   goToPreviousImage: () => void;
@@ -41,8 +45,8 @@ export interface ListingDetailViewModel {
   closeChat: () => void;
   updateChatThread: (thread: ChatThread) => void;
 
-  // Interest tracking
-  trackInterest: (id: number) => void;
+  // Contact reveal
+  revealContact: (id: number) => void;
 
   // Report modal state
   reportModalOpen: boolean;
@@ -79,6 +83,12 @@ export const useListingDetailViewModel = (
   // Gallery state
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showPhone, setShowPhone] = useState(false);
+
+  // Contact reveal state
+  const [revealedPhone, setRevealedPhone] = useState<string | null>(null);
+  const [revealedEmail, setRevealedEmail] = useState<string | null>(null);
+  const [revealedName, setRevealedName] = useState<string | null>(null);
+  const [revealLoading, setRevealLoading] = useState(false);
 
   // Seller listings state
   const [sellerListings, setSellerListings] = useState<SearchListing[]>([]);
@@ -339,9 +349,22 @@ export const useListingDetailViewModel = (
     setChatError(null);
   }, []);
 
-  const trackInterest = useCallback((listingId: number) => {
-    interactorRef.current.trackInterest(listingId).catch(() => {});
-  }, []);
+  const revealContact = useCallback(async (listingId: number) => {
+    if (revealedPhone) return; // Already revealed
+    setRevealLoading(true);
+    try {
+      const result = await interactorRef.current.revealContact(listingId);
+      setRevealedPhone(result.contactPhone ?? null);
+      setRevealedEmail(result.contactEmail ?? null);
+      setRevealedName(result.contactName ?? null);
+      setShowPhone(true);
+    } catch {
+      // Fallback: just show whatever we have
+      setShowPhone(true);
+    } finally {
+      setRevealLoading(false);
+    }
+  }, [revealedPhone]);
 
   const updateChatThread = useCallback((thread: ChatThread) => {
     setChatThread(thread);
@@ -361,6 +384,10 @@ export const useListingDetailViewModel = (
     // Gallery state
     currentImageIndex,
     showPhone,
+    revealedPhone,
+    revealedEmail,
+    revealedName,
+    revealLoading,
     setCurrentImageIndex,
     setShowPhone,
     goToPreviousImage,
@@ -382,8 +409,8 @@ export const useListingDetailViewModel = (
     closeChat,
     updateChatThread,
 
-    // Interest tracking
-    trackInterest,
+    // Contact reveal
+    revealContact,
 
     // Report modal state
     reportModalOpen,

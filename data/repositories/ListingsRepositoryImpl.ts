@@ -1,5 +1,5 @@
 import { IListingsRepository } from '../../domain/repositories/IListingsRepository';
-import { Listing, ListingMedia } from '../../domain/models/Listing';
+import { Listing, ListingMedia, RevealContactResult } from '../../domain/models/Listing';
 import { ListingPayload } from '../../domain/models/ListingPayload';
 import { UserListingsParams } from '../../domain/models/UserListingsParams';
 import { ListingMapper } from '../mappers/ListingMapper';
@@ -90,5 +90,15 @@ export class ListingsRepositoryImpl implements IListingsRepository {
 
   async trackInterest(id: number): Promise<void> {
     await Listings.trackInterest(id);
+  }
+
+  async revealContact(id: number): Promise<RevealContactResult> {
+    const dto = await Listings.revealContact(id);
+    return {
+      contactName: dto.contact_name,
+      contactPhone: dto.contact_phone,
+      contactEmail: dto.contact_email,
+      tracked: dto.tracked,
+    };
   }
 }

@@ -12,6 +12,7 @@ interface SearchResultsGridProps {
   viewMode: 'list' | 'grid';
   basePath: string;
   locale: 'ru' | 'uz';
+  filterCurrency?: string;
 }
 
 function convertListingToHit(listing: Listing): ProductHit {
@@ -97,6 +98,7 @@ export default function SearchResultsGrid({
   viewMode,
   basePath,
   locale,
+  filterCurrency,
 }: SearchResultsGridProps) {
   const { t } = useI18n();
 
@@ -126,6 +128,7 @@ export default function SearchResultsGrid({
           href={`${basePath}/l/${r.id}`}
           locale={locale}
           viewMode={viewMode}
+          targetCurrency={filterCurrency}
         />
       ))}
     </div>

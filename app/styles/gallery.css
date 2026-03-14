@@ -70,7 +70,6 @@
   cursor: pointer;
   pointer-events: all;
   transition: all 0.2s ease;
-  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;

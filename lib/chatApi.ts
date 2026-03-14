@@ -60,7 +60,8 @@ const THREADS_BASE = '/api/v1/chat/threads/';
 async function listThreads(params?: ThreadQueryParams): Promise<ChatThread[]> {
   const query = makeSearchParams(buildQuery(params));
   const data = await apiFetch(`${THREADS_BASE}${query}`);
-  return Array.isArray(data) ? data.map(mapThread) : [];
+  const results = Array.isArray(data) ? data : (data?.results ?? []);
+  return results.map(mapThread);
 }
 
 async function createThread(input: CreateThreadInput): Promise<ChatThread> {
@@ -149,7 +150,8 @@ async function uploadAttachment(threadId: string, file: File): Promise<ChatAttac
     method: 'POST',
     body: form,
   }, false);
-  const data = await response.json();
+  const json = await response.json();
+  const data = (json && 'success' in json && 'data' in json) ? json.data : json;
   return mapAttachment(data as ChatAttachmentResponse);
 }
 

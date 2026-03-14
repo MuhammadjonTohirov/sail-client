@@ -37,5 +37,14 @@
 @import './styles/chat.css';
 @import './styles/thread-list.css';
 
+/* Skeleton loading */
+@import './styles/skeleton.css';
+
+/* Toast notifications */
+@import './styles/toast.css';
+
+/* Dark mode */
+@import './styles/dark-mode.css';
+
 /* Utility classes */
 @import './styles/utilities.css';

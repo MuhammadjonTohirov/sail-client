@@ -1,0 +1,167 @@
+/* Dark Mode Theme Variables */
+
+:root {
+  /* Light mode (default) */
+  --bg: #f9f9f9;
+  --fg: #1a1a1a;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+  --error: #dc2626;
+
+  /* Neutral scale */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+}
+
+/* Dark mode */
+.dark,
+[data-theme="dark"] {
+  --bg: #0f0f0f;
+  --fg: #f5f5f5;
+  --card-bg: #1a1a1a;
+  --border: #2e2e2e;
+  --muted: #a0a0a0;
+
+  /* Neutral scale inverted */
+  --color-neutral-50: #111827;
+  --color-neutral-100: #1f2937;
+  --color-neutral-200: #374151;
+  --color-neutral-300: #4b5563;
+  --color-neutral-400: #6b7280;
+  --color-neutral-500: #9ca3af;
+  --color-neutral-600: #d1d5db;
+  --color-neutral-700: #e5e7eb;
+  --color-neutral-800: #f3f4f6;
+  --color-neutral-900: #f9fafb;
+}
+
+/* Dark mode specific overrides */
+.dark body,
+[data-theme="dark"] body {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+/* Cards and containers */
+.dark .product-card,
+.dark .thread-item,
+.dark .saved-search-card,
+.dark .modal-overlay,
+.dark .dropdown-menu {
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+
+/* Images - add slight brightness reduction */
+.dark img {
+  filter: brightness(0.95);
+}
+
+/* Form elements */
+.dark input,
+.dark textarea,
+.dark select {
+  background: var(--color-neutral-100);
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: var(--accent);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--muted);
+}
+
+/* Buttons */
+.dark .btn-secondary,
+.dark button[type="button"]:not(.btn-primary) {
+  background: var(--color-neutral-200);
+  color: var(--fg);
+}
+
+.dark .btn-secondary:hover {
+  background: var(--color-neutral-300);
+}
+
+/* Navigation */
+.dark nav,
+.dark .header {
+  background: var(--card-bg);
+  border-color: var(--border);
+}
+
+/* Footer */
+.dark footer {
+  background: var(--color-neutral-100);
+  border-color: var(--border);
+}
+
+/* Scrollbar */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+/* Code blocks */
+.dark pre,
+.dark code {
+  background: var(--color-neutral-100);
+}
+
+/* Tables */
+.dark table {
+  border-color: var(--border);
+}
+
+.dark th {
+  background: var(--color-neutral-100);
+}
+
+.dark tr:nth-child(even) {
+  background: var(--color-neutral-50);
+}
+
+/* Selection */
+.dark ::selection {
+  background: rgba(var(--accent-rgb), 0.3);
+}
+
+/* Transition for smooth theme switching */
+body,
+.product-card,
+.thread-item,
+nav,
+footer,
+input,
+textarea,
+select,
+button {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}

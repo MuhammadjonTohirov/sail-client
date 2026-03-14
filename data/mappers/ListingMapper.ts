@@ -53,7 +53,7 @@ export class ListingMapper {
       id: dto.id,
       title: dto.title,
       description: dto.description,
-      priceAmount: dto.price_amount,
+      priceAmount: Number(dto.price_amount) || 0,
       priceCurrency: dto.price_currency,
       isPriceNegotiable: dto.is_price_negotiable,
       condition: dto.condition,

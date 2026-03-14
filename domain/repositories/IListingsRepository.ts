@@ -1,4 +1,4 @@
-import { Listing, ListingMedia } from '../models/Listing';
+import { Listing, ListingMedia, RevealContactResult } from '../models/Listing';
 import { ListingPayload } from '../models/ListingPayload';
 import { SearchListing } from '../models/SearchListing';
 import { UserListingsParams } from '../models/UserListingsParams';
@@ -18,4 +18,5 @@ export interface IListingsRepository {
   deleteListing(id: number): Promise<void>;
   reorderMedia(listingId: number, mediaIds: number[]): Promise<void>;
   trackInterest(id: number): Promise<void>;
+  revealContact(id: number): Promise<RevealContactResult>;
 }

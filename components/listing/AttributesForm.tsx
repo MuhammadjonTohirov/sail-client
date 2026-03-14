@@ -1,6 +1,7 @@
 "use client";
 import Dropdown from '@/components/ui/Dropdown';
 import MultiDropdown from '@/components/ui/MultiDropdown';
+import { useI18n } from '@/lib/i18n';
 
 export type Attr = {
   id: number;
@@ -18,15 +19,13 @@ export default function AttributesForm({
   attrs,
   values,
   onChange,
-  locale = 'ru',
 }: {
   attrs: Attr[];
   values: Record<string, any>;
   onChange: (key: string, val: any) => void;
-  locale?: 'ru' | 'uz';
 }) {
+  const { t } = useI18n();
   const req = (flag?: boolean) => (flag ? ' *' : '');
-  const tYes = locale === 'uz' ? 'Ha' : 'Да';
 
   return (
     <div className="space-y-3">
@@ -60,7 +59,7 @@ export default function AttributesForm({
             />
           )}
           {a.type === 'boolean' && (
-            <label><input type="checkbox" checked={!!values[a.key]} onChange={(e) => onChange(a.key, e.target.checked)} /> {tYes}</label>
+            <label><input type="checkbox" checked={!!values[a.key]} onChange={(e) => onChange(a.key, e.target.checked)} /> {t('common.yes')}</label>
           )}
           {a.type === 'text' && (
             <input value={values[a.key] ?? ''} onChange={(e) => onChange(a.key, e.target.value)} />

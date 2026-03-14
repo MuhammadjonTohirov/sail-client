@@ -1,4 +1,5 @@
 import { apiFetch, currentLocale } from './apiUtils';
+import type { CategoryDTO, AttributeDTO, LocationDTO } from '@/data/models/TaxonomyDTO';
 
 export interface ReverseGeocodeResult {
   id: number;
@@ -11,13 +12,13 @@ export interface ReverseGeocodeResult {
 }
 
 export const Taxonomy = {
-  categories: () =>
+  categories: (): Promise<CategoryDTO[]> =>
     apiFetch(`/api/v1/categories?lang=${currentLocale()}`),
 
-  attributes: (id: number) =>
+  attributes: (id: number): Promise<AttributeDTO[]> =>
     apiFetch(`/api/v1/categories/${id}/attributes?lang=${currentLocale()}`),
 
-  locations: (parent_id?: number) => {
+  locations: (parent_id?: number): Promise<LocationDTO[]> => {
     const qp = new URLSearchParams();
     qp.set('lang', currentLocale());
     if (parent_id !== undefined) qp.set('parent_id', String(parent_id));
@@ -30,8 +31,8 @@ export const Taxonomy = {
       qp.set('lat', String(lat));
       qp.set('lon', String(lon));
       qp.set('lang', currentLocale());
-      const result = await apiFetch(`/api/v1/locations/reverse-geocode?${qp.toString()}`);
-      return result as ReverseGeocodeResult;
+      const result: ReverseGeocodeResult = await apiFetch(`/api/v1/locations/reverse-geocode?${qp.toString()}`);
+      return result;
     } catch (e) {
       console.error('Reverse geocode failed:', e);
       return null;

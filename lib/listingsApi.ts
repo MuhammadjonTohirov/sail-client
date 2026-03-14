@@ -1,84 +1,70 @@
 import { apiFetch } from './apiUtils';
-
-export type ListingPayload = {
-  title: string;
-  description?: string;
-  price_amount: string | number;
-  price_currency: string;
-  is_price_negotiable?: boolean;
-  condition: string;
-  deal_type?: 'sell' | 'exchange' | 'free';
-  seller_type?: 'person' | 'business';
-  category: number;
-  location: number;
-  lat?: number;
-  lon?: number;
-  attributes?: { attribute: number; value: unknown }[];
-  contact_name?: string;
-  contact_email?: string;
-  contact_phone?: string;
-};
+import type { ListingDTO, ListingMediaDTO, ListingPayloadDTO, RevealContactResultDTO } from '@/data/models/ListingDTO';
 
 export const Listings = {
-  create: (payload: ListingPayload) =>
+  create: (payload: ListingPayloadDTO): Promise<ListingDTO> =>
     apiFetch('/api/v1/listings/raw', {
       method: 'POST',
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     }),
 
-  detail: (id: number) =>
+  detail: (id: number): Promise<ListingDTO> =>
     apiFetch(`/api/v1/listings/${id}`),
 
-  mine: () =>
-    apiFetch('/api/v1/my/listings'),
+  mine: async (): Promise<ListingDTO[]> => {
+    const data = await apiFetch('/api/v1/my/listings');
+    return data?.results ?? [];
+  },
 
-  update: (id: number, payload: Partial<ListingPayload>) =>
+  update: (id: number, payload: Partial<ListingPayloadDTO>): Promise<ListingDTO> =>
     apiFetch(`/api/v1/listings/${id}/edit/raw`, {
       method: 'PATCH',
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     }),
 
-  refresh: (id: number) =>
+  refresh: (id: number): Promise<void> =>
     apiFetch(`/api/v1/listings/${id}/refresh`, { method: 'POST' }),
 
-  uploadMedia: async (id: number, file: File) => {
+  uploadMedia: async (id: number, file: File): Promise<ListingMediaDTO> => {
     const form = new FormData();
     form.append('file', file);
     const res = await apiFetch(`/api/v1/listings/${id}/media`, {
       method: 'POST',
-      body: form
+      body: form,
     }, false);
-    return res.json();
+    const json = await res.json();
+    return (json && 'success' in json && 'data' in json) ? json.data : json;
   },
 
-  deleteMedia: (listingId: number, mediaId: number) =>
+  deleteMedia: (listingId: number, mediaId: number): Promise<void> =>
     apiFetch(`/api/v1/listings/${listingId}/media/${mediaId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     }),
 
-  reorderMedia: (listingId: number, mediaIds: number[]) =>
+  reorderMedia: (listingId: number, mediaIds: number[]): Promise<void> =>
     apiFetch(`/api/v1/listings/${listingId}/media/reorder`, {
       method: 'POST',
-      body: JSON.stringify({ media_ids: mediaIds })
+      body: JSON.stringify({ media_ids: mediaIds }),
     }),
 
-  deactivate: (id: number) =>
+  deactivate: (id: number): Promise<void> =>
     apiFetch(`/api/v1/listings/${id}/deactivate`, { method: 'POST' }),
 
-  activate: (id: number) =>
+  activate: (id: number): Promise<void> =>
     apiFetch(`/api/v1/listings/${id}/activate`, { method: 'POST' }),
 
-  async delete(id: number): Promise<void> {
-    return apiFetch(`/api/v1/listings/${id}/delete`, { method: 'DELETE' });
-  },
+  delete: (id: number): Promise<void> =>
+    apiFetch(`/api/v1/listings/${id}/delete`, { method: 'DELETE' }),
 
-  async share(id: number, chatIds: number[]): Promise<void> {
-    return apiFetch(`/api/v1/listings/${id}/share`, {
+  share: (id: number, chatIds: number[]): Promise<void> =>
+    apiFetch(`/api/v1/listings/${id}/share`, {
       method: 'POST',
       body: JSON.stringify({ telegram_chat_ids: chatIds }),
-    });
-  },
+    }),
 
-  trackInterest: (id: number) =>
+  trackInterest: (id: number): Promise<void> =>
     apiFetch(`/api/v1/listings/${id}/interest`, { method: 'POST' }),
+
+  revealContact: (id: number): Promise<RevealContactResultDTO> =>
+    apiFetch(`/api/v1/listings/${id}/reveal-contact`, { method: 'POST' }),
 };

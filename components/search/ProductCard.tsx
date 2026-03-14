@@ -5,6 +5,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import PriceDisplay from '@/components/PriceDisplay';
 import { SearchListing } from '@/domain/models/SearchListing';
 import { trustedImageUrl } from '@/config';
+import { useI18n } from '@/lib/i18n';
 
 export type ProductHit = {
   id: string;
@@ -25,6 +26,7 @@ interface ProductCardProps {
   href: string;
   locale?: 'ru' | 'uz';
   viewMode?: 'grid' | 'list';
+  targetCurrency?: string;
 }
 
 export function searchListinToProductHit(listing: SearchListing): ProductHit {
@@ -43,22 +45,22 @@ export function searchListinToProductHit(listing: SearchListing): ProductHit {
   };
 }
 
-export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid' }: ProductCardProps) {
+export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid', targetCurrency }: ProductCardProps) {
+  const { t } = useI18n();
   const [imageError, setImageError] = useState(false);
 
   const img = hit.media_urls?.[0];
   const loc = locale === 'uz' ? (hit.location_name_uz || '') : (hit.location_name_ru || '');
 
-  // Format date to show relative time or date
   const getTimeAgo = (dateStr: string) => {
     const date = new Date(dateStr);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return locale === 'uz' ? 'Bugun' : 'Сегодня';
-    if (diffDays === 1) return locale === 'uz' ? 'Kecha' : 'Вчера';
-    if (diffDays < 7) return `${diffDays} ${locale === 'uz' ? 'kun oldin' : 'дн. назад'}`;
+    if (diffDays === 0) return t('common.today');
+    if (diffDays === 1) return t('common.yesterday');
+    if (diffDays < 7) return t('common.daysAgo', { count: diffDays });
 
     return date.toLocaleDateString(locale === 'uz' ? 'uz-UZ' : 'ru-RU', { day: 'numeric', month: 'short' });
   };
@@ -94,7 +96,7 @@ export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
-            <span className="text-xs font-medium">{locale === 'uz' ? 'TOP' : 'ТОП'}</span>
+            <span className="text-xs font-medium">{t('common.top')}</span>
           </div>
         )}
 
@@ -112,10 +114,11 @@ export default function ProductCard({ hit, href, locale = 'ru', viewMode = 'grid
             amount={hit.price}
             currency={hit.currency || 'UZS'}
             className="product-card-price"
+            targetCurrency={targetCurrency}
           />
         ) : (
           <div className="product-card-price text-green-600">
-            {locale === 'uz' ? 'Bepul' : 'Бесплатно'}
+            {t('common.free')}
           </div>
         )}
 

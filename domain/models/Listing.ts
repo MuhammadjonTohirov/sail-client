@@ -28,6 +28,13 @@ export interface ListingUser {
   readonly phoneE164?: string;
 }
 
+export interface RevealContactResult {
+  readonly contactName?: string;
+  readonly contactPhone?: string;
+  readonly contactEmail?: string;
+  readonly tracked: boolean;
+}
+
 export interface Listing {
   readonly id: number;
   readonly title: string;
@@ -48,7 +55,7 @@ export interface Listing {
   readonly lon?: number;
   readonly media?: ListingMedia[];
   readonly mediaUrls?: string[];
-  readonly attributes?: Array<{ key: string; value: unknown; label?: string }>;
+  readonly attributes?: Array<{ attribute?: number; key: string; label?: string; type?: string; value: unknown }>;
   readonly status?: string;
   readonly contactName?: string;
   readonly contactEmail?: string;

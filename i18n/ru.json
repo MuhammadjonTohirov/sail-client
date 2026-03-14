@@ -57,7 +57,10 @@
     "noResultsDescription": "Попробуйте изменить параметры поиска.",
     "filtersApplied": "{{count}} фильтров",
     "filtersBack": "Назад к результатам",
-    "select": "Выбрать"
+    "select": "Выбрать",
+    "endOfResults": "Больше объявлений нет",
+    "currencyLabel": "Валюта",
+    "allCurrencies": "Все"
   },
   "features": {
     "promotions": "Продвижение объявлений",
@@ -201,6 +204,7 @@
     "sendMessage": "Написать сообщение",
     "ownListing": "Это ваше объявление",
     "showPhone": "Показать телефон",
+    "showContact": "Показать контакт",
     "seller": "Продавец",
     "user": "Пользователь",
     "onSiteSince": "На сайте с",
@@ -412,7 +416,26 @@
     "reportListing": "Пожаловаться на объявление",
     "deliveryNotice": "на {{brand}} нет службы доставки. Все сделки происходят напрямую между покупателем и продавцом.",
     "retry": "Повторить",
-    "back": "Назад"
+    "back": "Назад",
+    "loadingMore": "Загружаем ещё...",
+    "share": "Поделиться",
+    "copyLink": "Скопировать ссылку",
+    "free": "Бесплатно",
+    "today": "Сегодня",
+    "yesterday": "Вчера",
+    "daysAgo": "{{count}} дн. назад",
+    "top": "ТОП",
+    "yes": "Да",
+    "mySearch": "Мой поиск",
+    "priceLabel": "Цена:",
+    "searchSaved": "Поиск сохранен",
+    "searchSaveError": "Ошибка при сохранении",
+    "searchAlreadySaved": "Этот поиск уже сохранен",
+    "searchSavedSuccess": "Поиск сохранен! Вы будете получать уведомления о новых объявлениях.",
+    "searchSaveLoginRequired": "Не удалось сохранить поиск. Пожалуйста, войдите в систему.",
+    "saving": "Сохранение...",
+    "saved": "Поиск сохранен",
+    "saveSearch": "Сохранить поиск"
   },
   "settings": {
     "pageTitle": "Настройки",
@@ -501,6 +524,26 @@
       "savedSearchesDescription": "Ежедневные уведомления о новых объявлениях по вашим сохраненным поискам",
       "promotions": "Акции и предложения",
       "promotionsDescription": "Получать уведомления о специальных предложениях и акциях"
+    },
+    "menu": {
+      "profile": "Профиль",
+      "notifications": "Уведомления",
+      "telegram": "Telegram",
+      "security": "Безопасность",
+      "appearance": "Внешний вид",
+      "account": "Аккаунт"
+    },
+    "appearance": {
+      "title": "Внешний вид",
+      "subtitle": "Настройте внешний вид Sail на вашем устройстве",
+      "themeLabel": "Тема",
+      "light": "Светлая",
+      "dark": "Темная",
+      "system": "Системная",
+      "lightDesc": "Всегда использовать светлую тему",
+      "darkDesc": "Всегда использовать темную тему",
+      "systemDesc": "Следовать настройкам системы",
+      "currentTheme": "Текущая"
     }
   },
   "locationPicker": {
@@ -549,5 +592,48 @@
     "switchRU": "RU",
     "switchUZ": "UZ",
     "language": "Язык"
+  },
+  "error": {
+    "title": "Что-то пошло не так",
+    "message": "Произошла непредвиденная ошибка. Пожалуйста, попробуйте снова.",
+    "tryAgain": "Попробовать снова",
+    "goHome": "На главную"
+  },
+  "shortcuts": {
+    "title": "Горячие клавиши",
+    "search": "Перейти к поиску",
+    "post": "Создать объявление",
+    "home": "На главную",
+    "favorites": "Избранное",
+    "myListings": "Мои объявления",
+    "close": "Закрыть",
+    "help": "Показать подсказки",
+    "hint": "Нажмите ? для показа подсказок"
+  },
+  "toast": {
+    "copied": "Скопировано в буфер обмена",
+    "linkCopied": "Ссылка скопирована",
+    "savedToFavorites": "Добавлено в избранное",
+    "removedFromFavorites": "Удалено из избранного",
+    "listingCreated": "Объявление создано",
+    "listingUpdated": "Объявление обновлено",
+    "listingDeleted": "Объявление удалено",
+    "messageSent": "Сообщение отправлено",
+    "errorOccurred": "Произошла ошибка"
+  },
+  "theme": {
+    "light": "Светлая тема",
+    "dark": "Тёмная тема",
+    "system": "Системная тема"
+  },
+  "pullToRefresh": {
+    "pull": "Потяните для обновления",
+    "release": "Отпустите для обновления",
+    "refreshing": "Обновление..."
+  },
+  "onlineStatus": {
+    "online": "Онлайн",
+    "recently": "Был недавно",
+    "unknown": "Неизвестно"
   }
 }

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Listing, ListingMedia } from '@/domain/models/Listing';
+import { Listing, ListingMedia, RevealContactResult } from '@/domain/models/Listing';
 import { ListingPayload } from '@/domain/models/ListingPayload';
 import { UserListingsParams } from '@/domain/models/UserListingsParams';
 import { SearchListing } from '@/domain/models/SearchListing';
@@ -14,6 +14,7 @@ import { DeleteListingMediaUseCase } from '@/domain/usecases/listings/DeleteList
 import { ActivateListingUseCase } from '@/domain/usecases/listings/ActivateListingUseCase';
 import { DeactivateListingUseCase } from '@/domain/usecases/listings/DeactivateListingUseCase';
 import { DeleteListingUseCase } from '@/domain/usecases/listings/DeleteListingUseCase';
+import { RevealContactUseCase } from '@/domain/usecases/listings/RevealContactUseCase';
 import { ListingsRepositoryImpl } from '@/data/repositories/ListingsRepositoryImpl';
 
 export function useListings() {
@@ -33,6 +34,7 @@ export function useListings() {
   const activateUseCase = useMemo(() => new ActivateListingUseCase(repository), [repository]);
   const deactivateUseCase = useMemo(() => new DeactivateListingUseCase(repository), [repository]);
   const deleteUseCase = useMemo(() => new DeleteListingUseCase(repository), [repository]);
+  const revealContactUseCase = useMemo(() => new RevealContactUseCase(repository), [repository]);
 
   const createListing = useCallback(async (payload: ListingPayload): Promise<Listing | null> => {
     try {
@@ -188,6 +190,20 @@ export function useListings() {
     }
   }, [deleteUseCase]);
 
+  const revealContact = useCallback(async (id: number): Promise<RevealContactResult | null> => {
+    try {
+      setLoading(true);
+      setError(null);
+      return await revealContactUseCase.execute(id);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to reveal contact';
+      setError(errorMessage);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [revealContactUseCase]);
+
   return {
     loading,
     error,
@@ -202,5 +218,6 @@ export function useListings() {
     activateListing,
     deactivateListing,
     deleteListing,
+    revealContact,
   };
 }

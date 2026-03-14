@@ -160,7 +160,7 @@ export const appConfig = {
 
   // API Configuration
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://sail.uz/server/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://94.158.51.9:8081/',
     timeout: 30000, // 30 seconds
   },
 

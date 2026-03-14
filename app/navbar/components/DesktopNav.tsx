@@ -103,7 +103,7 @@ export default function DesktopNav({
         onClick={() => changeLocale("ru")}
         aria-current={locale === "ru" ? "true" : undefined}
         style={{
-          background: "#F9F9F9",
+          background: "transparent",
           border: "none",
           color: "inherit",
           cursor: "pointer",
@@ -118,7 +118,7 @@ export default function DesktopNav({
         onClick={() => changeLocale("uz")}
         aria-current={locale === "uz" ? "true" : undefined}
         style={{
-          background: "#F9F9F9",
+          background: "transparent",
           border: "none",
           color: "inherit",
           cursor: "pointer",
