@@ -80,7 +80,34 @@ function ConnectedChatsList() {
 
   if (loading) return <div className="text-sm text-gray-500">{t('settings.loading')}</div>;
   if (error) return <div className="text-sm text-red-500">{error}</div>;
-  if (chats.length === 0) return <div className="text-sm text-gray-500">{t('settings.telegram.noChats')}</div>;
+  if (chats.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h4 className="text-sm font-semibold text-gray-900">
+              {t('settings.telegram.noChatsTitle')}
+            </h4>
+            <p className="mt-1 text-sm text-gray-600">
+              {t('settings.telegram.noChatsDescription')}
+            </p>
+            <ul className="mt-3 space-y-1 pl-5 text-sm text-gray-600 list-disc">
+              <li>{t('settings.telegram.noChatsStep1')}</li>
+              <li>{t('settings.telegram.noChatsStep2')}</li>
+              <li>{t('settings.telegram.noChatsStep3')}</li>
+            </ul>
+          </div>
+          <button
+            type="button"
+            onClick={loadChats}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors self-start"
+          >
+            {t('settings.telegram.refreshChats')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-3" style={{ display: 'flex', flexDirection: 'column' }}>
