@@ -43,15 +43,21 @@ function ConnectedChatsList() {
   const loadChats = async () => {
     try {
       const repo = new TelegramRepositoryImpl();
-
-      // First verify all chats to update their status
-      const verifyUseCase = new VerifyTelegramChatsUseCase(repo);
-      await verifyUseCase.execute();
-
-      // Then load the updated chats
       const getChatsUseCase = new GetTelegramChatsUseCase(repo);
       const data = await getChatsUseCase.execute();
       setChats(data);
+
+      // Best-effort verification: keep the UI usable even if Telegram API checks fail.
+      void (async () => {
+        try {
+          const verifyUseCase = new VerifyTelegramChatsUseCase(repo);
+          await verifyUseCase.execute();
+          const refreshed = await getChatsUseCase.execute();
+          setChats(refreshed);
+        } catch (verifyError) {
+          console.warn('Telegram chat verification skipped:', verifyError);
+        }
+      })();
     } catch (e) {
       console.error('Failed to load chats:', e);
       setError(t('settings.telegram.loadChatsError'));
