@@ -14,6 +14,7 @@ import type {
   VerifyChatsResponseDTO,
 } from '@/data/models/AuthDTO';
 import type { ProfileDTO } from '@/data/models/ProfileDTO';
+import type { PaginatedDTO } from '@/data/models/CommonDTO';
 
 function persistAuth(data: AuthResponseDTO): void {
   if (typeof window === 'undefined') return;
@@ -115,8 +116,10 @@ export const Auth = {
     }
   },
 
-  getTelegramChats: (): Promise<TelegramChatDTO[]> =>
-    apiFetch('/api/v1/telegram-chats/'),
+  getTelegramChats: async (): Promise<TelegramChatDTO[]> => {
+    const data: PaginatedDTO<TelegramChatDTO> = await apiFetch('/api/v1/telegram-chats/');
+    return data?.results ?? [];
+  },
 
   disconnectTelegramChat: (chatId: string): Promise<void> =>
     apiFetch(`/api/v1/telegram-chats/${chatId}/`, { method: 'DELETE' }),

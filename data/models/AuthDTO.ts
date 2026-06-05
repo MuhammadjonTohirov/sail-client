@@ -71,6 +71,10 @@ export interface TelegramChatDTO {
   chat_photo: string | null;
   chat_type: string;
   is_active: boolean;
+  bot_status?: string;
+  created_at?: string;
+  updated_at?: string;
+  last_verified_at?: string | null;
 }
 
 export interface VerifyChatsResponseDTO {
