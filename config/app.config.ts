@@ -5,8 +5,6 @@
  * Update these values to customize your marketplace application.
  */
 
-import { Console } from "console";
-
 export const appConfig = {
   // App Branding
   name: 'Sail',
